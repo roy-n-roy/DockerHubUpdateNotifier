@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
+import argparse
 import schedule
 import time
-from os import environ, path
+from os import environ, path, remove
 import logging
 import sqlite3
 import requests
@@ -13,7 +14,8 @@ from email.utils import formatdate
 
 DOCKER_HUB_REPO_TAGS_API_URL = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}'
 
-DB_FILE = '/db/docker_repos.sqlite'
+DB_DIR  = environ['DB_DIR'] if 'DB_DIR' in environ.keys() else path.sep + 'db'
+DB_FILE = DB_DIR + path.sep + 'docker_repos.sqlite'
 
 MAIL_FROM = environ['MAIL_FROM'] if 'MAIL_FROM' in environ.keys() else None
 MAIL_PASS = environ['MAIL_PASS'] if 'MAIL_PASS' in environ.keys() else None
@@ -46,13 +48,13 @@ def check_update():
 							(json['last_updated'], row['user_id'], row['user'], row['name'], row['tag'])
 						)
 				except:
-					logging.exception("Update column 'last_updated' SQL Error.")
+					logging.exception("DB UPDATE column 'last_updated' SQL Error.")
 					continue
 
 				try:
 					notify_dest = conn.execute('SELECT mail_address, webhook_url FROM users WHERE user_id = ?', (row['user_id'], )).fetchone()
 				except:
-					logging.exception("Select notify destination SQL Error.")
+					logging.exception("DB SELECT notify destination SQL Error.")
 					continue
 				
 				if notify_dest['mail_address'] is None and notify_dest['webhook_url'] is None:
@@ -110,9 +112,9 @@ def send_email(to, message):
 		smtp.sendmail(MAIL_FROM, to, message.as_string())
 
 def db_create():
-	if not path.exists(DB_FILE):
+	try:
 		with sqlite3.connect(DB_FILE) as conn:
-			conn.execute('''
+			conn.executescript('''
 					CREATE TABLE "users" (
 						"user_id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 						"mail_address"	TEXT,
@@ -128,9 +130,16 @@ def db_create():
 					);
 				''')
 			conn.commit()
+	except:
+		conn.close()
+		logging.exception('DB CREATE tables Error.')
+		remove(DB_FILE)
+		raise
 
 if __name__ == '__main__':
-	db_create()
+	if not path.exists(DB_FILE):
+		db_create()
+
 	check_update()
 	schedule.every().hour.do(check_update)
 
