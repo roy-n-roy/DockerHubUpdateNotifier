@@ -8,7 +8,7 @@
 			"name": "Python: entry-point.py",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\entry-point.py",
+			"program": "${workspaceFolder}\\entry_point.py",
 			"env": {
 				"DB_DIR": ".",
 				"LOG_LEVEL": "DEBUG"
