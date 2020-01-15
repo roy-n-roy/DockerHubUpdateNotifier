@@ -14,6 +14,18 @@
 				"LOG_LEVEL": "DEBUG"
 			},
 			"console": "integratedTerminal"
+		},
+		{
+			"name": "Python: edit.py",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}\\edit.py",
+			"args": ["-l"],
+			"env": {
+				"DB_DIR": ".",
+				"LOG_LEVEL": "DEBUG"
+			},
+			"console": "integratedTerminal"
 		}
 	]
 }

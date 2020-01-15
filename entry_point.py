@@ -1,109 +1,153 @@
-import json
 import logging
-import os
 import smtplib
 import time
 from email.mime.text import MIMEText
 from email.utils import formatdate
-from os import path
+from os import environ, path
 
 import dataset
 import requests
 import schedule
-from dateutil import parser
+from dataset.util import DatasetException
+from dateutil import parser as dateparser
+from requests.exceptions import RequestException
 
 VERSION = '0.1.0'
 
-DOCKER_HUB_REPO_TAGS_API_URL = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}'
+DOCKER_HUB_API_URL = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}'
 
-DB_DIR  = os.environ['DB_DIR'] if 'DB_DIR' in os.environ.keys() else path.sep + 'db'
+DB_DIR = environ['DB_DIR'] if 'DB_DIR' in environ.keys() else path.sep + 'db'
 DB_FILE = DB_DIR + path.sep + 'docker_repos.sqlite'
 
-MAIL_FROM = os.environ['MAIL_FROM'] if 'MAIL_FROM' in os.environ.keys() else None
-MAIL_PASS = os.environ['MAIL_PASS'] if 'MAIL_PASS' in os.environ.keys() else None
-SMTP_HOST = os.environ['SMTP_HOST'] if 'SMTP_HOST' in os.environ.keys() else None
-SMTP_PORT = os.environ['SMTP_PORT'] if 'SMTP_PORT' in os.environ.keys() else None
+MAIL_FROM = environ['MAIL_FROM'] if 'MAIL_FROM' in environ.keys() else None
+MAIL_PASS = environ['MAIL_PASS'] if 'MAIL_PASS' in environ.keys() else None
+SMTP_HOST = environ['SMTP_HOST'] if 'SMTP_HOST' in environ.keys() else None
+SMTP_PORT = environ['SMTP_PORT'] if 'SMTP_PORT' in environ.keys() else None
 
-LOG_LEVEL = getattr(logging, os.environ['LOG_LEVEL'].upper(), None) if 'LOG_LEVEL' in os.environ.keys() else logging.INFO
+LOG_LEVEL = getattr(logging, environ['LOG_LEVEL'].upper(
+), None) if 'LOG_LEVEL' in environ.keys() else logging.INFO
 LOG_LEVEL = LOG_LEVEL if isinstance(LOG_LEVEL, int) else logging.INFO
 
-logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s', level=LOG_LEVEL)
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s:%(message)s', level=LOG_LEVEL)
+
 
 def check_update():
     db = get_db()
     db.begin()
-    for row in db.query('SELECT * FROM watching_repositories INNER JOIN users USING(user_seq)'):
+    for row in db.query('''\
+                SELECT * FROM watching_repositories
+                INNER JOIN users USING(user_seq)
+            '''):
         try:
-            r = requests.get(DOCKER_HUB_REPO_TAGS_API_URL.format(row['publisher'], row['repo_name'], row['repo_tag']))
+            url = DOCKER_HUB_API_URL.format(
+                row['publisher'], row['repo_name'], row['repo_tag'])
+            r = requests.get(url)
             r.raise_for_status()
             json = r.json()
-        except:
-            logging.exception(" Failed to get repository last updated from Docker Hub.")
+        except RequestException:
+            logging.exception(
+                " Failed to get repository last updated from Docker Hub.")
             continue
 
-        if row['last_updated'] is None or row['last_updated'] != json['last_updated']:
-            logging.info("'{0}/{1}:{2}' was updated.".format(row['publisher'], row['repo_name'], row['repo_tag']))
-            try:
-                keys = ['user_seq', 'publisher', 'repo_name', 'repo_tag']
-                data = {k: v for k, v in row.items() if k in keys}
-                data['last_updated'] = json['last_updated']
-                db['watching_repositories'].update(data, keys)
-            except:
-                logging.exception(" DB UPDATE column 'last_updated' SQL Error.")
-                continue
+        if row['last_updated'] is not None and \
+                row['last_updated'] == json['last_updated']:
+            logging.debug(
+                " '{0}/{1}:{2}' was not updated."
+                .format(row['publisher'], row['repo_name'], row['repo_tag']))
+            continue
 
-            try:
-                notify_dest = db['users'].find_one(user_seq=row['user_seq'])
-            except:
-                logging.exception(" DB SELECT notify destination SQL Error.")
-                continue
+        logging.info(
+            "'{0}/{1}:{2}' was updated."
+            .format(row['publisher'], row['repo_name'], row['repo_tag']))
 
-            if notify_dest['mail_address'] is None and notify_dest['webhook_url'] is None:
-                logging.warn(" user_seq {0} 's notify destination is empty.".format(row['user_seq']))
-                continue
+        try:
+            keys = ['user_seq', 'publisher', 'repo_name', 'repo_tag']
+            data = {k: v for k, v in row.items() if k in keys}
+            data['last_updated'] = json['last_updated']
+            db['watching_repositories'].update(data, keys)
+        except DatasetException:
+            logging.exception(
+                " DB UPDATE column 'last_updated' SQL Error.")
+            continue
 
-            if notify_dest['mail_address'] is not None and notify_dest['mail_address'] != '':
-                if row['publisher'] == 'library':
-                    message_text = {"text": "{0}:{1} was updated on {2}.\nhttps://hub.docker.com/_/{0}".format(row['repo_name'], row['repo_tag'], parser.isoparse(json['last_updated']).strftime('%c'))}
-                else:
-                    message_text = {"text": "{0}/{1}:{2} was updated on {3}.\nhttps://hub.docker.com/r/{0}/{1}".format(row['publisher'], row['repo_name'], row['repo_tag'], parser.isoparse(json['last_updated']).strftime('%c'))}
+        try:
+            notify_dest = db['users'].find_one(user_seq=row['user_seq'])
+        except DatasetException:
+            logging.exception(
+                " DB SELECT notify destination SQL Error.")
+            continue
 
-                try:
-                    send_email(notify_dest['mail_address'], message_text)
-                except:
-                    logging.exception(" Send e-mail Error.")
-                else:
-                    logging.info(" sent e-mail to user_seq {0}".format(row['user_seq']))
+        if not notify_dest['mail_address'] and \
+                not notify_dest['webhook_url']:
+            logging.warn(
+                " user_seq {0} 's notify destination is empty."
+                .format(row['user_seq']))
+            continue
 
-            if notify_dest['webhook_url'] is not None and notify_dest['webhook_url'] != '':
-                if row['publisher'] == 'library':
-                    post_json = {"text": "<https://hub.docker.com/_/{0}|{0}:{1}> was updated on {2}.".format(row['repo_name'], row['repo_tag'], parser.isoparse(json['last_updated']).strftime('%c'))}
-                else:
-                    post_json = {"text": "<https://hub.docker.com/r/{0}/{1}|{0}/{1}:{2}> was updated on {3}.".format(row['publisher'], row['repo_name'], row['repo_tag'], parser.isoparse(json['last_updated']).strftime('%c'))}
-
-                try:
-                    json = requests.post(notify_dest['webhook_url'], json=post_json)
-                    json.raise_for_status()
-                except:
-                    logging.exception("Post webhook URL Error.")
-                else:
-                    logging.info(" posted webhook to user_seq {0}".format(row['user_seq']))
-
+        updated = dateparser.isoparse(json['last_updated']).strftime('%c')
+        if row['publisher'] == 'library':
+            repo_text = "{0}:{1}".format(row['repo_name'], row['repo_tag'])
+            repo_url = "https://hub.docker.com/_/{0}".format(
+                row['repo_name']
+            )
         else:
-            logging.debug(" '{0}/{1}:{2}' was not updated.".format(row['publisher'], row['repo_name'], row['repo_tag']))
+            repo_text = "{0}/{1}:{2}".format(
+                row['publisher'], row['repo_name'], row['repo_tag']
+            )
+            repo_url = "https://hub.docker.com/r/{0}/{1}".format(
+                row['publisher'], row['repo_name']
+            )
+
+        if notify_dest['mail_address']:
+            message_text = (
+                "{0} was updated on {2}.\n{1}"
+                .format(repo_text, repo_url, updated)
+            )
+
+            try:
+                send_email(notify_dest['mail_address'], message_text)
+            except smtplib.SMTPException:
+                logging.exception(
+                    " Send e-mail Error.")
+            else:
+                logging.info(
+                    " sent e-mail to user_seq {0}"
+                    .format(row['user_seq']))
+
+        if notify_dest['webhook_url']:
+            post_json = {
+                "text":
+                "<{1}|{0}> was updated on {2}."
+                .format(repo_text, repo_url, updated)
+            }
+
+            try:
+                json = requests.post(
+                    notify_dest['webhook_url'], json=post_json)
+                json.raise_for_status()
+            except RequestException:
+                logging.exception("Post webhook URL Error.")
+            else:
+                logging.info(
+                    " posted webhook to user_seq {0}"
+                    .format(row['user_seq']))
 
     if db.in_transaction:
         db.commit()
+
 
 def send_email(to, message):
     if to is None or message is None:
         return
 
     if SMTP_HOST is None or SMTP_PORT is None:
-        logging.error(" environment variable 'SMTP_HOST', 'SMTP_PORT' is not set.")
+        logging.error(
+            " environment variable 'SMTP_HOST', 'SMTP_PORT' is not set.")
         return
     elif MAIL_FROM is None or MAIL_PASS is None:
-        logging.error(" environment variable 'MAIL_FROM', 'MAIL_PASS' is not set.")
+        logging.error(
+            " environment variable 'MAIL_FROM', 'MAIL_PASS' is not set.")
         return
 
     msg = MIMEText(message)
@@ -112,45 +156,48 @@ def send_email(to, message):
     msg['From'] = MAIL_FROM
     msg['Date'] = formatdate()
 
-    try:
-        with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10) as smtp:
-            smtp.login(MAIL_FROM, MAIL_PASS)
-            smtp.sendmail(MAIL_FROM, to, message.as_string())
-    except:
-        logging.exception(" send e-mail error.")
+    with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=10) as smtp:
+        smtp.login(MAIL_FROM, MAIL_PASS)
+        smtp.sendmail(MAIL_FROM, to, message.as_string())
+
 
 def get_db() -> dataset.Database:
     try:
         return dataset.connect('sqlite:///' + DB_FILE)
-    except:
-        logging.exception(" DB connection Error. DB_FILE: {0}".format(DB_FILE))
+    except DatasetException:
+        logging.exception(
+            " DB connection Error. DB_FILE: {0}"
+            .format(DB_FILE))
         raise
+
 
 def db_create():
     db = get_db()
     try:
         db.query('''
-                CREATE TABLE "users" (
-                    "user_seq"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                    "user_id"	TEXT NOT NULL UNIQUE,
-                    "mail_address"	TEXT,
-                    "webhook_url"	TEXT
-                );
-            ''')
+            CREATE TABLE "users" (
+                "user_seq"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                "user_id"	TEXT NOT NULL UNIQUE,
+                "mail_address"	TEXT,
+                "webhook_url"	TEXT,
+                "timezone"	TEXT
+            );
+        ''')
         db.query('''
-                CREATE TABLE "watching_repositories" (
-                    "user_seq"	INTEGER NOT NULL,
-                    "publisher"	TEXT NOT NULL DEFAULT 'library',
-                    "repo_name"	TEXT NOT NULL,
-                    "repo_tag"	TEXT NOT NULL,
-                    "last_updated"	TEXT,
-                    PRIMARY KEY("user_seq","publisher","repo_name","repo_tag"),
-                    FOREIGN KEY("user_seq") REFERENCES "users"("user_seq")
-                );
-            ''')
-    except:
+            CREATE TABLE "watching_repositories" (
+                "user_seq"	INTEGER NOT NULL,
+                "publisher"	TEXT NOT NULL DEFAULT 'library',
+                "repo_name"	TEXT NOT NULL,
+                "repo_tag"	TEXT NOT NULL,
+                "last_updated"	TEXT,
+                PRIMARY KEY("user_seq","publisher","repo_name","repo_tag"),
+                FOREIGN KEY("user_seq") REFERENCES "users"("user_seq")
+            );
+        ''')
+    except DatasetException:
         logging.exception(' DB CREATE tables Error.')
         raise
+
 
 if __name__ == '__main__':
     if not path.exists(DB_FILE):

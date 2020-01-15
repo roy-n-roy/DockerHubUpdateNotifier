@@ -1,15 +1,15 @@
 FROM python:3.8
 
-RUN pip install requests python-dateutil schedule dataset
+RUN pip install requests dataset python-dateutil schedule tabulate
 
 WORKDIR /db
 WORKDIR /app
 
-COPY entry_point.py .
-RUN chmod +x entry_point.py
+COPY *.py /app/
+RUN chmod +x *.py
 
 ENV PATH $PATH:.
 ENV SMTP_HOST smtp.gmail.com
 ENV SMPT_PORT 465
 
-ENTRYPOINT [ "python3", "/app/entry_point.py" ]
+CMD [ "entry_point.py" ]
