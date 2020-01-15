@@ -1,4 +1,3 @@
-import argparse
 import json
 import logging
 import os
@@ -12,7 +11,6 @@ import dataset
 import requests
 import schedule
 from dateutil import parser
-from urllib3.util import parse_url
 
 VERSION = '0.1.0'
 
@@ -154,120 +152,13 @@ def db_create():
         logging.exception(' DB CREATE tables Error.')
         raise
 
-def run():
+if __name__ == '__main__':
+    if not path.exists(DB_FILE):
+        db_create()
+
     check_update()
     schedule.every().hour.do(check_update)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
-
-def show_list():
-    db = get_db()
-    result = ['user_id,\trepository,\tlast update']
-    try:
-        for row in db.query('SELECT * FROM watching_repositories INNER JOIN users USING(user_seq)'):
-            result.append("{0},\t{1}{2}:{3},\t{4}".format(row['user_id'], row['publisher'] + '/' if row['publisher'] != 'library' else '', row['repo_name'], row['repo_tag'], row['last_updated']))
-    except:
-        logging.exception(' DB SELECT tables Error.')
-
-    print(os.linesep.join(result))
-
-def register_user(user_id:str, notify_dest:str):
-    with get_db() as db:
-        if db['users'].count(user_id=user_id) != 0:
-            logging.error(" user_id: {0} is already used.".format(user_id))
-            return
-
-        if '@' in notify_dest:
-            email_add = notify_dest
-            webhook_url = None
-        elif parse_url(notify_dest).scheme is not None and parse_url(notify_dest).scheme in ['http', 'https']:
-            email_add = None
-            webhook_url = notify_dest
-        else:
-            logging.error(" user_id: {0} is already used.".format(user_id))
-            return
-
-        db['users'].insert(dict(user_id=user_id, mail_address=email_add, webhook_url=webhook_url))
-
-def delete_user(user_id:str):
-    with get_db() as db:
-        if db['users'].count(user_id=user_id) == 0:
-            logging.error(" user_id: {0} is not found.".format(user_id))
-            return
-
-        db['users'].delete(user_id=user_id)
-        logging.debug(" user_id: {0} is deleted.".format(user_id))
-
-def subscribe_repository(user_id:str, repo:str):
-    publisher = repo.split('/')[0] if '/' in repo else 'library'
-    repo_name = repo.split('/')[1] if '/' in repo else repo.split(':')[0] if repo in ':' else repo
-    repo_tag  = repo.split(':')[1] if ':' in repo else 'latest'
-    try:
-        r = requests.get(DOCKER_HUB_REPO_TAGS_API_URL.format(publisher, repo_name, repo_tag))
-        r.raise_for_status()
-        json = r.json()
-    except:
-        logging.error(" {0} is not found on docker hub.".format(repo))
-        return
-    else:
-        with get_db() as db:
-            user = db['users'].find_one(user_id=user_id)
-            if user is None or user['user_seq'] is None:
-                logging.error("user_id: {0} is not found.".format(user_id))
-                return
-            if db['watching_repositories'].count(user_seq=user['user_seq'], publisher=publisher, repo_name=repo_name, repo_tag=repo_tag) != 0:
-                logging.error(" {0} is already subscribed.")
-                return
-
-            try:
-                db['watching_repositories'].insert(dict(user_seq=user['user_seq'], publisher=publisher, repo_name=repo_name, repo_tag=repo_tag, last_updated=json['last_updated']))
-            except:
-                logging.exception(" DB INSERT Error.")
-
-def unsubscribe_repository(user_id:str, repo:str):
-    publisher = repo.split('/')[0] if '/' in repo else 'library'
-    repo_name = repo.split('/')[1] if '/' in repo else repo.split(':')[0] if repo in ':' else repo
-    repo_tag  = repo.split(':')[1] if ':' in repo else 'latest'
-
-    with get_db() as db:
-        user = db['users'].find_one(user_id=user_id)
-        if user is None or user['user_seq'] is None:
-            logging.error(" user_id: {0} is not found.".format(user_id))
-            return
-        if db['watching_repositories'].count(user_seq=user['user_seq'], publisher=publisher, repo_name=repo_name, repo_tag=repo_tag) == 0:
-            logging.error(" {0} i hasn't been subscribed yet.")
-            return
-
-        try:
-            db['watching_repositories'].delete(user_seq=user['user_seq'], publisher=publisher, repo_name=repo_name, repo_tag=repo_tag)
-        except:
-            logging.exception(" DB DELETE Error.")
-
-if __name__ == '__main__':
-    argperser = argparse.ArgumentParser(description="Docker Hub Update Notifier.")
-    argperser.add_argument('-v', '--version', action='version', version='%(prog)s ' + VERSION)
-    argperser.add_argument('-l', '--list', help='show list of users and subscriptions.', action='store_true')
-    argperser.add_argument('-r', '--register-user', help='registering a user with e-mail address or webhook URL.', metavar=('USER_ID', 'EMAIL_or_WEBHOOK'), nargs=2)
-    argperser.add_argument('-d', '--delete-user', help='delete a user.', metavar=('USER_ID'), nargs=1)
-    argperser.add_argument('-s', '--subscribe', help='subscribe to the Docker Hub repository.', metavar=('USER_ID','REPO:TAG'), nargs=2)
-    argperser.add_argument('-u', '--unsubscribe', help='unsubscribe to the Docker Hub repository.', metavar=('USER_ID','REPO:TAG'), nargs=2)
-
-    args = argperser.parse_args()
-
-    if not path.exists(DB_FILE):
-        db_create()
-
-    if args.list:
-        show_list()
-    elif args.register_user:
-        register_user(*args.register_user)
-    elif args.delete_user:
-        delete_user(*args.delete_user)
-    elif args.subscribe:
-        subscribe_repository(*args.subscribe)
-    elif args.unsubscribe:
-        unsubscribe_repository(*args.unsubscribe)
-    else:
-        run()
