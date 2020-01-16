@@ -7,6 +7,7 @@ from dataset.util import DatasetException
 from dateutil import parser as dateparser
 from dateutil import tz
 from tabulate import tabulate
+from email_validator import validate_email, EmailNotValidError
 
 import tzlocal
 from entry_point import DOCKER_HUB_API_URL, VERSION, get_db
@@ -42,22 +43,26 @@ def show_list():
 
 
 def register_user(user_id: str, notify_dest: str):
-    url_pattern = r"https?://hub\.docker\.com/"
+    url_pattern = r"https?://hooks\.slack\.com/services/"
     try:
         with get_db() as db:
             if db['users'].count(user_id=user_id) != 0:
                 logging.error(" user_id: {0} is already used.".format(user_id))
                 return
 
-            if '@' in notify_dest:
-                email_add = notify_dest
-                webhook_url = None
-            elif re.match(url_pattern, notify_dest):
+            if re.match(url_pattern, notify_dest):
                 email_add = None
                 webhook_url = notify_dest
             else:
-                logging.error(" user_id: {0} is already used.".format(user_id))
-                return
+                try:
+                    email_add = validate_email(notify_dest)['email']
+                    webhook_url = None
+                except EmailNotValidError:
+                    logging.error(
+                        " {0}  is not a valid email address or webhook URL."
+                        .format(user_id)
+                        )
+                    return
 
             db['users'].insert(dict(
                 user_id=user_id,
