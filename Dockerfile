@@ -13,6 +13,6 @@ RUN curl -L https://github.com/pudo/dataset/archive/1.2.0.tar.gz -o dataset-1.2.
 ENV PATH /app:$PATH:
 
 COPY *.py /app/
-RUN cat setup.py | tr -d '\r' > setup; chmod +x setup
+RUN cat edit_db.py | tr -d '\r' > edit_db; chmod +x edit_db
 
 CMD [ "python3", "./entry_point.py" ]
