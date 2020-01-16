@@ -1,0 +1,24 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "setup_venv",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"[ ! -e venv/bin/activate ] && python3 -m venv venv; curl -OL https://github.com/pudo/dataset/archive/1.2.0.tar.gz && tar xf 1.2.0.tar.gz -C ./venv && rm 1.2.0.tar.gz && source venv/bin/activate && python -m pip install --upgrade pip && pip install -r requirements.txt ./venv/dataset-1.2.0",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"(if not exist venv\\Scripts\\activate python -m venv venv) & curl -OL https://github.com/pudo/dataset/archive/1.2.0.tar.gz && tar xf 1.2.0.tar.gz -C .\\venv && del 1.2.0.tar.gz && venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt .\\venv\\dataset-1.2.0"
+				],
+			},
+			"problemMatcher": []
+		},
+	]
+}
