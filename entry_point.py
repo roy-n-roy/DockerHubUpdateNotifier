@@ -16,7 +16,7 @@ VERSION = '0.1.0'
 
 DOCKER_HUB_API_URL = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}'
 
-DB_DIR = environ['DB_DIR'] if 'DB_DIR' in environ.keys() else path.sep + 'db'
+DB_DIR = environ['DB_DIR'] if 'DB_DIR' in environ.keys() else path.sep + 'data'
 DB_FILE = DB_DIR + path.sep + 'docker_repos.sqlite'
 
 MAIL_FROM = environ['MAIL_FROM'] if 'MAIL_FROM' in environ.keys() else None
