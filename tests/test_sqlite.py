@@ -1,52 +1,76 @@
-import sys
+import gc
 import os
+import sys
 import tempfile
-import sqlite3
+
+from tzlocal import get_localzone
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__) + os.sep + os.pardir))
+import edit
 import entry_point
 
+
 def test_create_table():
-    temp_dir = tempfile.TemporaryDirectory()
-    entry_point.DB_FILE = temp_dir.name + os.sep + "testdb.sqlite"
+    with tempfile.TemporaryDirectory() as tempdir:
+        entry_point.DB_FILE = tempdir + os.sep + "testdb.sqlite"
 
-    if os.path.exists(entry_point.DB_FILE):
-        os.remove(entry_point.DB_FILE)
+        if os.path.exists(entry_point.DB_FILE):
+            os.remove(entry_point.DB_FILE)
 
-    entry_point.db_create()
+        entry_point.db_create()
 
-    with sqlite3.connect(entry_point.DB_FILE) as conn:
-        # Tests for 'users' table
-        (result,) = conn.execute('SELECT COUNT(*) FROM users').fetchone()
-        assert isinstance(result, int)
-        assert result == 0
+        with entry_point.get_db() as db:
+            # Tests for 'users' table
+            assert db['users'].count() == 0
 
-        result = conn.execute('SELECT user_seq, user_id, mail_address, webhook_url FROM users').fetchone()
-        assert result is None
+            row = dict(user_id="test_user1", mail_address="test@mail.test", webhook_url="http://url.test/", timezone=get_localzone().zone)
+            db['users'].insert(row)
+            row['user_seq'] = 1
+            assert  db['users'].find_one() == row
 
-        conn.execute('INSERT INTO users (user_id, mail_address, webhook_url) values (?, ?, ?)', ("test_user1", "test@mail.test", "http://url.test/"))
-        result = conn.execute('SELECT user_seq, user_id, mail_address, webhook_url FROM users').fetchone()
-        assert isinstance(result, tuple)
-        assert len(result) == 4
-        assert result == (1, "test_user1", "test@mail.test", "http://url.test/")
+            # Tests for 'watching_repositories' table
+            assert db['watching_repositories'].count() == 0
 
-        # Tests for 'watching_repositories' table
-        (result,) = conn.execute('SELECT COUNT(*) FROM watching_repositories').fetchone()
-        assert isinstance(result, int)
-        assert result == 0
+            row1 = dict(user_seq=1, publisher="gitlab", repo_name="gitlab-ce", repo_tag="latest")
+            row2 = dict(user_seq=1, repo_name="nginx", repo_tag="latest")
+            db['watching_repositories'].insert(row1)
+            db['watching_repositories'].insert(row2)
 
-        result = conn.execute('SELECT user_seq, publisher, repo_name, repo_tag, last_updated FROM watching_repositories').fetchone()
-        assert result is None
+            row1['last_updated'] = None
+            row2['publisher'] = 'library'
+            row2['last_updated'] = None
+            data = db['watching_repositories'].find(order_by=db['watching_repositories'].columns)
 
-        conn.execute('INSERT INTO watching_repositories (user_seq, repo_name, repo_tag) select user_seq, ?, ? from users where user_id = ?', ("nginx", "latest", "test_user1"))
-        conn.execute('INSERT INTO watching_repositories (user_seq, publisher, repo_name, repo_tag) select user_seq, ?, ?, ? from users where user_id = ?', ("gitlab", "gitlab-ce", "latest", "test_user1"))
-        result = conn.execute('SELECT user_seq, publisher, repo_name, repo_tag, last_updated FROM watching_repositories').fetchall()
+            assert data.next() == row1
+            assert data.next() == row2
 
-        assert isinstance(result, list)
-        assert len(result) == 2
-        assert isinstance(result[0], tuple)
-        assert isinstance(result[1], tuple)
-        assert len(result[0]) == 5
-        assert len(result[1]) == 5
-        assert result[0] == (1, "library", "nginx", "latest", None)
-        assert result[1] == (1, "gitlab", "gitlab-ce", "latest", None)
+            data.close()
+            db.close()
+        del data
+        del db
+        gc.collect()
+
+def test_add_user():
+    with tempfile.TemporaryDirectory() as tempdir:
+        entry_point.DB_FILE = tempdir + os.sep + "testdb.sqlite"
+
+        if os.path.exists(entry_point.DB_FILE):
+            os.remove(entry_point.DB_FILE)
+
+        entry_point.db_create()
+
+        edit.register_user('test_user1', 'test@gmail.com')
+        edit.register_user('test_user2', 'http://hooks.slack.com/services/test')
+        edit.register_user('test_user3', 'test@test.test')
+        edit.register_user('test_user4', 'http://test.test/services/test')
+
+        with entry_point.get_db() as db:
+            assert db['users'].count() == 2
+            assert db['users'].find_one(user_id='test_user1')['mail_address'] == 'test@gmail.com'
+            assert db['users'].find_one(user_id='test_user1')['webhook_url'] == None
+            assert db['users'].find_one(user_id='test_user2')['mail_address'] == None
+            assert db['users'].find_one(user_id='test_user2')['webhook_url'] == 'http://hooks.slack.com/services/test'
+
+            db.close()
+        del db
+        gc.collect()
