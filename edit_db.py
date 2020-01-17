@@ -2,6 +2,7 @@
 import argparse
 import logging
 import re
+import textwrap
 
 import requests
 from dataset.util import DatasetException
@@ -16,8 +17,10 @@ from entry_point import DOCKER_HUB_API_URL, SQL_SELECT_JOIN, VERSION, get_db
 
 def show_list():
     db = get_db()
-    header = ['user id', 'repository', 'last update']
-    table = []
+    user_header = ['user id', 'e-mail address', 'webhook url']
+    user_table = []
+    repo_header = ['user id', 'repository', 'last update']
+    repo_table = []
     try:
         for row in db.query(SQL_SELECT_JOIN):
             if row['publisher'] == 'library':
@@ -27,17 +30,34 @@ def show_list():
                     row['publisher'], row['repo_name'], row['repo_tag']
                 )
 
-            table.append([
+            repo_table.append([
                 row['user_id'],
                 repo_text,
                 dateparser.isoparse(row['last_updated'])
                 .astimezone(tz=tz.gettz(row['timezone']))
                 .strftime('%c')
             ])
+        for row in db['users'].find():
+            user_table.append([
+                row['user_id'],
+                row['mail_address'],
+                row['webhook_url']
+            ])
     except DatasetException:
         logging.exception(' DB SELECT tables Error.')
 
-    print(tabulate(table, headers=header))
+    print(textwrap.dedent('''
+        - Users:
+        {0}
+
+
+        - Repositories:
+        {1}
+        ''').format(
+            tabulate(user_table, headers=user_header),
+            tabulate(repo_table, headers=repo_header)
+        )
+    )
 
 
 def register_user(user_id: str, notify_dest: str):
