@@ -31,14 +31,15 @@ LOG_LEVEL = LOG_LEVEL if isinstance(LOG_LEVEL, int) else logging.INFO
 logging.basicConfig(
     format='%(asctime)s %(levelname)s:%(message)s', level=LOG_LEVEL)
 
+SQL_SELECT_JOIN = '''\
+SELECT * FROM watching_repositories INNER JOIN users USING(user_seq)\
+'''
+
 
 def check_update():
     db = get_db()
     db.begin()
-    for row in db.query('''\
-                SELECT * FROM watching_repositories
-                INNER JOIN users USING(user_seq)
-            '''):
+    for row in db.query(SQL_SELECT_JOIN):
         try:
             url = DOCKER_HUB_API_URL.format(
                 row['publisher'], row['repo_name'], row['repo_tag'])

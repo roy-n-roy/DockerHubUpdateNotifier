@@ -11,7 +11,7 @@ from tabulate import tabulate
 from email_validator import validate_email, EmailNotValidError
 
 import tzlocal
-from entry_point import DOCKER_HUB_API_URL, VERSION, get_db
+from entry_point import DOCKER_HUB_API_URL, SQL_SELECT_JOIN, VERSION, get_db
 
 
 def show_list():
@@ -19,10 +19,7 @@ def show_list():
     header = ['user id', 'repository', 'last update']
     table = []
     try:
-        for row in db.query(
-            'SELECT * FROM watching_repositories '
-            'INNER JOIN users USING(user_seq)'
-        ):
+        for row in db.query(SQL_SELECT_JOIN):
             if row['publisher'] == 'library':
                 repo_text = "{0}:{1}".format(row['repo_name'], row['repo_tag'])
             else:
