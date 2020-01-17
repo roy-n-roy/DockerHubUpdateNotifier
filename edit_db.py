@@ -79,6 +79,11 @@ def delete_user(user_id: str):
                 logging.error(" user_id: {0} is not found.".format(user_id))
                 return
 
+            # delete user's repositories.
+            db['watching_repositories'].delete(
+                user_seq=db['users'].find_one(user_id=user_id)['user_seq']
+            )
+            # delete user
             db['users'].delete(user_id=user_id)
             logging.debug(" user_id: {0} is deleted.".format(user_id))
     except DatasetException:
