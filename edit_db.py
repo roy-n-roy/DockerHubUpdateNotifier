@@ -91,7 +91,7 @@ def get_repo_id(repo: str) -> dict:
 
     publisher = repo.split('/')[0] if '/' in repo else 'library'
     repo_tag = repo.split(':')[1] if ':' in repo else 'latest'
-    repo_name = (set(re.split(r'/|:', repo)) - set(publisher, repo_tag)).pop()
+    repo_name = (set(re.split(r'/|:', repo)) - {publisher, repo_tag}).pop()
 
     return dict(publisher=publisher, repo_name=repo_name, repo_tag=repo_tag)
 
@@ -152,14 +152,11 @@ def unsubscribe_repository(user_id: str, repo: str):
 
 if __name__ == '__main__':
     perser = argparse.ArgumentParser(
-        description="Docker Hub Update Notifier.", add_help=False)
-    grp = perser.add_mutually_exclusive_group()
-    grp.add_argument(
-        '-h', '--help', action='help'
-    )
-    grp.add_argument(
+        description="Docker Hub Update Notifier.")
+    perser.add_argument(
         '-v', '--version', action='version', version='%(prog)s ' + VERSION
     )
+    grp = perser.add_mutually_exclusive_group()
     grp.add_argument(
         '-l', '--list', action='store_true',
         help='show list of users and subscriptions.'
