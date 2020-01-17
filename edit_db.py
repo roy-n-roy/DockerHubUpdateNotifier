@@ -88,18 +88,28 @@ def delete_user(user_id: str):
         logging.exception(' DB Error.')
 
 
-def subscribe_repository(user_id: str, repo: str):
+def get_repo_id(repo: str) -> dict:
+    if not repo or not isinstance(repo, str):
+        return None
+
     publisher = repo.split('/')[0] if '/' in repo else 'library'
-    repo_name = repo.split('/')[1] if '/' in repo else \
-        repo.split(':')[0] if repo in ':' else repo
     repo_tag = repo.split(':')[1] if ':' in repo else 'latest'
+    repo_name = (set(re.split(r'/|:', repo)) - set(publisher, repo_tag)).pop()
+
+    return dict(publisher=publisher, repo_name=repo_name, repo_tag=repo_tag)
+
+
+def subscribe_repository(user_id: str, repo: str):
+    repo_id = get_repo_id(repo)
     try:
-        r = requests.get(DOCKER_HUB_API_URL.format(
-            publisher, repo_name, repo_tag))
+        r = requests.get(DOCKER_HUB_API_URL.format(*repo_id.values()))
         r.raise_for_status()
         json = r.json()
     except requests.RequestException:
-        logging.error(" {0} is not found on docker hub.".format(repo))
+        logging.error(
+            " {0}/{1}:{2} is not found on docker hub."
+            .format(*repo_id.values())
+        )
         return
     else:
         with get_db() as db:
@@ -108,14 +118,12 @@ def subscribe_repository(user_id: str, repo: str):
                 logging.error("user_id: {0} is not found.".format(user_id))
                 return
 
-            keys = dict(
-                user_seq=user['user_seq'],
-                publisher=publisher,
-                repo_name=repo_name,
-                repo_tag=repo_tag
-            )
+            keys = dict(user_seq=user['user_seq'], **repo_id)
             if db['watching_repositories'].count(**keys) != 0:
-                logging.error(" {0} is already subscribed.")
+                logging.error(
+                    " {0}/{1}:{2} is already subscribed."
+                    .format(*repo_id.values())
+                )
                 return
 
             try:
@@ -126,10 +134,7 @@ def subscribe_repository(user_id: str, repo: str):
 
 
 def unsubscribe_repository(user_id: str, repo: str):
-    publisher = repo.split('/')[0] if '/' in repo else 'library'
-    repo_name = repo.split(
-        '/')[1] if '/' in repo else repo.split(':')[0] if repo in ':' else repo
-    repo_tag = repo.split(':')[1] if ':' in repo else 'latest'
+    repo_id = get_repo_id(repo)
 
     with get_db() as db:
         user = db['users'].find_one(user_id=user_id)
@@ -137,12 +142,7 @@ def unsubscribe_repository(user_id: str, repo: str):
             logging.error(" user_id: {0} is not found.".format(user_id))
             return
 
-        keys = dict(
-            user_seq=user['user_seq'],
-            publisher=publisher,
-            repo_name=repo_name,
-            repo_tag=repo_tag
-        )
+        keys = dict(user_seq=user['user_seq'], **repo_id)
         if db['watching_repositories'].count(**keys) == 0:
             logging.error(" {0} i hasn't been subscribed yet.")
             return
