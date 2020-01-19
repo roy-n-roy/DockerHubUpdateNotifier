@@ -1,0 +1,38 @@
+{% extends 'apps/base.html' %}
+ 
+{% block content %}
+
+<table class="table">
+    <thead><tr>
+        <th>リポジトリ</th>
+        <th>最終更新日</th>
+        <th></th>
+        <th></th>
+    </tr></thead>
+    <tbody>
+        {% for repo in repositories %}
+        <tr>
+            {% if repo.dockerhub_user == 'library' %}
+            <td><a target="_" href="https://hub.docker.com/_/{{ repo.name }}?tab=tags&name={{ repo.tag }}">{{ repo.name }}:{{ repo.tag }}</a></td>
+            {% else %}
+            <td><a target="_" href="https://hub.docker.com/r/{{ repo.dockerhub_user }}/{{ repo.name }}/tags?name={{ repo.tag }}">{{ repo.dockerhub_user }}/{{ repo.name }}:{{ repo.tag }}</a></td>
+            {% endif %}
+            <td>{{ repo.last_updated }}</td>
+            <td><a href="">編集</a></td>
+            <td><a href="">削除</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<ul class="pagination justify-content-center">
+    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">←前のページ</a></li>
+    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">次のページ→</a></li>
+</ul>
+
+<a class="btn btn-dark float-sm-right" href="add">追加</a>
+
+{% endblock %}
