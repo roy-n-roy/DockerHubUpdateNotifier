@@ -5,13 +5,13 @@ import re
 import textwrap
 
 import requests
+import tzlocal
 from dataset.util import DatasetException
 from dateutil import parser as dateparser
 from dateutil import tz
+from email_validator import EmailNotValidError, validate_email
 from tabulate import tabulate
-from email_validator import validate_email, EmailNotValidError
 
-import tzlocal
 from entry_point import DOCKER_HUB_API_URL, SQL_SELECT_JOIN, VERSION, get_db
 
 
@@ -90,6 +90,8 @@ def register_user(user_id: str, notify_dest: str):
             ))
     except DatasetException:
         logging.exception(' DB Error.')
+    else:
+        logging.info(" user: {0} registered.".format(user_id))
 
 
 def delete_user(user_id: str):
@@ -108,6 +110,8 @@ def delete_user(user_id: str):
             logging.debug(" user_id: {0} is deleted.".format(user_id))
     except DatasetException:
         logging.exception(' DB Error.')
+    else:
+        logging.info(" user: {0} deleted.".format(user_id))
 
 
 def get_repo_id(repo: str) -> dict:
@@ -153,6 +157,11 @@ def subscribe_repository(user_id: str, repo: str):
                 db['watching_repositories'].insert(keys)
             except DatasetException:
                 logging.exception(" DB INSERT Error.")
+            else:
+                logging.info(
+                    " Started subscription to repository {0}/{1}:{2}."
+                    .format(*repo_id.values())
+                )
 
 
 def unsubscribe_repository(user_id: str, repo: str):
@@ -173,6 +182,11 @@ def unsubscribe_repository(user_id: str, repo: str):
             db['watching_repositories'].delete(**keys)
         except DatasetException:
             logging.exception(" DB DELETE Error.")
+        else:
+            logging.info(
+                " Unsubscribed from the repository {0}/{1}:{2}."
+                .format(*repo_id.values())
+            )
 
 
 if __name__ == '__main__':
