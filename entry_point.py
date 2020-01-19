@@ -94,16 +94,21 @@ def check_update():
 
         updated = dateparser.isoparse(json['last_updated']).strftime('%c')
         if row['publisher'] == 'library':
-            repo_text = "{0}:{1}".format(row['repo_name'], row['repo_tag'])
-            repo_url = "https://hub.docker.com/_/{0}".format(
-                row['repo_name']
+            repo_text = (
+                "{0}:{1}".format(row['repo_name'], row['repo_tag'])
+            )
+            repo_url = (
+                "https://hub.docker.com/_/{0}/tags/?name={1}"
+                .format(row['repo_name'], row['repo_tag'])
             )
         else:
-            repo_text = "{0}/{1}:{2}".format(
-                row['publisher'], row['repo_name'], row['repo_tag']
+            repo_text = (
+                "{0}/{1}:{2}"
+                .format(row['publisher'], row['repo_name'], row['repo_tag'])
             )
-            repo_url = "https://hub.docker.com/r/{0}/{1}".format(
-                row['publisher'], row['repo_name']
+            repo_url = (
+                "https://hub.docker.com/r/{0}/{1}/tags/?name={1}"
+                .format(row['publisher'], row['repo_name'], row['repo_tag'])
             )
 
         if notify_dest['mail_address']:
