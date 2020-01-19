@@ -16,10 +16,10 @@
 			"console": "integratedTerminal"
 		},
 		{
-			"name": "Python: edit.py",
+			"name": "Python: edit_db.py",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\edit.py",
+			"program": "${workspaceFolder}\\edit_db.py",
 			"args": ["-l"],
 			"env": {
 				"DB_DIR": ".",
