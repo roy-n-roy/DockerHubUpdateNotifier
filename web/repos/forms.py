@@ -1,9 +1,9 @@
-from django import forms
+from django.forms import ModelForm
+
 from .models import Watching
 
 
-class WatchingForm(forms.ModelForm):
+class WatchingForm(ModelForm):
     class Meta:
         model = Watching
         fields = ("repository", )
-    pass

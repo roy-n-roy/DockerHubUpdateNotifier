@@ -5,6 +5,17 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Python: Django",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}\\web\\manage.py",
+			"args": [
+				"runserver",
+				"--noreload"
+			],
+			"django": true
+		},
+		{
 			"name": "Python: entry-point.py",
 			"type": "python",
 			"request": "launch",
@@ -20,7 +31,9 @@
 			"type": "python",
 			"request": "launch",
 			"program": "${workspaceFolder}\\edit_db.py",
-			"args": ["-l"],
+			"args": [
+				"-l"
+			],
 			"env": {
 				"DB_DIR": ".",
 				"LOG_LEVEL": "DEBUG"

@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.views.generic import CreateView, UpdateView
-from .models import Watching, Repository
+
 from .forms import WatchingForm
-# Create your views here.
+from .models import Repository, Watching
 
 
 def index(request):
-    repos = Repository.objects.all()
+    repos = Repository.objects.select_related() \
+            .filter(watching__user=request.user).all()
     return render(request, "apps/index.html", {'repositories': repos})
 
 
@@ -22,3 +23,4 @@ class WatchingUpdateView(UpdateView):
     form_class = WatchingForm
     template_name = "form.html"
     success_url = "/"
+
