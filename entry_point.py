@@ -38,7 +38,6 @@ SELECT * FROM watching_repositories INNER JOIN users USING(user_seq)\
 
 def check_update():
     db = get_db()
-    db.begin()
     for row in db.query(SQL_SELECT_JOIN):
         try:
             url = DOCKER_HUB_API_URL.format(
@@ -62,6 +61,7 @@ def check_update():
             "'{0}/{1}:{2}' was updated."
             .format(row['publisher'], row['repo_name'], row['repo_tag']))
 
+        db.begin()
         try:
             keys = ['user_seq', 'publisher', 'repo_name', 'repo_tag']
             data = {k: v for k, v in row.items() if k in keys}
@@ -70,6 +70,9 @@ def check_update():
         except DatasetException:
             logging.exception(
                 " DB UPDATE column 'last_updated' SQL Error.")
+            if db.in_transaction:
+                db.rollback()
+                logging.debug(" DB Rollbacked.")
             continue
 
         try:
@@ -84,6 +87,9 @@ def check_update():
             logging.warn(
                 " user_seq {0} 's notify destination is empty."
                 .format(row['user_seq']))
+            if db.in_transaction:
+                db.rollback()
+                logging.debug(" DB Rollbacked.")
             continue
 
         updated = dateparser.isoparse(json['last_updated']).strftime('%c')
@@ -111,6 +117,9 @@ def check_update():
             except smtplib.SMTPException:
                 logging.exception(
                     " Send e-mail Error.")
+                if db.in_transaction:
+                    db.rollback()
+                    logging.debug(" DB Rollbacked.")
             else:
                 logging.info(
                     " sent e-mail to user_seq {0}"
@@ -129,13 +138,16 @@ def check_update():
                 json.raise_for_status()
             except RequestException:
                 logging.exception("Post webhook URL Error.")
+                if db.in_transaction:
+                    db.rollback()
+                    logging.debug(" DB Rollbacked.")
             else:
                 logging.info(
                     " posted webhook to user_seq {0}"
                     .format(row['user_seq']))
 
-    if db.in_transaction:
-        db.commit()
+        if db.in_transaction:
+            db.commit()
 
 
 def send_email(to, message):
