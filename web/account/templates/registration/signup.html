@@ -1,0 +1,12 @@
+{% extends 'base_centered.html' %}
+
+{% block content %}
+
+    <h5 class="card-title text-center">ユーザー登録</h5>
+    <form action="" method="POST">
+        {% bootstrap_form form layout='' %}
+        <button type="submit" class="btn btn-primary btn-block">登録</button>
+        {% csrf_token %}
+    </form>
+
+{% endblock %}

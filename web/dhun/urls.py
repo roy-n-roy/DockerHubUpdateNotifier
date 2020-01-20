@@ -19,6 +19,8 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path(r'admin/', admin.site.urls),
+    path(r'accounts/', include('account.urls')),
+    path(r'accounts/', include('django.contrib.auth.urls')),
     path(r'repos/', include('repos.urls')),
     path(r'', RedirectView.as_view(url='repos/'), name='index'),
 ]

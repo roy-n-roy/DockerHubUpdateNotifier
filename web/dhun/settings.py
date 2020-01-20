@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'account',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap4',
     'repos.apps.ReposConfig',
-    'users',
 ]
 
 MIDDLEWARE = [
@@ -129,8 +129,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'account.User'
+LOGIN_REDIRECT_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
