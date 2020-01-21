@@ -8,9 +8,10 @@
 			"name": "Python: Django Batch",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\web\\manage.py",
+			"program": "${workspaceFolder}\\django\\manage.py",
 			"args": [
-				"batch"
+				"batch",
+				"--settings=config.settings_dev"
 			],
 			"django": true
 		},
@@ -18,37 +19,13 @@
 			"name": "Python: Django",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\web\\manage.py",
+			"program": "${workspaceFolder}\\django\\manage.py",
 			"args": [
 				"runserver",
+				"--settings=config.settings_dev",
 				"--noreload"
 			],
 			"django": true
 		},
-		{
-			"name": "Python: entry-point.py",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}\\entry_point.py",
-			"env": {
-				"DB_DIR": ".",
-				"LOG_LEVEL": "DEBUG"
-			},
-			"console": "integratedTerminal"
-		},
-		{
-			"name": "Python: edit_db.py",
-			"type": "python",
-			"request": "launch",
-			"program": "${workspaceFolder}\\edit_db.py",
-			"args": [
-				"-l"
-			],
-			"env": {
-				"DB_DIR": ".",
-				"LOG_LEVEL": "DEBUG"
-			},
-			"console": "integratedTerminal"
-		}
 	]
 }
