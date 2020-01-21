@@ -25,7 +25,7 @@ def delete(request, watching_id):
     watching = get_object_or_404(Watching, pk=watching_id)
     watching.delete()
     messages.success(request, '削除完了: ' + str(watching.repository))
-    return redirect('index')
+    return redirect('repos:index')
 
 
 @require_POST
@@ -70,7 +70,7 @@ def edit(request, watching_id=None):
     else:
         messages.error(request, action + 'に失敗しました。')
 
-    return redirect('index')
+    return redirect('repos:index')
 
 
 @require_GET

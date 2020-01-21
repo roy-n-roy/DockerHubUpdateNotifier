@@ -35,14 +35,14 @@ Docker Hub Update Checker
                 <button class="btn btn-outline-primary btn-sm display_edit"
                         data-toggle="modal" data-target="#editModal" data-title="更新: {{ sub.repository }}"
                         data-owner="{{ sub.repository.owner }}" data-name="{{ sub.repository.name }}"
-                        data-tag="{{ sub.repository.tag }}" data-url="{% url 'update' watching_id=sub.id %}">
+                        data-tag="{{ sub.repository.tag }}" data-url="{% url 'repos:update' watching_id=sub.id %}">
                     修正
                 </button>
             </td>
             <td>
                 <button class="btn btn-outline-danger btn-sm del_confirm"
                         data-toggle="modal" data-target="#deleteModal"
-                        data-name ="{{ sub.repository }}" data-url="{% url 'delete' watching_id=sub.id %}">
+                        data-name ="{{ sub.repository }}" data-url="{% url 'repos:delete' watching_id=sub.id %}">
                     削除
                 </button>
             </td>
@@ -55,7 +55,7 @@ Docker Hub Update Checker
 
 <div class="clearfix">
     <button class="btn btn-dark float-sm-right float-right display_edit"
-            data-toggle="modal" data-target="#editModal" data-title="追加" data-url="{% url 'add' %}">
+            data-toggle="modal" data-target="#editModal" data-title="追加" data-url="{% url 'repos:add' %}">
         追加
     </button>
     {% if is_paginated %}
@@ -143,19 +143,19 @@ Docker Hub Update Checker
                     <div class="form-group row">
                         <label for="owner" class="col-sm-2 col-form-label">owner</label>
                         <div class="col-sm-10">
-                            <input name="owner" type="text" class="form-control">
+                            <input id="owner" name="owner" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="name" class="col-sm-2 col-form-label">repository</label>
                         <div class="col-sm-10">
-                            <input name="name" type="text" class="form-control">
+                            <input id="name" name="name" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="tag" class="col-sm-2 col-form-label">tag</label>
                         <div class="col-sm-10">
-                            <input name="tag" type="text" class="form-control">
+                            <input id="tag" name="tag" type="text" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -190,7 +190,7 @@ $(function() {
         owner = owner === '' ? 'library' : owner;
         var name = $('#edit_form input[name="name"]').val();
         var tag = $('#edit_form input[name="tag"]').val();
-        var url = "{% url 'check' owner='_owner_' name='_name_' tag='_tag_' %}"
+        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
             .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
         $.ajax({
             url  : url,
