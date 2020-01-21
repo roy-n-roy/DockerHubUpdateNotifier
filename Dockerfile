@@ -9,4 +9,4 @@ COPY django/ /app/
 RUN pip install -r requirements.txt
 
 EXPOSE 3031
-CMD [ "uwsgi", "./uwsgi.ini" ]
+CMD [ "bash", "-c", "python manage.py migrate && uwsgi uwsgi.ini" ]
