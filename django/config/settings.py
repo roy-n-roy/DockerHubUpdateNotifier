@@ -14,6 +14,8 @@ import os
 
 from django.contrib.messages import constants as messages
 
+ENV = os.environ
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3z&wej7%6pm8m66s#g@o&n*k2ow-r+-%jpzrg^#==bnl7y#89g'
+SECRET_KEY = ENV['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -84,11 +86,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'django',
-        'HOST': 'postgres',
-        'PORT': '5432',
+        'NAME': ENV['DB_NAME'] if 'DB_NAME' in ENV else '',
+        'USER': ENV['DB_USER'] if 'DB_USER' in ENV else '',
+        'PASSWORD': ENV['DB_PASS'] if 'DB_PASS' in ENV else '',
+        'HOST': ENV['DB_HOST'] if 'DB_HOST' in ENV else '',
+        'PORT': ENV['DB_PORT'] if 'DB_PORT' in ENV else '5432',
     }
 }
 
@@ -119,9 +121,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'ja'
+LANGUAGE_CODE = ENV['LANGUAGE_CODE'] if 'LANGUAGE_CODE' in ENV else 'en-us'
 
-TIME_ZONE = 'Asia/Tokyo'
+TIME_ZONE = ENV['TZ'] if 'TZ' in ENV else 'Etc/GMT'
 
 USE_I18N = True
 
@@ -130,7 +132,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CpipSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'

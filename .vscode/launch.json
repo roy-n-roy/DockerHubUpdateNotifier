@@ -13,6 +13,11 @@
 				"batch",
 				"--settings=config.settings_dev"
 			],
+			"env": {
+				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
+				"LANGUAGE_CODE": "ja",
+				"TZ": "Asia/Tokyo",
+			},
 			"django": true
 		},
 		{
@@ -25,6 +30,11 @@
 				"--settings=config.settings_dev",
 				"--noreload"
 			],
+			"env": {
+				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
+				"LANGUAGE_CODE": "ja",
+				"TZ": "Asia/Tokyo",
+			},
 			"django": true
 		},
 	]
