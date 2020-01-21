@@ -1,6 +1,23 @@
 {% extends 'base.html' %}
 
+{% block title %}
+Docker Hub Update Checker
+{% endblock %}
+
 {% block body %}
+
+{% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 <table class="table">
     <thead><tr>
@@ -10,29 +27,193 @@
         <th></th>
     </tr></thead>
     <tbody>
-        {% for repo in repositories %}
+        {% for sub in subs %}
         <tr>
-            {% if repo.dockerhub_user == 'library' %}
-            <td><a target="_" href="https://hub.docker.com/_/{{ repo.name }}?tab=tags&name={{ repo.tag }}">{{ repo.name }}:{{ repo.tag }}</a></td>
-            {% else %}
-            <td><a target="_" href="https://hub.docker.com/r/{{ repo.dockerhub_user }}/{{ repo.name }}/tags?name={{ repo.tag }}">{{ repo.dockerhub_user }}/{{ repo.name }}:{{ repo.tag }}</a></td>
-            {% endif %}
-            <td>{{ repo.last_updated }}</td>
-            <td><a href="">編集</a></td>
-            <td><a href="">削除</a></td>
+            <td><a target="_" href="{{ sub.repository.url }}">{{ sub.repository }}</a></td>
+            <td>{{ sub.repository.last_updated }}</td>
+            <td>
+                <button class="btn btn-outline-primary btn-sm display_edit"
+                        data-toggle="modal" data-target="#editModal" data-title="更新: {{ sub.repository }}"
+                        data-owner="{{ sub.repository.owner }}" data-name="{{ sub.repository.name }}"
+                        data-tag="{{ sub.repository.tag }}" data-url="{% url 'update' watching_id=sub.id %}">
+                    修正
+                </button>
+            </td>
+            <td>
+                <button class="btn btn-outline-danger btn-sm del_confirm"
+                        data-toggle="modal" data-target="#deleteModal"
+                        data-name ="{{ sub.repository }}" data-url="{% url 'delete' watching_id=sub.id %}">
+                    削除
+                </button>
+            </td>
         </tr>
+        {% empty %}
+        <tr><td class="text-center" colspan="2">データが登録されていません。</td></tr>
         {% endfor %}
     </tbody>
 </table>
 
-<ul class="pagination justify-content-center">
-    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">←前のページ</a></li>
-    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item"><a class="page-link" href="#">次のページ→</a></li>
-</ul>
+<div class="clearfix">
+    <button class="btn btn-dark float-sm-right float-right display_edit"
+            data-toggle="modal" data-target="#editModal" data-title="追加" data-url="{% url 'add' %}">
+        追加
+    </button>
+    {% if is_paginated %}
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        {% endif %}
+        {% for linkpage in page_obj.paginator.page_range %}
+        {% ifequal linkpage page_obj.number %}
+        <li class="page-item active">
+            <a class="page-link" href="#">{{ linkpage }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ linkpage }}">{{ linkpage }}</a>
+        </li>
+        {% endifequal %}
+        {% endfor %}
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+    {% endif %}
+</div>
 
-<a class="btn btn-dark float-sm-right" href="add">追加</a>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">削除確認</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><span id="del_name"></span> の更新通知を解除しますか？</p>
+            </div>
+            <div class="modal-footer">
+                <form id="del_form" method="POST" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">OK</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="edit_form" method="POST" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="owner" class="col-sm-2 col-form-label">owner</label>
+                        <div class="col-sm-10">
+                            <input name="owner" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="name" class="col-sm-2 col-form-label">repository</label>
+                        <div class="col-sm-10">
+                            <input name="name" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="tag" class="col-sm-2 col-form-label">tag</label>
+                        <div class="col-sm-10">
+                            <input name="tag" type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="edit_submit">更新</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(function() {
+    $('.del_confirm').on('click', function() {
+        $('#del_name').text($(this).data('name'));
+        $('#del_form').attr('action', $(this).data('url'));
+    });
+    $('.display_edit').on('click', function() {
+        $('#editModalLabel').text($(this).data('title'));
+        $('#edit_name').text($(this).data('name'));
+        $('#edit_form').attr('action', $(this).data('url'));
+        $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
+        $('#edit_form input[name="name"]').val($(this).data('name'));
+        $('#edit_form input[name="tag"]').val($(this).data('tag'));
+        $("#form_alert").remove();
+    });
+    $("#edit_submit").click(function(e) {
+        var owner = $('#edit_form input[name="owner"]').val();
+        owner = owner === '' ? 'library' : owner;
+        var name = $('#edit_form input[name="name"]').val();
+        var tag = $('#edit_form input[name="tag"]').val();
+        var url = "{% url 'check' owner='_owner_' name='_name_' tag='_tag_' %}"
+            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
+        $.ajax({
+            url  : url,
+            type : 'GET',
+        }).done(function() {
+            $('#edit_form input[name="owner"]').val(function(idx, val) {
+                return val === '' ? 'library' : val;
+            });
+            $('#edit_form').off("submit");
+            $('#edit_form').submit();
+        }).fail(function(data) {
+            $("#form_alert").remove();
+            $("#edit_form .modal-body").prepend(
+                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '<span>対象のリポジトリ・タグが見つかりませんでした。</span>' +
+                '</div>'
+            );
+        });
+        return e.preventDefault();
+    });
+});
+</script>
 {% endblock %}

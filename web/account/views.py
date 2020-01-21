@@ -10,10 +10,6 @@ from .forms import UserCreateForm
 User = get_user_model()
 
 
-class Top(generic.TemplateView):
-    template_name = 'top.html'
-
-
 class SignUpView(generic.CreateView):
     form_class = UserCreateForm
     success_url = reverse_lazy('login')

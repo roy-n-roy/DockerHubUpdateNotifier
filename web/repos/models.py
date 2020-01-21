@@ -6,18 +6,28 @@ class Repository(models.Model):
     """
     Docker Hubのリポジトリ
     """
-    dockerhub_user = models.CharField(max_length=1024)
+    owner = models.CharField(max_length=1024)
     name = models.CharField(max_length=1024)
     tag = models.CharField(max_length=1024)
     last_updated = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        unique_together = ("dockerhub_user", "name", "tag")
+        unique_together = ("owner", "name", "tag")
 
     def __str__(self):
-        u = '' if self.dockerhub_user == 'library' \
-            else self.dockerhub_user + '/'
+        u = '' if self.owner == 'library' \
+            else self.owner + '/'
         return u + self.name + ':' + self.tag
+
+    def url(self):
+        if self.owner == 'library':
+            return ("https://hub.docker.com/_/{0}?tab=tags&name={1}"
+                    .format(self.name, self.tag)
+                    )
+        else:
+            return ("https://hub.docker.com/r/{0}/{1}/tags?name={2}"
+                    .format(self.owner, self.name, self.tag)
+                    )
 
 
 class Watching(models.Model):

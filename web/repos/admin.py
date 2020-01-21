@@ -8,7 +8,7 @@ from .models import Repository, Watching
 @admin.register(Repository)
 class RepositoryAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'last_updated')
-    fields = ['dockerhub_user', 'name', 'tag', 'last_updated']
+    fields = ['owner', 'name', 'tag', 'last_updated']
 
 
 @admin.register(Watching)
