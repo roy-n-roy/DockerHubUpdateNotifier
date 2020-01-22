@@ -28,6 +28,7 @@ services:
       DB_PASS: django
       LANGUAGE_CODE: ja
       TZ: Asia/Tokyo
+      ALLOWED_HOSTS: docker.server-on.net
     depends_on:
       - postgres
 

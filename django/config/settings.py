@@ -29,8 +29,9 @@ SECRET_KEY = ENV['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['docker.server-on.net']
-
+ALLOWED_HOSTS = [
+    i.strip() for i in ENV['ALLOWED_HOSTS'].split(',') if not i.strip() == '']\
+        if 'ALLOWED_HOSTS' in ENV else []
 
 # Application definition
 
@@ -150,7 +151,7 @@ BOOTSTRAP4 = {
     "include_jquery": True,
 }
 
-DOCKER_HUB_API = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}'
+DOCKER_HUB_API = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}?page={3}&page_size=100'
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'dark',

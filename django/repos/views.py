@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -78,6 +80,18 @@ def edit(request, watching_id=None):
 def check(request, owner, name, tag):
     last_update = App.check_repository(owner, name, tag)
     if last_update:
-        return HttpResponse(last_update)
+        return HttpResponse(json.dumps({"lastupdated": str(last_update)}))
+    else:
+        raise Http404
+
+
+@require_GET
+@login_required
+def tags(request, owner, name, page):
+    tags = App.get_tags(owner, name, page)
+    if tags:
+        tags['owner'] = owner
+        tags['name'] = name
+        return HttpResponse(json.dumps(tags))
     else:
         raise Http404
