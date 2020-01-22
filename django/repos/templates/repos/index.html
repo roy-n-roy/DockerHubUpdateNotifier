@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Docker Hub Update Checker
-{% endblock %}
-
 {% block body %}
 
 {% if messages %}
@@ -33,7 +29,7 @@ Docker Hub Update Checker
             <td>{{ sub.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
-                        data-toggle="modal" data-target="#editModal" data-title="更新: {{ sub.repository }}"
+                        data-toggle="modal" data-target="#editModal" data-type="更新" data-title="{{ sub.repository }}"
                         data-owner="{{ sub.repository.owner }}" data-name="{{ sub.repository.name }}"
                         data-tag="{{ sub.repository.tag }}" data-url="{% url 'repos:update' watching_id=sub.id %}">
                     修正
@@ -55,7 +51,7 @@ Docker Hub Update Checker
 
 <div class="clearfix">
     <button class="btn btn-dark float-sm-right float-right display_edit"
-            data-toggle="modal" data-target="#editModal" data-title="追加" data-url="{% url 'repos:add' %}">
+            data-toggle="modal" data-target="#editModal" data-type="追加" data-title="" data-url="{% url 'repos:add' %}">
         追加
     </button>
     {% if is_paginated %}
@@ -132,7 +128,7 @@ Docker Hub Update Checker
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel"></h5>
+                <h5 class="modal-title" id="editModalLabel"></h5>v
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -177,7 +173,8 @@ $(function() {
         $('#del_form').attr('action', $(this).data('url'));
     });
     $('.display_edit').on('click', function() {
-        $('#editModalLabel').text($(this).data('title'));
+        $('#edit_submit').text($(this).data('type'));
+        $('#editModalLabel').text($(this).data('type') + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
         $('#edit_name').text($(this).data('name'));
         $('#edit_form').attr('action', $(this).data('url'));
         $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
