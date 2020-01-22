@@ -15,10 +15,32 @@
 				"command": "cmd",
 				"args": [
 					"/c",
-					"(if not exist venv\\Scripts\\activate python -m venv venv) & venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt autopep8 flake8 rope"
+					"(if not exist venv\\Scripts\\activate python -m venv venv) & venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt autopep8 flake8 rope",
 				],
 			},
-			"problemMatcher": []
+			"problemMatcher": [],
+		},
+		{
+			"label": "django_migrate",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source venv/bin/activate && python ${workspaceFolder}\\django\\manage.py migrate --settings=config.settings_dev",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"venv\\Scripts\\activate && python ${workspaceFolder}\\django\\manage.py migrate --settings=config.settings_dev",
+				],
+				"options": {
+					"env": {
+						"SECRET_KEY": "",
+					},
+				},
+			},
+			"problemMatcher": [],
 		},
 	]
 }

@@ -3,7 +3,32 @@
 	// 既存の属性の説明をホバーして表示します。
 	// 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
 	"version": "0.2.0",
+	"compounds": [
+		{
+			"name": "Django",
+			"configurations": ["Python: Django", "Firefox: Django"]
+		}
+	],
 	"configurations": [
+		{
+			"name": "Python: Django",
+			"type": "python",
+			"request": "launch",
+			"program": "${workspaceFolder}\\django\\manage.py",
+			"args": [
+				"runserver",
+				"localhost:8000",
+				"--settings=config.settings_dev",
+				"--noreload"
+			],
+			"env": {
+				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
+				"LANGUAGE_CODE": "ja",
+				"TZ": "Asia/Tokyo",
+			},
+			"preLaunchTask": "django_migrate",
+			"django": true
+		},
 		{
 			"name": "Python: Django Batch",
 			"type": "python",
@@ -18,24 +43,16 @@
 				"LANGUAGE_CODE": "ja",
 				"TZ": "Asia/Tokyo",
 			},
+			"preLaunchTask": "django_migrate",
 			"django": true
 		},
 		{
-			"name": "Python: Django",
-			"type": "python",
+			"type": "firefox",
 			"request": "launch",
-			"program": "${workspaceFolder}\\django\\manage.py",
-			"args": [
-				"runserver",
-				"--settings=config.settings_dev",
-				"--noreload"
-			],
-			"env": {
-				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
-				"LANGUAGE_CODE": "ja",
-				"TZ": "Asia/Tokyo",
-			},
-			"django": true
+			"reAttach": true,
+			"name": "Firefox: Django",
+			"url": "http://localhost:8000",
+			"webRoot": "${workspaceFolder}"
 		},
-	]
+	],
 }
