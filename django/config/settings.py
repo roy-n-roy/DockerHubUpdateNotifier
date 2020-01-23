@@ -87,12 +87,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': ('django.db.backends.' +
+                   ENV['DB_ENGINE'] if 'DB_ENGINE' in ENV else ''),
         'NAME': ENV['DB_NAME'] if 'DB_NAME' in ENV else '',
         'USER': ENV['DB_USER'] if 'DB_USER' in ENV else '',
         'PASSWORD': ENV['DB_PASS'] if 'DB_PASS' in ENV else '',
         'HOST': ENV['DB_HOST'] if 'DB_HOST' in ENV else '',
-        'PORT': ENV['DB_PORT'] if 'DB_PORT' in ENV else '5432',
+        'PORT': ENV['DB_PORT'] if 'DB_PORT' in ENV else '',
     }
 }
 
@@ -125,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = ENV['LANGUAGE_CODE'] if 'LANGUAGE_CODE' in ENV else 'en-us'
 
-TIME_ZONE = ENV['TZ'] if 'TZ' in ENV else 'Etc/GMT'
+TIME_ZONE = ENV['TZ'] if 'TZ' in ENV else 'UTC'
 
 USE_I18N = True
 
@@ -142,6 +143,39 @@ STATIC_URL = '/static/'
 AUTH_USER_MODEL = 'account.User'
 LOGIN_REDIRECT_URL = '/'
 
+# E-mail Settings
+# https://docs.djangoproject.com/en/3.0/topics/email/
+if 'EMAIL_BACKEND' in ENV:
+    EMAIL_BACKEND = (
+        'django.core.mail.backends.' + ENV['EMAIL_BACKEND'] + '.EmailBackend'
+    )
+if 'EMAIL_HOST' in ENV:
+    EMAIL_HOST = ENV['EMAIL_HOST']
+if 'EMAIL_PORT' in ENV:
+    EMAIL_PORT = ENV['EMAIL_PORT']
+if 'EMAIL_USE_SSL' in ENV:
+    EMAIL_USE_SSL = ENV['EMAIL_USE_SSL'].upper() == 'TRUE'
+if 'EMAIL_USE_TLS' in ENV:
+    EMAIL_USE_TLS = ENV['EMAIL_USE_TLS'].upper() == 'TRUE'
+if 'EMAIL_HOST_USER' in ENV:
+    EMAIL_HOST_USER = ENV['EMAIL_HOST_USER']
+if 'EMAIL_HOST_PASSWORD' in ENV:
+    EMAIL_HOST_PASSWORD = ENV['EMAIL_HOST_PASSWORD']
+if 'EMAIL_USE_LOCALTIME' in ENV:
+    EMAIL_USE_LOCALTIME = ENV['EMAIL_USE_LOCALTIME'].upper() == 'TRUE'
+if 'EMAIL_TIMEOUT' in ENV:
+    EMAIL_TIMEOUT = ENV['EMAIL_TIMEOUT']
+if 'DEFAULT_FROM_EMAIL' in ENV:
+    DEFAULT_FROM_EMAIL = ENV['DEFAULT_FROM_EMAIL']
+if 'EMAIL_SUBJECT_PREFIX' in ENV:
+    EMAIL_SUBJECT_PREFIX = ENV['EMAIL_SUBJECT_PREFIX']
+if 'EMAIL_SSL_KEYFILE' in ENV:
+    EMAIL_SSL_KEYFILE = ENV['EMAIL_SSL_KEYFILE']
+if 'EMAIL_SSL_CERTFILE' in ENV:
+    EMAIL_SSL_CERTFILE = ENV['EMAIL_SSL_CERTFILE']
+if 'EMAIL_FILE_PATH' in ENV:
+    EMAIL_FILE_PATH = ENV['EMAIL_FILE_PATH']
+
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
     "error_css_class": "bootstrap4-error",
@@ -150,7 +184,10 @@ BOOTSTRAP4 = {
     "include_jquery": True,
 }
 
-DOCKER_HUB_API = 'https://hub.docker.com/v2/repositories/{0}/{1}/tags/{2}?page={3}&page_size=100'
+DOCKER_HUB_API = (
+    'https://hub.docker.com/v2/repositories/'
+    '{0}/{1}/tags/{2}?page={3}&page_size=100'
+)
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'dark',

@@ -7,13 +7,21 @@ services:
     container_name: webapp
     restart: always
     environment:
+      LANGUAGE_CODE: ja
+      TZ: Asia/Tokyo
+      ALLOWED_HOSTS: ''
       DB_HOST: postgres
       DB_NAME: django
       DB_USER: django
       DB_PASS: django
-      LANGUAGE_CODE: ja
-      TZ: Asia/Tokyo
-      ALLOWED_HOSTS: docker.server-on.net
+      EMAIL_BACKEND: smtp
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
+      EMAIL_USE_TLS: 'true'
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_LOCALTIME: 'false'
+      DEFAULT_FROM_EMAIL: ''
     depends_on:
       - postgres
 
@@ -23,12 +31,20 @@ services:
     restart: always
     command: python scheduler.py batch
     environment:
+      LANGUAGE_CODE: ja
+      TZ: Asia/Tokyo
       DB_HOST: postgres
       DB_NAME: django
       DB_USER: django
       DB_PASS: django
-      LANGUAGE_CODE: ja
-      TZ: Asia/Tokyo
+      EMAIL_BACKEND: smtp
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
+      EMAIL_USE_TLS: 'true'
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_LOCALTIME: 'false'
+      DEFAULT_FROM_EMAIL: ''
     depends_on:
       - postgres
 
