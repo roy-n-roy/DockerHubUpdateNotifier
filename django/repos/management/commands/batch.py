@@ -6,6 +6,7 @@ from ...apps import ReposConfig as App
 
 
 import re
+import traceback
 
 SLACK_URL_PATTERN = re.compile(
     r'^https://hooks.slack.com/services/[A-Za-z0-9]+/[A-Za-z0-9]+/[A-Za-z0-9]+'
@@ -23,6 +24,8 @@ EMAIL_MESSAGE = (
     'To view the repository on Docker Hub, go to the following URL:\n\n{url}'
 )
 
+RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
+
 
 class Command(BaseCommand):
     help = 'Closes the specified poll for voting'
@@ -30,29 +33,27 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for repo in Repository.objects.all():
-            last_updated = App.check_repository(
-                repo.owner, repo.name, repo.tag
-            )
-
-            if last_updated is None:
-                raise CommandError('Repository "%s" does not exist' % repo)
-            elif repo.last_updated != last_updated:
-                repo.last_updated = last_updated
-                for wch in Watching.objects.filter(repository=repo).all():
-                    send_notify(wch.user, repo)
-                repo.save()
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        'Successfully notify "%s", last_updated: %s' %
-                        repo, repo.last_updated)
-                )
-            else:
-                self.stdout.write(
-                    self.style.NOTICE('No update on "%s".' % repo)
+            try:
+                last_updated = App.check_repository(
+                    repo.owner, repo.name, repo.tag
                 )
 
+                if last_updated is None:
+                    raise CommandError('Repository "%s" does not exist' % repo)
+                elif repo.last_updated != last_updated:
+                    repo.last_updated = last_updated
+                    for wch in Watching.objects.filter(repository=repo).all():
+                        send_notify(self, wch.user, repo)
+                    repo.save()
+                else:
+                    self.stdout.write(
+                        self.style.NOTICE('No update on "%s".' % repo)
+                    )
+            except Exception:
+                self.stdout.write(self.style.ERROR(traceback.format_exc()))
 
-def send_notify(user: User, repo: Repository):
+
+def send_notify(command: Command, user: User, repo: Repository):
     if not user.is_active:
         return
 
@@ -64,13 +65,43 @@ def send_notify(user: User, repo: Repository):
         elif IFTTT_URL_PATTERN.match(webhook_url):
             message = IFTTT_MESSAGE.format(
                 url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
-        user.post_webhook(message)
+
+        result = user.post_webhook(message)
+        if result:
+            command.stdout.write(command.style.SUCCESS(
+                RESULT_LOG.format(
+                    type='Webhook', result='successfully',
+                    repo=repo, date=repo.last_updated
+                )
+            ))
+        else:
+            command.stdout.write(command.style.ERROR(
+                RESULT_LOG.format(
+                    type='Webhook', result='failed',
+                    repo=repo, date=repo.last_updated
+                )
+            ))
+
     if user.is_notify_to_email:
-        user.email_user(
+        result = user.email_user(
             subject='Docker repository {repo} was Updated.'.format(repo=repo),
             message=EMAIL_MESSAGE.format(
                 url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
         )
+        if result:
+            command.stdout.write(command.style.SUCCESS(
+                RESULT_LOG.format(
+                    type='E-mail', result='successfully',
+                    repo=repo, date=repo.last_updated
+                )
+            ))
+        else:
+            command.stdout.write(command.style.ERROR(
+                RESULT_LOG.format(
+                    type='E-mail', result='failed',
+                    repo=repo, date=repo.last_updated
+                )
+            ))
 
 
 def get_repo_url(repo: Repository):

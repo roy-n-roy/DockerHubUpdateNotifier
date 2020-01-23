@@ -83,8 +83,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
+        return send_mail(
+            subject, message, from_email, [self.email], **kwargs) > 0
 
     def post_webhook(self, message):
         """Post Webhook to user defined URL."""
-        requests.post(url=str(self.webhook_url), json=message)
+        result = requests.post(url=str(self.webhook_url), json=message)
+        return result.status_code == requests.codes.ok
