@@ -65,20 +65,6 @@
     </div>
 </div>
 
-<!--
-<div class="modal fade" id="spinnerModal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-hidden="true">
-    <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="width: 8rem; height: 8rem;">
-        <div class="modal-content">
-            <div class="modal-body d-flex justify-content-center">
-                <div class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
 {% if messages %}
     <div>
         {% for message in messages %}
@@ -100,22 +86,22 @@
         <th></th>
     </tr></thead>
     <tbody>
-        {% for sub in subs %}
+        {% for item in items %}
         <tr>
-            <td><a target="_" href="{{ sub.repository.url }}">{{ sub.repository }}</a></td>
-            <td>{{ sub.repository.last_updated }}</td>
+            <td><a target="_" href="{{ item.repository.url }}">{{ item.repository }}</a></td>
+            <td>{{ item.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
-                        data-toggle="modal" data-target="#editModal" data-type="更新" data-title="{{ sub.repository }}"
-                        data-owner="{{ sub.repository.owner }}" data-name="{{ sub.repository.name }}"
-                        data-tag="{{ sub.repository.tag }}" data-url="{% url 'repos:update' watching_id=sub.id %}">
+                        data-toggle="modal" data-target="#editModal" data-type="更新" data-title="{{ item.repository }}"
+                        data-owner="{{ item.repository.owner }}" data-name="{{ item.repository.name }}"
+                        data-tag="{{ item.repository.tag }}" data-url="{% url 'repos:update' watching_id=item.id %}">
                     変更
                 </button>
             </td>
             <td>
                 <button class="btn btn-outline-danger btn-sm del_confirm"
                         data-toggle="modal" data-target="#deleteModal"
-                        data-title="{{ sub.repository }}" data-url="{% url 'repos:delete' watching_id=sub.id %}">
+                        data-title="{{ item.repository }}" data-url="{% url 'repos:delete' watching_id=item.id %}">
                     削除
                 </button>
             </td>
@@ -208,7 +194,17 @@ function set_tags(owner, name, page, current) {
         }).fail(function(data) {
             parent = $('#edit_form select[name="tag"]');
             parent.children().remove();
-            parent.append($('<option>').val("latest").html("latest").attr('selected'));
+            parent.append('<option value="latest" selected>latest</option>');
+            $("#edit_form .modal-body").prepend(
+                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '<span> ' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗しました。</span>' +
+                '</div>'
+            );
+        }).always(function() {
+            $('#in_process_label').remove();
         });
     }
 }
@@ -227,6 +223,7 @@ $(function() {
         $('#edit_form select[name="tag"]').val($(this).data('tag'));
         $("#form_alert").remove();
         $('#edit_form select[name="tag"]').children().remove();
+        $('#edit_form input[name="name"]').focus();
         set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
     });
     $("#edit_submit").click(function(e) {
@@ -264,6 +261,7 @@ $(function() {
         owner = owner === '' ? 'library' : owner;
         var name = $('#edit_form input[name="name"]').val();
         $('#edit_form select[name="tag"]').children().remove();
+        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>データ取得中...</option>');
         set_tags(owner, name, 1, '');
     });
 });

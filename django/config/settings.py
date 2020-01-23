@@ -141,7 +141,6 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'account.User'
 LOGIN_REDIRECT_URL = '/'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {

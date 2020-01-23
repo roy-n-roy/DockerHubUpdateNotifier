@@ -35,7 +35,20 @@ class UserManager(UserManager):
 class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
-    webhook_url = models.URLField(max_length=500, blank=True, null=True)
+    webhook_url = models.URLField(
+        _('Webhook URL'), max_length=500, blank=True, null=True, help_text=(
+            'If set in this field, the Webhook URL you enter will'
+            ' be notified of updates to the Docker repository.'
+        ),
+    )
+
+    is_notify_to_email = models.BooleanField(
+        _('is notity to E-mail'), default=True,
+        help_text=(
+            'If enabled, it will notify your email address of'
+            ' updates to the Docker repository.'
+        ),
+    )
 
     is_staff = models.BooleanField(
         _('staff status'),

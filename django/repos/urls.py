@@ -5,7 +5,7 @@ from . import views
 app_name = 'repos'
 
 urlpatterns = [
-    path('', views.index, name="index"),
+    path('', views.IndexListView.as_view(), name="index"),
     path('add', views.edit, name="add"),
     path('update/<int:watching_id>', views.edit, name="update"),
     path('delete/<int:watching_id>', views.delete, name="delete"),

@@ -31,12 +31,12 @@ class ReposConfig(AppConfig):
             settings.DOCKER_HUB_API.format(owner, name, '', page)
         )
         if html.status_code != requests.codes.ok:
-            return
+            return None
 
         json = html.json()
         tags = []
-        if 'results' not in json:
-            return
+        if 'results' not in json or 'count' not in json or json['count'] <= 0:
+            return None
 
         json['results']
         for tag in json['results']:

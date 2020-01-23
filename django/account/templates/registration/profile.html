@@ -4,39 +4,9 @@
 
 {% block content %}
 
-{% if messages %}
-    <div>
-        {% for message in messages %}
-            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %} alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message }}
-            </div>
-        {% endfor %}
-    </div>
-{% endif %}
-
-<form method="POST" action="{% url 'accounts:update' %}">
+<form method="POST" action="{% url 'accounts:profile' %}">
     {% csrf_token %}
-    <div class="form-group row">
-        <label for="email" class="col-sm-3 col-form-label">E-mail</label>
-        <div class="col-sm-9">
-            <input id="email" name="email" type="text" class="form-control" value="{{ user.email }}">
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="webhook_url" class="col-sm-3 col-form-label">Webhook URL</label>
-        <div class="col-sm-9">
-            <input id="webhook_url" name="webhook_url" type="url" class="form-control" value="{{ user.webhook_url|default_if_none:'' }}">
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="date_joined" class="col-sm-3 col-form-label">登録日</label>
-        <div class="col-sm-9">
-            <label id="date_joined">{{ user.date_joined }}</label>
-        </div>
-    </div>
+    {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' %}
     <div class="form-group row">
         <div class="offset-sm-10 col-sm-2">
             <button type="submit" class="btn btn-primary">更新</button>

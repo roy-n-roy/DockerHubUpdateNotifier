@@ -18,6 +18,9 @@
 					"(if not exist venv\\Scripts\\activate python -m venv venv) & venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt autopep8 flake8 rope",
 				],
 			},
+			"options": {
+				"cwd": "${workSpaceFolder}",
+			},
 			"problemMatcher": [],
 		},
 		{
@@ -26,18 +29,19 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source venv/bin/activate && python ${workspaceFolder}\\django\\manage.py migrate --settings=config.settings_dev",
+				"source venv/bin/activate && python django/manage.py migrate --settings=config.settings_dev",
 			],
 			"windows": {
 				"command": "cmd",
 				"args": [
 					"/c",
-					"venv\\Scripts\\activate && python ${workspaceFolder}\\django\\manage.py migrate --settings=config.settings_dev",
+					"venv\\Scripts\\activate && python django\\manage.py migrate --settings=config.settings_dev",
 				],
-				"options": {
-					"env": {
-						"SECRET_KEY": "",
-					},
+			},
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"SECRET_KEY": "",
 				},
 			},
 			"problemMatcher": [],

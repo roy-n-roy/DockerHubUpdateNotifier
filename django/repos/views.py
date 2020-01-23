@@ -1,11 +1,12 @@
 import json
-
+from django.views.generic import ListView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import HttpResponseForbidden
 from django.shortcuts import (Http404, HttpResponse, get_object_or_404,
-                              redirect, render)
+                              redirect)
 from django.views.decorators.http import require_GET, require_POST
 
 from .apps import ReposConfig as App
@@ -13,18 +14,20 @@ from .forms import WatchingForm
 from .models import Repository, Watching
 
 
-@require_GET
-@login_required
-def index(request):
-    subs = Watching.objects.filter(user=request.user) \
-           .select_related('repository').all()
-    return render(request, "repos/index.html", {'subs': subs})
+class IndexListView(LoginRequiredMixin, ListView):
+    model = Watching
+    context_object_name = 'items'
+    template_name = "repos/index.html"
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Watching.objects.filter(user=self.request.user)
 
 
 @require_POST
 @login_required
 def delete(request, watching_id):
-    watching = get_object_or_404(Watching, pk=watching_id)
+    watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
     watching.delete()
     messages.success(request, '削除完了: ' + str(watching.repository))
     return redirect('repos:index')
@@ -37,7 +40,8 @@ def edit(request, watching_id=None):
     if watching_id is None:
         watching = Watching(user=request.user)
     else:
-        watching = get_object_or_404(Watching, pk=watching_id)
+        watching = get_object_or_404(
+            Watching, pk=watching_id, user=request.user)
 
     if watching.user.id != request.user.id:
         return HttpResponseForbidden()
