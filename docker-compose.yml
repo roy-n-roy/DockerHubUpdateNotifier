@@ -30,7 +30,7 @@ services:
     image: docker-hub-update-notifier
     container_name: batch
     restart: always
-    command: python scheduler.py batch
+    command: bash -c ". ~/bashrc && python scheduler.py batch"
     environment:
       LANGUAGE_CODE: ja
       TZ: Asia/Tokyo
