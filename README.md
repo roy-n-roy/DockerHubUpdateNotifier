@@ -14,6 +14,7 @@ URL: [Docker Hub Update Checker - https://container-image.live-on.net](https://c
 - [ ] 通知機能: メール
 - [ ] Webhook URLバリデーション
 - [ ] テスト
+- [ ] ドキュメント整備
 - [ ] リポジトリ登録画面の初期フォーカス
 - [ ] 一覧のソート
 - [ ] README整備
