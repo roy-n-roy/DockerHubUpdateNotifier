@@ -83,16 +83,19 @@ def send_notify(command: Command, user: User, repo: Repository):
                     RESULT_LOG.format(
                         type='Webhook', result='failed',
                         repo=repo, date=repo.last_updated
-                    )
+                    ) + '\n message: ' + message
                 ))
 
     if user.is_notify_to_email:
         result = False
         try:
             result = user.email_user(
-                subject='Docker repository {repo} was Updated.'.format(repo=repo),
+                subject='Docker repository {repo} was Updated.'
+                .format(repo=repo),
                 message=EMAIL_MESSAGE.format(
-                    url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
+                    url=get_repo_url(repo), repo=str(repo),
+                    date=repo.last_updated
+                )
             )
         except Exception:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
