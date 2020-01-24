@@ -1,13 +1,14 @@
 import json
-from django.views.generic import ListView
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
-from django.http import HttpResponseForbidden
-from django.shortcuts import (Http404, HttpResponse, get_object_or_404,
-                              redirect)
+from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
+                         HttpResponseForbidden)
+from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_GET, require_POST
+from django.views.generic import ListView
 
 from .apps import ReposConfig as App
 from .forms import WatchingForm
@@ -15,13 +16,18 @@ from .models import Repository, Watching
 
 
 class IndexListView(LoginRequiredMixin, ListView):
+    http_method_names = ['get']
     model = Watching
     context_object_name = 'items'
     template_name = "repos/index.html"
     paginate_by = 10
 
     def get_queryset(self):
-        return Watching.objects.filter(user=self.request.user)
+        quieryset = Watching.objects.filter(user=self.request.user)
+        req = self.request.GET
+        if 'sortby' == req and req['sortby']:
+            quieryset = quieryset.order_by(req[''])
+        return quieryset
 
 
 @require_POST
@@ -47,6 +53,9 @@ def edit(request, watching_id=None):
         return HttpResponseForbidden()
 
     data = request.POST
+    if 'owner' not in data or 'name' not in data or 'tag' not in data:
+        return HttpResponseBadRequest()
+
     keys = {
         "owner": data['owner'],
         "name": data['name'],

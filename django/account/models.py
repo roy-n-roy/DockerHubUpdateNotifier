@@ -1,3 +1,6 @@
+import re
+from enum import Enum, auto, unique
+
 import requests
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin,
                                         UserManager)
@@ -86,8 +89,33 @@ class User(AbstractBaseUser, PermissionsMixin):
         return send_mail(
             subject, message, from_email, [self.email], **kwargs) > 0
 
-    def post_webhook(self, message):
+    def post_webhook(self, message: dict):
         """Post Webhook to user defined URL."""
         result = requests.post(url=str(self.webhook_url), json=message)
         result.raise_for_status()
         return result.status_code == requests.codes.ok
+
+    def get_webhook_type(self):
+        if _SLACK_URL_PATTERN.match(self.webhook_url):
+            return WebhookType.SLACK
+        elif _IFTTT_URL_PATTERN.match(self.webhook_url):
+            return WebhookType.IFTTT
+        else:
+            return WebhookType.OTHER
+
+
+@unique
+class WebhookType(Enum):
+    """User's Webhook site type. """
+    SLACK = auto()
+    IFTTT = auto()
+    UNKNOWN = auto()
+    NONE = auto()
+
+
+_SLACK_URL_PATTERN = re.compile(
+    r'^https://hooks.slack.com/services/[A-Za-z0-9]+/[A-Za-z0-9]+/[A-Za-z0-9]+'
+)
+_IFTTT_URL_PATTERN = re.compile(
+    r'https://maker.ifttt.com/[\w/:%#$&\?\(\)~\.=\+\-]+'
+)

@@ -1,54 +1,34 @@
-from django.core.management.base import BaseCommand, CommandError
-
-from account.models import User
-from ...models import Repository, Watching
-from ...apps import ReposConfig as App
-
-
-import re
 import traceback
 
-SLACK_URL_PATTERN = re.compile(
-    r'^https://hooks.slack.com/services/[A-Za-z0-9]+/[A-Za-z0-9]+/[A-Za-z0-9]+'
-)
-SLACK_MESSAGE = '{{"text": "<{url}|{repo}> was updated on {date}."}}'
-IFTTT_URL_PATTERN = re.compile(
-    r'https://maker.ifttt.com/[\w/:%#$&\?\(\)~\.=\+\-]+'
-)
-IFTTT_MESSAGE = (
-    '{{"value1": "{repo} was updated on {date}.",' +
-    ' "value2": "{url}", "value3", "{date}"}}'
-)
-EMAIL_MESSAGE = (
-    'The Docker Hub repository {repo} was updated at {date}.\n' +
-    'To view the repository on Docker Hub, go to the following URL:\n\n{url}'
-)
+from django.core.management.base import BaseCommand
+
+from account.models import User, WebhookType
+
+from ...apps import ReposConfig as App
+from ...models import Repository, Watching
+
 
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
 
 
 class Command(BaseCommand):
-    help = 'Closes the specified poll for voting'
+    help = 'Update repositories from Docker Hub and notify users.'
     output_transaction = True
 
     def handle(self, *args, **options):
+        self.stdout.write(self.style.NOTICE('Start Bach Application.'))
         for repo in Repository.objects.all():
             try:
                 last_updated = App.check_repository(
                     repo.owner, repo.name, repo.tag
                 )
-
-                if last_updated is None:
-                    raise CommandError('Repository "%s" does not exist' % repo)
-                elif repo.last_updated != last_updated:
+                if last_updated is None or repo.last_updated != last_updated:
                     repo.last_updated = last_updated
                     for wch in Watching.objects.filter(repository=repo).all():
                         send_notify(self, wch.user, repo)
                     repo.save()
                 else:
-                    self.stdout.write(
-                        self.style.NOTICE('No update on "%s".' % repo)
-                    )
+                    self.stdout.write(f'No update on "{repo}".')
             except Exception:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
 
@@ -57,15 +37,21 @@ def send_notify(command: Command, user: User, repo: Repository):
     if not user.is_active:
         return
 
-    webhook_url = user.webhook_url
-    if webhook_url is not None:
-        if SLACK_URL_PATTERN.match(webhook_url):
-            message = SLACK_MESSAGE.format(
-                url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
-        elif IFTTT_URL_PATTERN.match(webhook_url):
-            message = IFTTT_MESSAGE.format(
-                url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
-        result = False
+    webhook_type = user.get_webhook_type()
+    if webhook_type == WebhookType.SLACK:
+        message = {
+            "text": f"<{repo.get_url()}|{repo}> was updated"
+            f" on {repo.last_updated}."}
+    elif webhook_type == WebhookType.IFTTT:
+        message = {
+            "value1": f"{repo} was updated on {repo.last_updated}.",
+            "value2": f"{repo.get_url()}", "value3": f"{repo.last_updated}"}
+    elif webhook_type == WebhookType.UNKNOWN:
+        command.stdout.write(command.style.ERROR(
+            f'User {user} has UNKNOWN URL.\n{user.webhook_url}'
+        ))
+
+    if webhook_type not in [WebhookType.UNKNOWN, WebhookType.NONE]:
         try:
             result = user.post_webhook(message)
         except Exception:
@@ -73,28 +59,26 @@ def send_notify(command: Command, user: User, repo: Repository):
         finally:
             if result:
                 command.stdout.write(command.style.SUCCESS(
-                    RESULT_LOG.format(
-                        type='Webhook', result='successfully',
-                        repo=repo, date=repo.last_updated
-                    )
+                    f'Webhook notification was successfully.'
+                    f' "{repo}", last_updated: {repo.last_updated}'
                 ))
             else:
                 command.stdout.write(command.style.ERROR(
-                    RESULT_LOG.format(
-                        type='Webhook', result='failed',
-                        repo=repo, date=repo.last_updated
-                    ) + '\n message: ' + message
+                    f'Webhook notification was failed.'
+                    f' "{repo}", last_updated: {repo.last_updated}\n'
+                    f'message: {message}'
                 ))
 
     if user.is_notify_to_email:
         result = False
         try:
             result = user.email_user(
-                subject='Docker repository {repo} was Updated.'
-                .format(repo=repo),
-                message=EMAIL_MESSAGE.format(
-                    url=get_repo_url(repo), repo=str(repo),
-                    date=repo.last_updated
+                subject=f'Docker repository {repo} was Updated.',
+                message=(
+                    f'The Docker Hub repository {repo} was updated'
+                    f' at {repo.last_updated}.\n'
+                    'To view the repository on Docker Hub,'
+                    f' go to the following URL:\n\n{repo.get_url()}'
                 )
             )
         except Exception:
@@ -102,28 +86,12 @@ def send_notify(command: Command, user: User, repo: Repository):
         finally:
             if result:
                 command.stdout.write(command.style.SUCCESS(
-                    RESULT_LOG.format(
-                        type='E-mail', result='successfully',
-                        repo=repo, date=repo.last_updated
-                    )
+                    f'E-mail notification was successfully.'
+                    f' "{repo}", last_updated: {repo.last_updated}'
                 ))
             else:
                 command.stdout.write(command.style.ERROR(
-                    RESULT_LOG.format(
-                        type='E-mail', result='failed',
-                        repo=repo, date=repo.last_updated
-                    )
+                    f'E-mail notification was failed.'
+                    f' "{repo}", last_updated: {repo.last_updated}\n'
+                    f'message: {message}'
                 ))
-
-
-def get_repo_url(repo: Repository):
-    if str(repo.owner) == 'library':
-        return (
-            'https://hub.docker.com/_/{name}?tab=tags&name={tag}'
-            .format(name=repo.name, tag=repo.tag)
-        )
-    else:
-        return (
-            'https://hub.docker.com/r/{owner}/{name}/tags?name={tag}'
-            .format(owner=repo.owner, name=repo.name, tag=repo.tag)
-        )

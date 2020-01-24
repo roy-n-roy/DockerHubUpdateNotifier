@@ -19,15 +19,17 @@ class Repository(models.Model):
             else self.owner + '/'
         return u + self.name + ':' + self.tag
 
-    def url(self):
+    def get_url(self):
         if self.owner == 'library':
-            return ("https://hub.docker.com/_/{0}?tab=tags&name={1}"
-                    .format(self.name, self.tag)
-                    )
+            return (
+                f'https://hub.docker.com/_/{self.name}'
+                f'?tab=tags&name={self.tag}'
+            )
         else:
-            return ("https://hub.docker.com/r/{0}/{1}/tags?name={2}"
-                    .format(self.owner, self.name, self.tag)
-                    )
+            return (
+                f'https://hub.docker.com/r/{self.owner}/{self.name}/tags'
+                f'?name={self.tag}'
+            )
 
 
 class Watching(models.Model):

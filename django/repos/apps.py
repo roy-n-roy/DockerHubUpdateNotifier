@@ -1,5 +1,6 @@
+from urllib.parse import parse_qs, urlparse
+
 import requests
-from urllib.parse import urlparse, parse_qs
 from django.apps import AppConfig
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
