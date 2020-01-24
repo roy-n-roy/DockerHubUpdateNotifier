@@ -1,14 +1,10 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 16:15+0900\n"
+"POT-Creation-Date: 2020-01-24 23:23+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,51 +22,126 @@ msgstr "Eメールアドレス"
 msgid "Webhook URL"
 msgstr "Webhook URL"
 
-#: .\account\models.py:49
+#: .\account\models.py:43
+msgid ""
+"If set in this field, the Webhook URL you enter will be notified of updates "
+"to the Docker repository .Supported for Incoming Webhook URL of Slack and "
+"IFTTT."
+msgstr ""
+"Eメールでの通知を希望する場合はチェックして下さい。SlackとIFTTTのIncoming "
+"Webhook URLをサポートしています。"
+
+#: .\account\models.py:50
 msgid "is notity to E-mail"
 msgstr "Eメールアドレスへ通知"
 
-#: .\account\models.py:57
+#: .\account\models.py:52
+msgid ""
+"If enabled, it will notify your email address of updates to the Docker "
+"repository."
+msgstr "Eメールでの通知を希望する場合はチェックして下さい。"
+
+#: .\account\models.py:58
 msgid "staff status"
-msgstr "スタッフ権限"
+msgstr ""
 
-#: .\account\models.py:60
+#: .\account\models.py:61
 msgid "Designates whether the user can log into this admin site."
-msgstr "ユーザーが管理サイトにログイン可能かどうかを示します。"
+msgstr ""
 
-#: .\account\models.py:64
+#: .\account\models.py:65
 msgid "active"
-msgstr "有効"
+msgstr ""
 
-#: .\account\models.py:67
+#: .\account\models.py:68
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
-"ユーザーがアクティブかどうかを示します。アカウントを削除する代わりに選択を解"
-"除してください。"
 
-#: .\account\models.py:71
+#: .\account\models.py:72
 msgid "date joined"
-msgstr "登録日時"
-
-#: .\account\models.py:80
-msgid "user"
-msgstr "ユーザー"
+msgstr "ユーザー登録日"
 
 #: .\account\models.py:81
+msgid "user"
+msgstr ""
+
+#: .\account\models.py:82
 msgid "users"
-msgstr "ユーザー"
+msgstr ""
+
+#: .\account\templates\registration\delete_complete.html:7
+msgid "Your account deleted successfully."
+msgstr "アカウントを削除しました。"
+
+#: .\account\templates\registration\delete_confirm.html:7
+msgid "Delete your account. Are you sure?"
+msgstr "アカウントを削除します。よろしいですか?"
+
+#: .\account\templates\registration\delete_confirm.html:8
+msgid "Sure"
+msgstr "はい"
+
+#: .\account\templates\registration\logged_out.html:7
+msgid "You have signed out."
+msgstr "ログアウトしました。"
+
+#: .\account\templates\registration\login.html:5
+#: .\account\templates\registration\login.html:9
+#: .\account\templates\registration\login.html:12
+#: .\repos\templates\base.html:30
+msgid "Sign in"
+msgstr "ログイン"
+
+#: .\account\templates\registration\login.html:16
+msgid "Forgot your password?"
+msgstr "パスワードをお忘れですか?"
+
+#: .\account\templates\registration\password_change_done.html:7
+msgid "Your password has been changed."
+msgstr "パスワードを変更しました。"
+
+#: .\account\templates\registration\password_change_form.html:5
+msgid "change password"
+msgstr "パスワード変更"
+
+#: .\account\templates\registration\password_change_form.html:14
+#: .\account\templates\registration\profile.html:15
+#: .\repos\templates\repos\index.html:209 .\repos\views.py:47
+msgid "Update"
+msgstr "更新"
+
+#: .\account\templates\registration\password_reset_complete.html:7
+msgid "Your password has been reset."
+msgstr "パスワードをリセットしました。"
+
+#: .\account\templates\registration\password_reset_confirm.html:9
+msgid "Reset Password"
+msgstr "パスワードのリセット"
+
+#: .\account\templates\registration\password_reset_confirm.html:12
+msgid "Change my password"
+msgstr "パスワードを変更する"
+
+#: .\account\templates\registration\password_reset_done.html:7
+msgid ""
+"The email was sent to the address you entered. Reset the password from the "
+"link in the body of the mail."
+msgstr ""
+"入力されたアドレスにメールを送信しました。メール本文にあるリンクからパスワー"
+"ドをリセットしてください。"
 
 #: .\account\templates\registration\password_reset_email.html:2
 #, python-format
 msgid ""
 "You're receiving this email because you requested a password reset for your "
 "user account at %(site_name)s."
-msgstr "ユーザー 様\n"
+msgstr ""
+"ユーザー 様\n"
 "\n"
-"このメールは %(site_name)s でご利用中のユーザアカウントにて、"
-"パスワードリセットのリクエストを頂いたユーザ様へ送信しています。"
+"このメールは %(site_name)s でご利用中のユーザアカウントにて、パスワードリセッ"
+"トのリクエストを頂いたユーザ様へ送信しています。"
 
 #: .\account\templates\registration\password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
@@ -80,77 +151,129 @@ msgstr "以下のリンクから、パスワードのリセットをお願いし
 msgid "Thanks for using our site!"
 msgstr "今後とものご利用お待ちしております。"
 
+#: .\account\templates\registration\password_reset_form.html:9
+msgid "Please enter your email address."
+msgstr "メールアドレスの入力"
+
 #: .\account\templates\registration\password_reset_subject.txt:2
 #, python-format
 msgid "Password reset on %(site_name)s"
 msgstr "%(site_name)s : パスワード再設定のご案内"
 
-#: .\repos\templates\repos\index.html:11
+#: .\account\templates\registration\profile.html:5
+#: .\repos\templates\base.html:25
+msgid "User settings"
+msgstr "ユーザー設定"
+
+#: .\account\templates\registration\signup.html:5
+#: .\account\templates\registration\signup.html:9
+msgid "User registration"
+msgstr "ユーザー登録"
+
+#: .\account\templates\registration\signup.html:12
+msgid "Register"
+msgstr "登録"
+
+#: .\repos\templates\base.html:26
+msgid "Sign out"
+msgstr "ログアウト"
+
+#: .\repos\templates\base.html:31
+msgid "Sign up"
+msgstr "ユーザー登録"
+
+#: .\repos\templates\repos\index.html:12
 msgid "Removal Confirm"
 msgstr "削除確認"
 
-#: .\repos\templates\repos\index.html:17
+#: .\repos\templates\repos\index.html:18
 msgid "Do you want to remove <span id=\"del_name\"></span> notification?"
 msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 
-#: .\repos\templates\repos\index.html:22
+#: .\repos\templates\repos\index.html:23
 msgid "OK"
 msgstr "OK"
 
-#: .\repos\templates\repos\index.html:23 .\repos\templates\repos\index.html:63
+#: .\repos\templates\repos\index.html:24 .\repos\templates\repos\index.html:64
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: .\repos\templates\repos\index.html:43
+#: .\repos\templates\repos\index.html:44
 msgid "owner"
 msgstr "オーナー"
 
-#: .\repos\templates\repos\index.html:49
+#: .\repos\templates\repos\index.html:50
 msgid "repository"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\index.html:55
+#: .\repos\templates\repos\index.html:56
 msgid "tag"
 msgstr "タグ"
 
-#: .\repos\templates\repos\index.html:85
+#: .\repos\templates\repos\index.html:75
 msgid "Repositories"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\index.html:86
+#: .\repos\templates\repos\index.html:76
 msgid "Last Update"
 msgstr "最終更新日"
 
-#: .\repos\templates\repos\index.html:100
+#: .\repos\templates\repos\index.html:90
 msgid "Edit"
 msgstr "変更"
 
-#: .\repos\templates\repos\index.html:112
+#: .\repos\templates\repos\index.html:97
+msgid "Remove"
+msgstr ""
+
+#: .\repos\templates\repos\index.html:102
 msgid "No notifications have been registered."
 msgstr "通知の登録がありません。"
 
-#: .\repos\templates\repos\index.html:120
+#: .\repos\templates\repos\index.html:110
 msgid "Add Repository"
 msgstr "追加"
 
-#: .\repos\templates\repos\index.html:205
+#: .\repos\templates\repos\index.html:195
 msgid ""
-"Failed to get tag list for ' + (owner === 'library' ? '' : owner + '/') + name + '"
+"Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
+"'"
 msgstr ""
-"' + (owner === 'library' ? '' : owner + '/') + name + 'のタグ一覧取得に失敗しました。"
+"' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
+"しました。"
 
-#: .\repos\templates\repos\index.html:219
-msgid "Update"
-msgstr "更新"
+#: .\repos\templates\repos\index.html:209
+msgid "Add"
+msgstr ""
 
-#: .\repos\templates\repos\index.html:256
+#: .\repos\templates\repos\index.html:246
 msgid ""
-"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + '"
-" could not be found on Docker Hub."
+"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
+"not be found on Docker Hub."
 msgstr ""
-"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + '"
-" をDocker Hubで見つけられませんでした。"
+"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
+"Hubで見つけられませんでした。"
 
-#: .\repos\templates\repos\index.html:267
+#: .\repos\templates\repos\index.html:257
 msgid "Retrieving data..."
 msgstr "データ取得中..."
+
+#: .\repos\views.py:40
+msgid "Deletion completed."
+msgstr "削除完了"
+
+#: .\repos\views.py:47
+msgid "Registration"
+msgstr "登録"
+
+#: .\repos\views.py:82
+msgid " is a duplicate."
+msgstr "は既に登録されています。"
+
+#: .\repos\views.py:84 .\repos\views.py:88
+msgid " failed."
+msgstr "に失敗しました。"
+
+#: .\repos\views.py:86
+msgid " completed."
+msgstr "完了"

@@ -12,31 +12,29 @@
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="{% url 'index' %}">{{ site_title }}</a>
-    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navvar"
-            aria-controls="navvar" aria-expanded="false" aria-label="Navigation View">
+    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar"
+            aria-controls="navbar" aria-expanded="false" aria-label="Navigation View">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="navvar" class="collapse navbar-collapse">
+    <div id="navbar" class="collapse navbar-collapse">
         {% if user.is_authenticated %}
         <span class="navbar-text my-lg-0 ml-auto">
             <span class="navbar-text my-2 my-sm-0 mr-2">{{ user }}</span>
         </span>
         <span class="navbar-text my-2 my-lg-0 ml-2">
-            <a class="btn btn-outline-info my-2 my-sm-0 mr-2" href="{% url 'accounts:profile' %}">ユーザ設定</a>
-            <a class="btn btn-outline-danger my-2 my-sm-0" href="{% url 'logout' %}">ログアウト</a>
+            <a class="btn btn-outline-info my-2 my-sm-0 mr-2" href="{% url 'accounts:profile' %}">{% blocktrans %}User settings{% endblocktrans %}</a>
+            <a class="btn btn-outline-danger my-2 my-sm-0" href="{% url 'logout' %}">{% blocktrans %}Sign out{% endblocktrans %}</a>
         </span>
         {% else %}
         <span class="navbar-text my-2 my-lg-0 ml-auto">
-            <a class="btn btn-outline-primary my-2 my-sm-0 mr-2" href="{% url 'login' %}">ログイン</a>
-            <a class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'accounts:signup' %}">ユーザー登録</a>
+            <a class="btn btn-outline-primary my-2 my-sm-0 mr-2" href="{% url 'login' %}">{% blocktrans %}Sign in{% endblocktrans %}</a>
+            <a class="btn btn-outline-primary my-2 my-sm-0" href="{% url 'accounts:signup' %}">{% blocktrans %}Sign up{% endblocktrans %}</a>
         </span>
         {% endif %}
     </div>
 </nav>
 <div class="container mt-3">
-    {% block body %}
-        {{ body }}
-    {% endblock %}
+{% block content %}{% endblock %}
 </div>
 {% block extra_js %}{% endblock %}
 </body>

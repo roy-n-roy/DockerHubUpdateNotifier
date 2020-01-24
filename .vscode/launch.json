@@ -23,7 +23,7 @@
 			],
 			"env": {
 				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
-				"LANGUAGE_CODE": "ja",
+				//"LANGUAGE_CODE": "ja",
 				"TZ": "Asia/Tokyo",
 			},
 			"preLaunchTask": "django_migrate",
@@ -40,7 +40,7 @@
 			],
 			"env": {
 				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
-				"LANGUAGE_CODE": "ja",
+				//"LANGUAGE_CODE": "ja",
 				"TZ": "Asia/Tokyo",
 			},
 			"preLaunchTask": "django_migrate",

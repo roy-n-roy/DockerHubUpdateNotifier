@@ -1,19 +1,43 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
 {% load i18n %}
 
-{% block title %}{% blocktrans %}User Settings - {{ block.super }}{% endblocktrans %}{% endblock %}
+{% block title %}{% blocktrans %}User settings{% endblocktrans %} - {{ block.super }}{% endblock %}
 
 {% block content %}
 
-<form method="POST" action="{% url 'accounts:profile' %}">
-    {% csrf_token %}
-    {% bootstrap_form form layout='horizontal' alert_error_type='all' %}
-    <div class="form-group row">
-        <div class="offset-sm-10 col-sm-2">
-            <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
+<div class="container">
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+        <div class="col-8">
+            <h3>{% blocktrans %}Notification{% endblocktrans %}</h3>
         </div>
-    </div>
-</form>
-
+    </div></div>
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+        <form method="POST" action="{% url 'accounts:profile' %}">
+            {% csrf_token %}
+            {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' horizontal_label_class='col-4 col-lg-3' horizontal_field_class='col-8 col-lg-9' %}
+            <div class="form-group row">
+                <div class="offset-sm-10 col-sm-2">
+                    <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
+                </div>
+            </div>
+        </form>
+    </div></div>
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+        <div class="col-8">
+            <h3>{% blocktrans %}Password change{% endblocktrans %}</h3>
+        </div>
+    </div></div>
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+        <form method="POST" action="{% url 'password_change' %}">
+            {% csrf_token %}
+            {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' horizontal_label_class='col-4 col-lg-3' horizontal_field_class='col-8 col-lg-9' %}
+            <div class="form-group row">
+                <div class="offset-sm-10 col-sm-2">
+                    <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
+                </div>
+            </div>
+        </form>
+    </div></div>
+</div>
 {% endblock %}

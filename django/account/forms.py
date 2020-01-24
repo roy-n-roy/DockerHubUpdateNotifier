@@ -1,7 +1,6 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.forms import DateTimeField
-
 
 User = get_user_model()
 
@@ -36,7 +35,7 @@ class UserUpdateFrom(UserChangeForm):
                 'is_notify_to_email',
                 'email',
                 'webhook_url',
-                'date_joined'
+                'date_joined',
             )
 
     date_joined = DateTimeField(

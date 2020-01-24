@@ -1,10 +1,10 @@
-{% extends "registration/base.html" %}
+{% extends "base.html" %}
 
-{% load bootstrap4 %}
+{% load i18n %}
 
 {% block content %}
 
-    <p>アカウントを削除します。よろしいですか?</p>
-    <a class="btn btn-danger" href="{% url 'accounts:delete-complete' %}">はい</a>
+    <p>{% blocktrans %}Delete your account. Are you sure?{% endblocktrans %}</p>
+    <a class="btn btn-danger" href="{% url 'accounts:delete-complete' %}">{% blocktrans %}Sure{% endblocktrans %}</a>
 
 {% endblock %}

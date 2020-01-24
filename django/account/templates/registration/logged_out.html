@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
-{% block body %}
+{% load i18n %}
 
-    <p>ログアウトしました。</p>
+{% block content %}
+
+    <p>{% blocktrans %}You have signed out.{% endblocktrans %}</p>
 
 {% endblock %}

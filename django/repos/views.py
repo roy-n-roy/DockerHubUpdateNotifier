@@ -13,6 +13,7 @@ from django.views.generic import ListView
 from .apps import ReposConfig as App
 from .forms import WatchingForm
 from .models import Repository, Watching
+from django.utils.translation import gettext_lazy as _
 
 
 class IndexListView(LoginRequiredMixin, ListView):
@@ -35,14 +36,15 @@ class IndexListView(LoginRequiredMixin, ListView):
 def delete(request, watching_id):
     watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
     watching.delete()
-    messages.success(request, '削除完了: ' + str(watching.repository))
+    messages.success(
+        request, _('Deletion completed.') + str(watching.repository))
     return redirect('repos:index')
 
 
 @require_POST
 @login_required
 def edit(request, watching_id=None):
-    action = '登録' if watching_id is None else '更新'
+    action = _('Registration') if watching_id is None else _('Update')
     if watching_id is None:
         watching = Watching(user=request.user)
     else:
@@ -77,13 +79,13 @@ def edit(request, watching_id=None):
             watching.save()
         except IntegrityError as e:
             if e.args[0].startswith('UNIQUE'):
-                messages.info(request, str(repo) + 'は登録済みです。')
+                messages.info(request, _(str(repo) + ' is a duplicate.'))
             else:
-                messages.error(request, action + 'に失敗しました。')
+                messages.error(request, _(action + ' failed.'))
         else:
-            messages.success(request, action + '完了: ' + str(repo))
+            messages.success(request, _(action + ' completed.') + str(repo))
     else:
-        messages.error(request, action + 'に失敗しました。')
+        messages.error(request, _(action + ' failed.'))
 
     return redirect('repos:index')
 

@@ -1,17 +1,19 @@
-{% extends 'base_centered.html' %}
+{% extends 'registration/base_centered.html' %}
 
-{% block title %}ログイン - {{ block.super }}{% endblock %}
+{% load i18n %}
 
-{% block content %}
+{% block title %}{% blocktrans %}Sign in{% endblocktrans %} - {{ block.super }}{% endblock %}
 
-    <h5 class="card-title text-center">ログイン</h5>
+{% block centered_content %}
+
+    <h5 class="card-title text-center">{% blocktrans %}Sign in{% endblocktrans %}</h5>
     <form action="{% url 'login' %}" method="POST">
         {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary btn-block">ログイン</button>
+        <button type="submit" class="btn btn-primary btn-block">{% blocktrans %}Sign in{% endblocktrans %}</button>
         <input type="hidden" name="next" value="{{ next }}"/>
         {% csrf_token %}
     </form>
-    <a href="{% url 'password_reset' %}">パスワードをお忘れですか?</a>
+    <a href="{% url 'password_reset' %}">{% blocktrans %}Forgot your password?{% endblocktrans %}</a>
 
 
 {% endblock %}
