@@ -26,6 +26,7 @@ Access To "http://localhost/"
 - [x] 一覧ページ送り
 - [x] 通知機能: slack (Webhook)
 - [x] 通知機能: メール
+- [ ] 利用方法のページを作成
 - [ ] Webhook URLバリデーション
 - [ ] テスト
 - [x] レスポンシブデザイン対応
