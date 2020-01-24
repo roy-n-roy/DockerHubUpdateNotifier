@@ -4,6 +4,20 @@ Docker hubのリポジトリをタグ単位で監視し、更新があった場�
 
 URL: [Docker Hub Update Checker - https://container-image.live-on.net](https://container-image.live-on.net)
 
+## HOW TO USE
+
+https://container-image.live-on.net へアクセスして利用するか、  
+もし、セルフホストしたい場合は下記のコマンドを実行してください。  
+If you want to self-host,  
+
+```
+> git clone https://github.com/roy-n-roy/DockerHubUpdateNotifier.git
+> docker-conpose up -d --build
+```
+
+その後、 http://localhost/ へアクセスしてください。  
+Access To "http://localhost/"  
+
 ## TODO
 - [x] ログイン機能
 - [x] ユーザー登録機能
@@ -14,6 +28,9 @@ URL: [Docker Hub Update Checker - https://container-image.live-on.net](https://c
 - [ ] 通知機能: メール
 - [ ] Webhook URLバリデーション
 - [ ] テスト
+- [x] レスポンシブデザイン対応
+- [ ] 全タグチェック対応
+- [ ] タグ一覧のサーバーサイドキャッシュ
 - [ ] ドキュメント整備
 - [ ] リポジトリ登録画面の初期フォーカス
 - [ ] 一覧のソート
