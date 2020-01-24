@@ -78,17 +78,17 @@
     </div>
 {% endif %}
 
-<table class="table">
-    <thead><tr>
-        <th>リポジトリ</th>
-        <th>最終更新日</th>
+<table class="table table-responsive-sm">
+    <thead class="thead-light"><tr>
+        <th scope="col">リポジトリ</th>
+        <th scope="col">最終更新日</th>
         <th></th>
         <th></th>
     </tr></thead>
     <tbody>
         {% for item in items %}
         <tr>
-            <td><a target="_" href="{{ item.repository.url }}">{{ item.repository }}</a></td>
+            <td scope="row"><a target="_" href="{{ item.repository.url }}">{{ item.repository }}</a></td>
             <td>{{ item.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
