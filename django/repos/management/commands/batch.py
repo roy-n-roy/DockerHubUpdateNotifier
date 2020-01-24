@@ -31,6 +31,7 @@ class Command(BaseCommand):
                     self.stdout.write(f'No update on "{repo}".')
             except Exception:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
+        self.stdout.write(self.style.NOTICE('Finished Bach Application.'))
 
 
 def send_notify(command: Command, user: User, repo: Repository):
