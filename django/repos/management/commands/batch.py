@@ -65,43 +65,52 @@ def send_notify(command: Command, user: User, repo: Repository):
         elif IFTTT_URL_PATTERN.match(webhook_url):
             message = IFTTT_MESSAGE.format(
                 url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
-
-        result = user.post_webhook(message)
-        if result:
-            command.stdout.write(command.style.SUCCESS(
-                RESULT_LOG.format(
-                    type='Webhook', result='successfully',
-                    repo=repo, date=repo.last_updated
-                )
-            ))
-        else:
-            command.stdout.write(command.style.ERROR(
-                RESULT_LOG.format(
-                    type='Webhook', result='failed',
-                    repo=repo, date=repo.last_updated
-                )
-            ))
+        result = False
+        try:
+            result = user.post_webhook(message)
+        except Exception:
+            command.stdout.write(command.style.ERROR(traceback.format_exc()))
+        finally:
+            if result:
+                command.stdout.write(command.style.SUCCESS(
+                    RESULT_LOG.format(
+                        type='Webhook', result='successfully',
+                        repo=repo, date=repo.last_updated
+                    )
+                ))
+            else:
+                command.stdout.write(command.style.ERROR(
+                    RESULT_LOG.format(
+                        type='Webhook', result='failed',
+                        repo=repo, date=repo.last_updated
+                    )
+                ))
 
     if user.is_notify_to_email:
-        result = user.email_user(
-            subject='Docker repository {repo} was Updated.'.format(repo=repo),
-            message=EMAIL_MESSAGE.format(
-                url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
-        )
-        if result:
-            command.stdout.write(command.style.SUCCESS(
-                RESULT_LOG.format(
-                    type='E-mail', result='successfully',
-                    repo=repo, date=repo.last_updated
-                )
-            ))
-        else:
-            command.stdout.write(command.style.ERROR(
-                RESULT_LOG.format(
-                    type='E-mail', result='failed',
-                    repo=repo, date=repo.last_updated
-                )
-            ))
+        result = False
+        try:
+            result = user.email_user(
+                subject='Docker repository {repo} was Updated.'.format(repo=repo),
+                message=EMAIL_MESSAGE.format(
+                    url=get_repo_url(repo), repo=str(repo), date=repo.last_updated)
+            )
+        except Exception:
+            command.stdout.write(command.style.ERROR(traceback.format_exc()))
+        finally:
+            if result:
+                command.stdout.write(command.style.SUCCESS(
+                    RESULT_LOG.format(
+                        type='E-mail', result='successfully',
+                        repo=repo, date=repo.last_updated
+                    )
+                ))
+            else:
+                command.stdout.write(command.style.ERROR(
+                    RESULT_LOG.format(
+                        type='E-mail', result='failed',
+                        repo=repo, date=repo.last_updated
+                    )
+                ))
 
 
 def get_repo_url(repo: Repository):
