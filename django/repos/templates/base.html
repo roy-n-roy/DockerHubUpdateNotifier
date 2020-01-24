@@ -1,5 +1,4 @@
-{% load i18n static %}
-<!DOCTYPE html>{% get_current_language as LANGUAGE_CODE %}
+{% load i18n %}<!DOCTYPE html>{% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE|default:"en-us" }}">
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
@@ -14,7 +13,7 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
     <a class="navbar-brand" href="{% url 'index' %}">{{ site_title }}</a>
     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navvar"
-            aria-controls="navvar" aria-expanded="false" aria-label="ナビゲーション表示">
+            aria-controls="navvar" aria-expanded="false" aria-label="Navigation View">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navvar" class="collapse navbar-collapse">

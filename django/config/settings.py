@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -139,9 +140,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'account.User'
-LOGIN_REDIRECT_URL = '/'
-
 # E-mail Settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
 if 'EMAIL_BACKEND' in ENV:
@@ -182,6 +180,10 @@ BOOTSTRAP4 = {
     "javascript_in_head": True,
     "include_jquery": True,
 }
+
+AUTH_USER_MODEL = 'account.User'
+LOGIN_REDIRECT_URL = '/'
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'), )
 
 DOCKER_HUB_API = (
     'https://hub.docker.com/v2/repositories/'

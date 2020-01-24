@@ -1,15 +1,17 @@
 {% extends "registration/base.html" %}
 
-{% block title %}ユーザー設定 - {{ block.super }}{% endblock %}
+{% load i18n %}
+
+{% block title %}{% blocktrans %}User Settings - {{ block.super }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
 <form method="POST" action="{% url 'accounts:profile' %}">
     {% csrf_token %}
-    {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' %}
+    {% bootstrap_form form layout='horizontal' alert_error_type='all' %}
     <div class="form-group row">
         <div class="offset-sm-10 col-sm-2">
-            <button type="submit" class="btn btn-primary">更新</button>
+            <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
         </div>
     </div>
 </form>

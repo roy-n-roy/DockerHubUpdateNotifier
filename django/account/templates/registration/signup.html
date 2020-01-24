@@ -1,13 +1,15 @@
 {% extends 'base_centered.html' %}
 
-{% block title %}ユーザー登録 - {{ block.super }}{% endblock %}
+{% load i18n %}
+
+{% block title %}{% blocktrans %}User Registration - {{ block.super }}{% endblocktrans %}{% endblock %}
 
 {% block content %}
 
-    <h5 class="card-title text-center">ユーザー登録</h5>
+    <h5 class="card-title text-center">{% blocktrans %}User Registration{% endblocktrans %}</h5>
     <form action="" method="POST">
         {% bootstrap_form form alert_error_type='all' %}
-        <button type="submit" class="btn btn-primary btn-block">登録</button>
+        <button type="submit" class="btn btn-primary btn-block">{% blocktrans %}Register{% endblocktrans %}</button>
         {% csrf_token %}
     </form>
 

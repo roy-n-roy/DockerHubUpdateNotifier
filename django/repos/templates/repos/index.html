@@ -1,24 +1,26 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block body %}
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">削除確認</h5>
+                <h5 class="modal-title" id="deleteModalLabel">{% blocktrans %}Removal Confirm{% endblocktrans %}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p><span id="del_name"></span> の更新通知を解除しますか？</p>
+                <p>{% blocktrans %}Do you want to remove <span id="del_name"></span> notification?{% endblocktrans %}</p>
             </div>
             <div class="modal-footer">
                 <form id="del_form" method="POST" action="">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">OK</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">{% blocktrans %}OK{% endblocktrans %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
                 </form>
             </div>
         </div>
@@ -38,27 +40,27 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="owner" class="col-sm-2 col-form-label">owner</label>
+                        <label for="owner" class="col-sm-2 col-form-label">{% blocktrans %}owner{% endblocktrans %}</label>
                         <div class="col-sm-10">
                             <input id="owner" name="owner" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="name" class="col-sm-2 col-form-label">repository</label>
+                        <label for="name" class="col-sm-2 col-form-label">{% blocktrans %}repository{% endblocktrans %}</label>
                         <div class="col-sm-10">
                             <input id="name" name="name" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="tag" class="col-sm-2 col-form-label">tag</label>
+                        <label for="tag" class="col-sm-2 col-form-label">{% blocktrans %}tag{% endblocktrans %}</label>
                         <div class="col-sm-10">
                             <select id="tag" name="tag" class="form-control"></select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="edit_submit">更新</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="edit_submit"></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
                 </div>
             </form>
         </div>
@@ -80,42 +82,42 @@
 
 <table class="table table-responsive-sm">
     <thead class="thead-light"><tr>
-        <th scope="col">リポジトリ</th>
-        <th scope="col">最終更新日</th>
+        <th scope="col">{% blocktrans %}Repositories{% endblocktrans %}</th>
+        <th scope="col">{% blocktrans %}Last Update{% endblocktrans %}</th>
         <th></th>
         <th></th>
     </tr></thead>
     <tbody>
         {% for item in items %}
         <tr>
-            <td scope="row"><a target="_" href="{{ item.repository.url }}">{{ item.repository }}</a></td>
+            <td scope="row"><a target="_" href="{{ item.repository.get_url }}">{{ item.repository }}</a></td>
             <td>{{ item.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
-                        data-toggle="modal" data-target="#editModal" data-type="更新" data-title="{{ item.repository }}"
+                        data-toggle="modal" data-target="#editModal" data-type="update" data-title="{{ item.repository }}"
                         data-owner="{{ item.repository.owner }}" data-name="{{ item.repository.name }}"
                         data-tag="{{ item.repository.tag }}" data-url="{% url 'repos:update' watching_id=item.id %}">
-                    変更
+                    {% blocktrans %}Edit{% endblocktrans %}
                 </button>
             </td>
             <td>
                 <button class="btn btn-outline-danger btn-sm del_confirm"
                         data-toggle="modal" data-target="#deleteModal"
                         data-title="{{ item.repository }}" data-url="{% url 'repos:delete' watching_id=item.id %}">
-                    削除
+                    {% blocktrans %}Remove{% endblocktrans %}
                 </button>
             </td>
         </tr>
         {% empty %}
-        <tr><td class="text-center" colspan="2">データが登録されていません。</td></tr>
+        <tr><td class="text-center" colspan="2">{% blocktrans %}No notifications have been registered.{% endblocktrans %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
 
 <div class="clearfix">
     <button class="btn btn-dark float-sm-right float-right display_edit"
-            data-toggle="modal" data-target="#editModal" data-type="追加" data-title="" data-url="{% url 'repos:add' %}">
-        追加
+            data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="{% url 'repos:add' %}">
+        {% blocktrans %}Add Repository{% endblocktrans %}
     </button>
     {% if is_paginated %}
     <ul class="pagination justify-content-center">
@@ -200,7 +202,7 @@ function set_tags(owner, name, page, current) {
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                     '</button>' +
-                    '<span> ' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗しました。</span>' +
+                    '<span>{% blocktrans %}Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + '{% endblocktrans %}</span>' +
                 '</div>'
             );
         }).always(function() {
@@ -214,8 +216,9 @@ $(function() {
         $('#del_form').attr('action', $(this).data('url'));
     });
     $('.display_edit').on('click', function() {
-        $('#edit_submit').text($(this).data('type'));
-        $('#editModalLabel').text($(this).data('type') + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
+        var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
+        $('#edit_submit').text(label);
+        $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
         $('#edit_name').text($(this).data('name'));
         $('#edit_form').attr('action', $(this).data('url'));
         $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
@@ -250,7 +253,7 @@ $(function() {
                     '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
                         '<span aria-hidden="true">&times;</span>' +
                     '</button>' +
-                    '<span> ' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker Hubで見つけられませんでした。</span>' +
+                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
                 '</div>'
             );
         });
@@ -261,7 +264,7 @@ $(function() {
         owner = owner === '' ? 'library' : owner;
         var name = $('#edit_form input[name="name"]').val();
         $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>データ取得中...</option>');
+        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
         set_tags(owner, name, 1, '');
     });
 });
