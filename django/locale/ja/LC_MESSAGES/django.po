@@ -267,7 +267,7 @@ msgstr "変更"
 
 #: .\repos\templates\repos\index.html:97
 msgid "Remove"
-msgstr ""
+msgstr "削除"
 
 #: .\repos\templates\repos\index.html:102
 msgid "No notifications have been registered."

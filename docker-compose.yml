@@ -49,7 +49,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:latest
+    image: postgres:12.1-alpine
     container_name: postgres
     environment:
       POSTGRES_DB: django
@@ -60,7 +60,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   nginx:
-    image: nginx:latest
+    image: nginx:1.17.8-alpine
     container_name: nginx
     ports:
       - 80:80
