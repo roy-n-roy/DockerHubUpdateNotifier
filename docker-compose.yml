@@ -7,7 +7,6 @@ services:
     container_name: webapp
     restart: always
     environment:
-      LANGUAGE_CODE: ja
       TZ: Asia/Tokyo
       ALLOWED_HOSTS: 'localhost, 127.0.0.1'
       DB_ENGINE: postgresql
@@ -30,9 +29,8 @@ services:
     image: docker-hub-update-notifier
     container_name: batch
     restart: always
-    command: bash -c ". ~/.bashrc && python scheduler.py batch"
+    command: sh -c "export SECRET_KEY=\"`cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 50 | head -n 1`\" && python scheduler.py batch"
     environment:
-      LANGUAGE_CODE: ja
       TZ: Asia/Tokyo
       DB_ENGINE: postgresql
       DB_HOST: postgres
