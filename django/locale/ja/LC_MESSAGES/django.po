@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-24 23:23+0900\n"
+"POT-Creation-Date: 2020-01-25 18:53+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,19 +71,26 @@ msgstr ""
 msgid "users"
 msgstr ""
 
-#: .\account\templates\registration\delete_complete.html:7
+#: .\account\templates\registration\base.html:13
+#: .\account\templates\registration\delete_complete.html:10
+#: .\account\templates\registration\password_reset_done.html:12
+msgid "Back"
+msgstr "戻る"
+
+#: .\account\templates\registration\delete_complete.html:5
 msgid "Your account deleted successfully."
-msgstr "アカウントを削除しました。"
+msgstr "ユーザーアカウントを削除しました。"
 
 #: .\account\templates\registration\delete_confirm.html:7
+#: .\account\templates\registration\profile.html:19
 msgid "Delete your account. Are you sure?"
-msgstr "アカウントを削除します。よろしいですか?"
+msgstr "ユーザーアカウントを削除します。よろしいですか?"
 
 #: .\account\templates\registration\delete_confirm.html:8
 msgid "Sure"
 msgstr "はい"
 
-#: .\account\templates\registration\logged_out.html:7
+#: .\account\templates\registration\logged_out.html:5
 msgid "You have signed out."
 msgstr "ログアウトしました。"
 
@@ -98,7 +105,7 @@ msgstr "ログイン"
 msgid "Forgot your password?"
 msgstr "パスワードをお忘れですか?"
 
-#: .\account\templates\registration\password_change_done.html:7
+#: .\account\templates\registration\password_change_done.html:5
 msgid "Your password has been changed."
 msgstr "パスワードを変更しました。"
 
@@ -107,12 +114,13 @@ msgid "change password"
 msgstr "パスワード変更"
 
 #: .\account\templates\registration\password_change_form.html:14
-#: .\account\templates\registration\profile.html:15
-#: .\repos\templates\repos\index.html:209 .\repos\views.py:47
+#: .\account\templates\registration\profile.html:46
+#: .\account\templates\registration\profile.html:59
+#: .\repos\templates\repos\index.html:211 .\repos\views.py:48
 msgid "Update"
 msgstr "更新"
 
-#: .\account\templates\registration\password_reset_complete.html:7
+#: .\account\templates\registration\password_reset_complete.html:5
 msgid "Your password has been reset."
 msgstr "パスワードをリセットしました。"
 
@@ -165,6 +173,45 @@ msgstr "%(site_name)s : パスワード再設定のご案内"
 msgid "User settings"
 msgstr "ユーザー設定"
 
+#: .\account\templates\registration\profile.html:12
+msgid "Account Deletion Confirm"
+msgstr "ユーザー削除確認"
+
+#: .\account\templates\registration\profile.html:20
+msgid "Please enter your email address if you wish to delete your account."
+msgstr "もしユーザーアカウントを削除される場合は、メールアドレスを入力してください。"
+
+#: .\account\templates\registration\profile.html:22
+msgid "Email address"
+msgstr "Eメールアドレス"
+
+#: .\account\templates\registration\profile.html:28
+#: .\account\templates\registration\profile.html:69
+msgid "Delete"
+msgstr "削除"
+
+#: .\account\templates\registration\profile.html:29
+#: .\repos\templates\repos\index.html:24 .\repos\templates\repos\index.html:64
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: .\account\templates\registration\profile.html:40
+msgid "Notification"
+msgstr "通知"
+
+#: .\account\templates\registration\profile.html:53
+msgid "Password change"
+msgstr "パスワード変更"
+
+#: .\account\templates\registration\profile.html:65
+msgid "Account Deletion"
+msgstr "ユーザーアカウント削除"
+
+#: .\account\templates\registration\profile.html:66
+msgid ""
+"Once you delete your account, there is no going back. Please be certain."
+msgstr "一度ユーザーアカウントを削除すると、元に戻すことはできません。ご注意ください。"
+
 #: .\account\templates\registration\signup.html:5
 #: .\account\templates\registration\signup.html:9
 msgid "User registration"
@@ -193,10 +240,6 @@ msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 #: .\repos\templates\repos\index.html:23
 msgid "OK"
 msgstr "OK"
-
-#: .\repos\templates\repos\index.html:24 .\repos\templates\repos\index.html:64
-msgid "Cancel"
-msgstr "キャンセル"
 
 #: .\repos\templates\repos\index.html:44
 msgid "owner"
@@ -234,7 +277,7 @@ msgstr "通知の登録がありません。"
 msgid "Add Repository"
 msgstr "追加"
 
-#: .\repos\templates\repos\index.html:195
+#: .\repos\templates\repos\index.html:197
 msgid ""
 "Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
 "'"
@@ -242,11 +285,11 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
 "しました。"
 
-#: .\repos\templates\repos\index.html:209
+#: .\repos\templates\repos\index.html:211
 msgid "Add"
 msgstr ""
 
-#: .\repos\templates\repos\index.html:246
+#: .\repos\templates\repos\index.html:248
 msgid ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
 "not be found on Docker Hub."
@@ -254,26 +297,26 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
 "Hubで見つけられませんでした。"
 
-#: .\repos\templates\repos\index.html:257
+#: .\repos\templates\repos\index.html:259
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 
-#: .\repos\views.py:40
+#: .\repos\views.py:41
 msgid "Deletion completed."
 msgstr "削除完了"
 
-#: .\repos\views.py:47
+#: .\repos\views.py:48
 msgid "Registration"
 msgstr "登録"
 
-#: .\repos\views.py:82
+#: .\repos\views.py:83
 msgid " is a duplicate."
 msgstr "は既に登録されています。"
 
-#: .\repos\views.py:84 .\repos\views.py:88
+#: .\repos\views.py:85 .\repos\views.py:89
 msgid " failed."
 msgstr "に失敗しました。"
 
-#: .\repos\views.py:86
+#: .\repos\views.py:87
 msgid " completed."
 msgstr "完了"

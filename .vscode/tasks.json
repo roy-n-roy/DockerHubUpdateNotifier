@@ -46,5 +46,52 @@
 			},
 			"problemMatcher": [],
 		},
+		{
+			"label": "django_make_messages",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source ../venv/bin/activate && django-admin makemessages",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"..\\venv\\Scripts\\activate && django-admin makemessages",
+				],
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/django"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "django_compile_messages",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source ../venv/bin/activate && django-admin compilemessages",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"..\\venv\\Scripts\\activate && django-admin compilemessages",
+				],
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/django"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "django_prelaunch",
+			"dependsOn": [
+				"django_migrate",
+				"django_compile_messages",
+			]
+		}
 	]
 }

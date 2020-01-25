@@ -1,4 +1,5 @@
 import json
+from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -6,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import ListView
 
@@ -87,7 +88,16 @@ def edit(request, watching_id=None):
     else:
         messages.error(request, _(action + ' failed.'))
 
-    return redirect('repos:index')
+    # POST元のURLクエリを保持しつつ、リダイレクト先のURLクエリで上書き
+    redirect_url = urlparse(reverse('repos:index'))._asdict()
+    referer_url = urlparse(request.META.get('HTTP_REFERER'))._asdict()
+
+    query = parse_qs(qs=referer_url.get('query'), keep_blank_values=True)
+    query.update(parse_qs(redirect_url.get('query'), keep_blank_values=True))
+
+    redirect_url['query'] = urlencode(query, doseq=True)
+
+    return redirect(urlunparse(redirect_url.values()))
 
 
 @require_GET

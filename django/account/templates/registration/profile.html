@@ -5,39 +5,89 @@
 {% block title %}{% blocktrans %}User settings{% endblocktrans %} - {{ block.super }}{% endblock %}
 
 {% block content %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">{% blocktrans %}Account Deletion Confirm{% endblocktrans %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="del_form" method="GET" action="{% url 'accounts:delete-complete' %}">
+                <div class="modal-body">
+                    <p>{% blocktrans %}Delete your account. Are you sure?{% endblocktrans %}</p>
+                    <p>{% blocktrans %}Please enter your email address if you wish to delete your account.{% endblocktrans %}</p>
+                    <div class="form-group">
+                        <label title="Email address" for="email_validate">{% blocktrans %}Email address{% endblocktrans %}</label>
+                        <input id="email_validate" type="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        {% csrf_token %}
+                        <button id="account_deletion_confirmed" type="submit" class="btn btn-danger" aria-disabled="true" disabled>{% blocktrans %}Delete{% endblocktrans %}</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <div class="container">
-    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
-        <div class="col-8">
-            <h3>{% blocktrans %}Notification{% endblocktrans %}</h3>
-        </div>
-    </div></div>
-    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border rounded-lg my-3 px-4 py-2">
         <form method="POST" action="{% url 'accounts:profile' %}">
+            <legend>{% blocktrans %}Notification{% endblocktrans %}</legend>
             {% csrf_token %}
+            {% bootstrap_form_errors form %}
             {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' horizontal_label_class='col-4 col-lg-3' horizontal_field_class='col-8 col-lg-9' %}
             <div class="form-group row">
-                <div class="offset-sm-10 col-sm-2">
-                    <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
+                <div class="offset-lg-9 col-lg-3 offset-md-7 col-md-5">
+                    <button type="submit" class="btn btn-block btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
                 </div>
             </div>
         </form>
     </div></div>
-    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
-        <div class="col-8">
-            <h3>{% blocktrans %}Password change{% endblocktrans %}</h3>
-        </div>
-    </div></div>
-    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9">
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border rounded-lg my-3 px-4 py-2">
         <form method="POST" action="{% url 'password_change' %}">
+            <legend>{% blocktrans %}Password change{% endblocktrans %}</legend>
             {% csrf_token %}
-            {% bootstrap_form form layout='horizontal' alert_error_type='all' exclude='password' horizontal_label_class='col-4 col-lg-3' horizontal_field_class='col-8 col-lg-9' %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_form form=password_change_form layout='horizontal' alert_error_type='all' exclude='password' horizontal_label_class='col-4 col-lg-3' horizontal_field_class='col-8 col-lg-9' %}
             <div class="form-group row">
-                <div class="offset-sm-10 col-sm-2">
-                    <button type="submit" class="btn btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
+                <div class="offset-lg-9 col-lg-3 offset-md-7 col-md-5">
+                    <button type="submit" class="btn btn-block btn-primary">{% blocktrans %}Update{% endblocktrans %}</button>
                 </div>
             </div>
         </form>
+    </div></div>
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border border-danger rounded-lg my-3 px-4 py-2">
+        <legend>{% blocktrans %}Account Deletion{% endblocktrans %}</legend>
+        <p class="col">{% blocktrans %}Once you delete your account, there is no going back. Please be certain.{% endblocktrans %}</p>
+        <div class="form-group row">
+            <div class="offset-lg-9 col-lg-3 offset-md-7 col-md-5" data-toggle="modal" data-target="#deleteModal">
+                <button id="delete_account_show_modal" type="button" class="btn btn-block btn-danger">{% blocktrans %}Delete{% endblocktrans %}</button>
+            </div>
+        </div>
     </div></div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(function() {
+    $('#delete_account_show_modal').on('click', function() {
+        $('#email_validate').val('');
+    });
+    $('#email_validate').on('input', function() {
+        if ($(this).val() === "{{ user }}") {
+            $('#account_deletion_confirmed').attr('aria-disabled', 'false');
+            $('#account_deletion_confirmed').removeAttr('disabled');
+        } else {
+            $('#account_deletion_confirmed').attr('aria-disabled', 'true');
+            $('#account_deletion_confirmed').attr('disabled', 'disabled');
+        } 
+    });
+});
+</script>
 {% endblock %}

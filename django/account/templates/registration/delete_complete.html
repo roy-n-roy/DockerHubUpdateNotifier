@@ -1,9 +1,12 @@
-{% extends "base.html" %}
-
+{% extends "registration/base.html" %}
 {% load i18n %}
 
-{% block content %}
+{% block message %}
+<p>{% blocktrans %}Your account deleted successfully.{% endblocktrans %}</p>
+{% endblock %}
 
-    <p>{% blocktrans %}Your account deleted successfully.{% endblocktrans %}</p>
-
+{% block back_button %}
+<div class="offset-sm-6 offset-md-7 col-lg-2 col-md-3">
+    <a class="btn btn-block btn-primary" href="{% url 'index' %}">{% blocktrans %}Back{% endblocktrans %}</a>
+</div>
 {% endblock %}
