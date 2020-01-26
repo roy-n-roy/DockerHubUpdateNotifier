@@ -1,14 +1,17 @@
 import traceback
+import json
 
 from django.core.management.base import BaseCommand
-
+from django.template.loader import render_to_string
+from django.utils.translation import get_language, activate
 from account.models import User, WebhookType
 
 from ...apps import ReposConfig as App
 from ...models import Repository, Watching
 
-
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
+
+SYS_LANGUAGE_CODE = get_language()
 
 
 class Command(BaseCommand):
@@ -38,23 +41,37 @@ def send_notify(command: Command, user: User, repo: Repository):
     if not user.is_active:
         return
 
+    context = {
+        "repo": str(repo),
+        "last_updated": repo.last_updated,
+        "url": repo.get_url(),
+    }
     webhook_type = user.get_webhook_type()
+    message = None
     if webhook_type == WebhookType.SLACK:
-        message = {
-            "text": f"<{repo.get_url()}|{repo}> was updated"
-            f" on {repo.last_updated}."}
+        try:
+            activate(str(user.language_code))
+            message = json.loads(render_to_string(
+                'repos/update_notify_slack.json', context))
+        finally:
+            activate(SYS_LANGUAGE_CODE)
     elif webhook_type == WebhookType.IFTTT:
-        message = {
-            "value1": f"{repo} was updated on {repo.last_updated}.",
-            "value2": f"{repo.get_url()}", "value3": f"{repo.last_updated}"}
+        try:
+            activate(str(user.language_code))
+            message = json.loads(render_to_string(
+                'repos/update_notify_slack.json', context))
+        finally:
+            activate(SYS_LANGUAGE_CODE)
     elif webhook_type == WebhookType.UNKNOWN:
         command.stdout.write(command.style.ERROR(
             f'User {user} has UNKNOWN URL.\n{user.webhook_url}'
         ))
 
     if webhook_type not in [WebhookType.UNKNOWN, WebhookType.NONE]:
+        result = False
         try:
-            result = user.post_webhook(message)
+            if message:
+                result = user.post_webhook(message)
         except Exception:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
         finally:
@@ -73,18 +90,17 @@ def send_notify(command: Command, user: User, repo: Repository):
     if user.is_notify_to_email:
         result = False
         try:
+            activate(str(user.language_code))
             result = user.email_user(
-                subject=f'Docker repository {repo} was Updated.',
-                message=(
-                    f'The Docker Hub repository {repo} was updated'
-                    f' at {repo.last_updated}.\n'
-                    'To view the repository on Docker Hub,'
-                    f' go to the following URL:\n\n{repo.get_url()}'
-                )
+                subject=render_to_string(
+                    'repos/update_notify_subject.txt', context),
+                message=render_to_string(
+                    'repos/update_notify_email.html', context)
             )
         except Exception:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
         finally:
+            activate(SYS_LANGUAGE_CODE)
             if result:
                 command.stdout.write(command.style.SUCCESS(
                     f'E-mail notification was successfully.'

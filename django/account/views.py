@@ -20,6 +20,13 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy('login')
     template_name = 'registration/signup.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({
+            'initial': {'language_code': self.request.LANGUAGE_CODE}
+        })
+        return kwargs
+
 
 class ProfileView(LoginRequiredMixin, generic.UpdateView):
     model = User

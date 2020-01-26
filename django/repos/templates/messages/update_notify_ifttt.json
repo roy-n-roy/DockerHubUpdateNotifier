@@ -1,0 +1,1 @@
+{% load i18n %}{% autoescape off %}{"value1": "{% blocktrans %}{{ repo }} was updated on {{ last_updated }}.{% endblocktrans %}", "value2": "{{ url }}", "value3": "{{ last_updated }}"}{% endautoescape %}

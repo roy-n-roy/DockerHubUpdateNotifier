@@ -36,6 +36,10 @@
 <div class="container mt-3">
 {% block content %}{% endblock %}
 </div>
+<form id="set_language_form" action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="language" hidden>
+</form>
 {% block extra_js %}{% endblock %}
 </body>
 </html>

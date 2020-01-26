@@ -36,7 +36,7 @@
 
 <div class="container">
     <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border rounded-lg my-3 px-4 py-2">
-        <form method="POST" action="{% url 'accounts:profile' %}">
+        <form id="profile_form" method="POST" action="{% url 'accounts:profile' %}">
             <legend>{% blocktrans %}Notification{% endblocktrans %}</legend>
             {% csrf_token %}
             {% bootstrap_form_errors form %}
@@ -88,6 +88,11 @@ $(function() {
             $('#account_deletion_confirmed').attr('disabled', 'disabled');
         } 
     });
+    $('#profile_form select[name="language_code"]').on('change', function() {
+        $('#set_language_form input[name="language"]').val($(this).val());
+        $('#set_language_form').submit();
+    });
+    $('#profile_form select[name="language_code"]').val("{{ LANGUAGE_CODE }}");
 });
 </script>
 {% endblock %}

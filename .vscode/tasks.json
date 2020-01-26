@@ -24,6 +24,29 @@
 			"problemMatcher": [],
 		},
 		{
+			"label": "django_make_migrations",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source venv/bin/activate && python django/manage.py makemigrations --settings=config.settings_dev",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"venv\\Scripts\\activate && python django\\manage.py makemigrations --settings=config.settings_dev",
+				],
+			},
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"SECRET_KEY": "",
+				},
+			},
+			"problemMatcher": [],
+		},
+		{
 			"label": "django_migrate",
 			"type": "shell",
 			"command": "bash",

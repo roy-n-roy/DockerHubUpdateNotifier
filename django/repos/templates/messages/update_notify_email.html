@@ -1,0 +1,6 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}The Docker Hub repository {{ repo }} was updated at {{ last_updated }}.{% endblocktrans %}
+{% trans "To view the repository on Docker Hub, go to the following URL:" %}
+
+{{ repo_url ]}
+{% endautoescape %}

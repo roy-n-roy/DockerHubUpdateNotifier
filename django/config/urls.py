@@ -19,11 +19,12 @@ from django.urls import include, path
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
-    path(r'accounts/', include('account.urls')),
-    path(r'accounts/', include('django.contrib.auth.urls')),
-    path(r'repos/', include('repos.urls')),
-    path(r'', RedirectView.as_view(url='repos/'), name='index'),
+    path('accounts/', include('account.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('repos/', include('repos.urls')),
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('', RedirectView.as_view(url='repos/'), name='index'),
 ]
 
 if 'django.contrib.admin' in settings.INSTALLED_APPS:
-    urlpatterns.append(path(r'admin/', admin.site.urls))
+    urlpatterns.append(path('admin/', admin.site.urls))

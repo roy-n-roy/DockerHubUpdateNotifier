@@ -1,0 +1,1 @@
+{% load i18n %}{% autoescape off %}{"text": "{{ url }}\|{{ repo }}> was updated on {{ last_updated }}."}{% endautoescape %}

@@ -46,6 +46,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         ),
     )
 
+    language_code = models.CharField(
+        _('Language'),
+        max_length=3,
+        default='en',
+        help_text=_('Language used to display.')
+        )
+
     is_notify_to_email = models.BooleanField(
         _('is notity to E-mail'), default=True,
         help_text=_(
