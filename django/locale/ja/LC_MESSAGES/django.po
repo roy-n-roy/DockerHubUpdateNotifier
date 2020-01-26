@@ -3,12 +3,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-25 18:53+0900\n"
+"Report-Msgid-Bugs-To: Roy. <royroy.euph@gmail.com>\n"
+"POT-Creation-Date: 2020-01-26 16:25+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: None\n"
+"Language: Japanese\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,48 +32,56 @@ msgstr ""
 "Webhook URLをサポートしています。"
 
 #: .\account\models.py:50
+msgid "Language"
+msgstr "言語"
+
+#: .\account\models.py:53
+msgid "Language used to display."
+msgstr "表示に使用する言語です。"
+
+#: .\account\models.py:57
 msgid "is notity to E-mail"
 msgstr "Eメールアドレスへ通知"
 
-#: .\account\models.py:52
+#: .\account\models.py:59
 msgid ""
 "If enabled, it will notify your email address of updates to the Docker "
 "repository."
 msgstr "Eメールでの通知を希望する場合はチェックして下さい。"
 
-#: .\account\models.py:58
+#: .\account\models.py:65
 msgid "staff status"
 msgstr ""
 
-#: .\account\models.py:61
+#: .\account\models.py:68
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: .\account\models.py:65
+#: .\account\models.py:72
 msgid "active"
 msgstr ""
 
-#: .\account\models.py:68
+#: .\account\models.py:75
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: .\account\models.py:72
+#: .\account\models.py:79
 msgid "date joined"
 msgstr "ユーザー登録日"
 
-#: .\account\models.py:81
+#: .\account\models.py:88
 msgid "user"
 msgstr ""
 
-#: .\account\models.py:82
+#: .\account\models.py:89
 msgid "users"
 msgstr ""
 
 #: .\account\templates\registration\base.html:13
 #: .\account\templates\registration\delete_complete.html:10
-#: .\account\templates\registration\password_reset_done.html:12
+#: .\account\templates\registration\password_reset_done.html:10
 msgid "Back"
 msgstr "戻る"
 
@@ -116,7 +124,7 @@ msgstr "パスワード変更"
 #: .\account\templates\registration\password_change_form.html:14
 #: .\account\templates\registration\profile.html:46
 #: .\account\templates\registration\profile.html:59
-#: .\repos\templates\repos\index.html:211 .\repos\views.py:48
+#: .\repos\templates\repos\index.html:209 .\repos\views.py:48
 msgid "Update"
 msgstr "更新"
 
@@ -132,7 +140,7 @@ msgstr "パスワードのリセット"
 msgid "Change my password"
 msgstr "パスワードを変更する"
 
-#: .\account\templates\registration\password_reset_done.html:7
+#: .\account\templates\registration\password_reset_done.html:5
 msgid ""
 "The email was sent to the address you entered. Reset the password from the "
 "link in the body of the mail."
@@ -179,7 +187,8 @@ msgstr "ユーザー削除確認"
 
 #: .\account\templates\registration\profile.html:20
 msgid "Please enter your email address if you wish to delete your account."
-msgstr "もしユーザーアカウントを削除される場合は、メールアドレスを入力してください。"
+msgstr ""
+"もしユーザーアカウントを削除される場合は、メールアドレスを入力してください。"
 
 #: .\account\templates\registration\profile.html:22
 msgid "Email address"
@@ -210,10 +219,12 @@ msgstr "ユーザーアカウント削除"
 #: .\account\templates\registration\profile.html:66
 msgid ""
 "Once you delete your account, there is no going back. Please be certain."
-msgstr "一度ユーザーアカウントを削除すると、元に戻すことはできません。ご注意ください。"
+msgstr ""
+"一度ユーザーアカウントを削除すると、元に戻すことはできません。ご注意くださ"
+"い。"
 
 #: .\account\templates\registration\signup.html:5
-#: .\account\templates\registration\signup.html:9
+#: .\account\templates\registration\signup.html:8
 msgid "User registration"
 msgstr "ユーザー登録"
 
@@ -228,6 +239,20 @@ msgstr "ログアウト"
 #: .\repos\templates\base.html:31
 msgid "Sign up"
 msgstr "ユーザー登録"
+
+#: .\repos\templates\messages\update_notify_email.html:2
+#, python-format
+msgid "The Docker Hub repository %(repo)s was updated at %(last_updated)s."
+msgstr "Docker Hubのリポジトリ: %(repo)s が %(last_updated)s に更新されました。"
+
+#: .\repos\templates\messages\update_notify_email.html:3
+msgid "To view the repository on Docker Hub, go to the following URL:"
+msgstr "Docker Hubで確認するには、以下のURLへアクセスしてください。"
+
+#: .\repos\templates\messages\update_notify_subject.txt:2
+#, python-format
+msgid "Docker repository %(repo)s was Updated."
+msgstr "Dockerリポジトリ: %(repo)s が更新されました。"
 
 #: .\repos\templates\repos\index.html:12
 msgid "Removal Confirm"
@@ -277,7 +302,7 @@ msgstr "通知の登録がありません。"
 msgid "Add Repository"
 msgstr "追加"
 
-#: .\repos\templates\repos\index.html:197
+#: .\repos\templates\repos\index.html:196
 msgid ""
 "Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
 "'"
@@ -285,11 +310,11 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
 "しました。"
 
-#: .\repos\templates\repos\index.html:211
+#: .\repos\templates\repos\index.html:209
 msgid "Add"
 msgstr ""
 
-#: .\repos\templates\repos\index.html:248
+#: .\repos\templates\repos\index.html:246
 msgid ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
 "not be found on Docker Hub."
@@ -297,7 +322,7 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
 "Hubで見つけられませんでした。"
 
-#: .\repos\templates\repos\index.html:259
+#: .\repos\templates\repos\index.html:257
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 

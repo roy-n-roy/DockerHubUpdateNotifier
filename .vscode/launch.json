@@ -6,7 +6,7 @@
 	"compounds": [
 		{
 			"name": "Django",
-			"configurations": ["Python: Django", "Firefox: Django"]
+			"configurations": ["Python: Django", "Firefox: Django"],
 		}
 	],
 	"configurations": [
@@ -17,16 +17,16 @@
 			"program": "${workspaceFolder}\\django\\manage.py",
 			"args": [
 				"runserver",
-				"localhost:8000",
 				"--settings=config.settings_dev",
-				"--noreload"
+				"--noreload",
 			],
 			"env": {
 				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
 				"TZ": "Asia/Tokyo",
 			},
 			"preLaunchTask": "django_prelaunch",
-			"django": true
+			"django": true,
+			"subProcess": true,
 		},
 		{
 			"name": "Python: Django Batch",
@@ -35,14 +35,14 @@
 			"program": "${workspaceFolder}\\django\\manage.py",
 			"args": [
 				"batch",
-				"--settings=config.settings_dev"
+				"--settings=config.settings_dev",
 			],
 			"env": {
 				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
 				"TZ": "Asia/Tokyo",
 			},
 			"preLaunchTask": "django_prelaunch",
-			"django": true
+			"django": true,
 		},
 		{
 			"type": "firefox",
@@ -50,7 +50,7 @@
 			"reAttach": true,
 			"name": "Firefox: Django",
 			"url": "http://localhost:8000",
-			"webRoot": "${workspaceFolder}"
+			"webRoot": "${workspaceFolder}",
 		},
 	],
 }

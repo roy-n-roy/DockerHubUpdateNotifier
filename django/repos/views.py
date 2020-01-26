@@ -22,7 +22,7 @@ class IndexListView(LoginRequiredMixin, ListView):
     model = Watching
     context_object_name = 'items'
     template_name = "repos/index.html"
-    paginate_by = 10
+    paginate_by = 0
 
     def get_queryset(self):
         quieryset = Watching.objects.filter(user=self.request.user)

@@ -70,7 +70,7 @@
 
 {% bootstrap_messages %}
 
-<table class="table table-responsive-sm">
+<table id="main_table" class="table">
     <thead class="thead-light"><tr>
         <th scope="col">{% blocktrans %}Repositories{% endblocktrans %}</th>
         <th scope="col">{% blocktrans %}Last Update{% endblocktrans %}</th>
@@ -80,7 +80,10 @@
     <tbody>
         {% for item in items %}
         <tr>
-            <td scope="row"><a target="_" href="{{ item.repository.get_url }}">{{ item.repository }}</a></td>
+            <td scope="row">
+                <a target="_" href="{{ item.repository.get_url }}">{{ item.repository }}</a>
+                <i class="small text-primary fas fa-external-link-alt"></i>
+            </td>
             <td>{{ item.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
@@ -104,62 +107,15 @@
     </tbody>
 </table>
 
-<div class="clearfix">
-    <button class="btn btn-dark float-sm-right float-right display_edit"
-            data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="{% url 'repos:add' %}">
-        {% blocktrans %}Add Repository{% endblocktrans %}
-    </button>
-    {% if is_paginated %}
-    <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
-            </a>
-        </li>
-        {% endif %}
-        {% for linkpage in page_obj.paginator.page_range %}
-        {% ifequal linkpage page_obj.number %}
-        <li class="page-item active">
-            <a class="page-link" href="#">{{ linkpage }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ linkpage }}">{{ linkpage }}</a>
-        </li>
-        {% endifequal %}
-        {% endfor %}
-        {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-            </a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
-            </a>
-        </li>
-        {% endif %}
-    </ul>
-    {% endif %}
-</div>
+
 {% endblock %}
 
 {% block extra_js %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css"/>
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
-$(function() {
+$(document).ready(function() {
     var set_tags = function (owner, name, page, current) {
         if (name) {
             var url = "{% url 'repos:tags' owner='_owner_' name='_name_' page=0%}"
@@ -201,23 +157,59 @@ $(function() {
             });
         }
     };
-    $('.del_confirm').on('click', function() {
-        $('#del_name').text($(this).data('title'));
-        $('#del_form').attr('action', $(this).data('url'));
-    });
-    $('.display_edit').on('click', function() {
-        var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
-        $('#edit_submit').text(label);
-        $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
-        $('#edit_name').text($(this).data('name'));
-        $('#edit_form').attr('action', $(this).data('url'));
-        $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
-        $('#edit_form input[name="name"]').val($(this).data('name'));
-        $('#edit_form select[name="tag"]').val($(this).data('tag'));
-        $("#form_alert").remove();
-        $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form input[name="name"]').focus();
-        set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
+    $('#main_table').on('init.dt', function() {
+        $('#add-button-container').append($(
+        '<button class="btn btn-block btn-outline-secondary display_edit" ' +
+            'data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="' + "{% url 'repos:add' %}" + '">' +
+            '{% blocktrans %}Add Repository{% endblocktrans %}' +
+        '</button>'
+        ));
+    }).on('draw.dt', function() {
+        $('#main_table_paginate ul').addClass('justify-content-md-center');
+        $('.del_confirm').on('click', function() {
+            $('#del_name').text($(this).data('title'));
+            $('#del_form').attr('action', $(this).data('url'));
+        });
+        $('.display_edit').on('click', function() {
+            var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
+            $('#edit_submit').text(label);
+            $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
+            $('#edit_name').text($(this).data('name'));
+            $('#edit_form').attr('action', $(this).data('url'));
+            $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
+            $('#edit_form input[name="name"]').val($(this).data('name'));
+            $('#edit_form select[name="tag"]').val($(this).data('tag'));
+            $("#form_alert").remove();
+            $('#edit_form select[name="tag"]').children().remove();
+            $('#edit_form input[name="name"]').focus();
+            set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
+        });
+    }).DataTable({
+        dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12 col-md-3'i><'col-sm-12 col-md-6'p><'#add-button-container.col-sm-12 col-md-3'>>",
+        stateSave: true,
+        columns: [ null, null, { "orderable": false }, { "orderable": false } ],
+        order: [[ 0, 'asc' ], [ 1, 'desc' ], [ 0, 'asc' ], [ 0, 'asc' ]],
+        language: {
+            emptyTable: "テーブルにデータがありません",
+            info: " _TOTAL_ 件中 _START_ から _END_ まで表示",
+            infoEmpty: " 0 件中 0 から 0 まで表示",
+            infoFiltered: "（全 _MAX_ 件より抽出）",
+            infoPostFix: "",
+            infoThousands: ",",
+            lengthMenu: "_MENU_ 件表示",
+            loadingRecords: "読み込み中...",
+            processing: "処理中...",
+            search: "検索:",
+            zeroRecords: "一致するレコードがありません",
+            paginate: {
+                first:    '«',
+                previous: '‹',
+                next:     '›',
+                last:     '»'
+            },
+        },
     });
     $("#edit_submit").click(function(e) {
         var owner = $('#edit_form input[name="owner"]').val();

@@ -29,13 +29,13 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source venv/bin/activate && python django/manage.py makemigrations --settings=config.settings_dev",
+				"source venv/bin/activate && python django/manage.py makemigrations --merge --settings=config.settings_dev",
 			],
 			"windows": {
 				"command": "cmd",
 				"args": [
 					"/c",
-					"venv\\Scripts\\activate && python django\\manage.py makemigrations --settings=config.settings_dev",
+					"venv\\Scripts\\activate && python django\\manage.py makemigrations --merge --settings=config.settings_dev",
 				],
 			},
 			"options": {
