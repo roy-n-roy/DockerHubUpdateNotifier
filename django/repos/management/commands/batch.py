@@ -1,5 +1,4 @@
 import traceback
-import json
 
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
@@ -51,15 +50,15 @@ def send_notify(command: Command, user: User, repo: Repository):
     if webhook_type == WebhookType.SLACK:
         try:
             activate(str(user.language_code))
-            message = json.loads(render_to_string(
-                'repos/update_notify_slack.json', context))
+            message = render_to_string(
+                'messages/update_notify_slack.txt', context).encode('UTF-8')
         finally:
             activate(SYS_LANGUAGE_CODE)
     elif webhook_type == WebhookType.IFTTT:
         try:
             activate(str(user.language_code))
-            message = json.loads(render_to_string(
-                'repos/update_notify_slack.json', context))
+            message = render_to_string(
+                'messages/update_notify_slack.txt', context).encode('UTF-8')
         finally:
             activate(SYS_LANGUAGE_CODE)
     elif webhook_type == WebhookType.UNKNOWN:
@@ -93,9 +92,9 @@ def send_notify(command: Command, user: User, repo: Repository):
             activate(str(user.language_code))
             result = user.email_user(
                 subject=render_to_string(
-                    'repos/update_notify_subject.txt', context),
+                    'messages/update_notify_subject.txt', context),
                 message=render_to_string(
-                    'repos/update_notify_email.html', context)
+                    'messages/update_notify_email.html', context)
             )
         except Exception:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))

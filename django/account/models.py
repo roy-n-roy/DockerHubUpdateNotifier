@@ -99,7 +99,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def post_webhook(self, message: dict):
         """Post Webhook to user defined URL."""
-        result = requests.post(url=str(self.webhook_url), json=message)
+        result = requests.post(url=str(self.webhook_url), data=message)
         result.raise_for_status()
         return result.status_code == requests.codes.ok
 
