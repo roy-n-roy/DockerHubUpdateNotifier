@@ -29,17 +29,17 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source venv/bin/activate && python django/manage.py makemigrations --merge --settings=config.settings_dev",
+				"../source venv/bin/activate && python manage.py makemigrations account repos --settings=config.settings_dev && python manage.py makemigrations --merge --settings=config.settings_dev",
 			],
 			"windows": {
 				"command": "cmd",
 				"args": [
 					"/c",
-					"venv\\Scripts\\activate && python django\\manage.py makemigrations --merge --settings=config.settings_dev",
+					"..\\venv\\Scripts\\activate && python manage.py makemigrations account repos --settings=config.settings_dev && python manage.py makemigrations --merge --settings=config.settings_dev",
 				],
 			},
 			"options": {
-				"cwd": "${workspaceFolder}",
+				"cwd": "${workspaceFolder}/django",
 				"env": {
 					"SECRET_KEY": "",
 				},
@@ -52,17 +52,17 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source venv/bin/activate && python django/manage.py migrate --settings=config.settings_dev",
+				"source ../venv/bin/activate && python manage.py migrate --settings=config.settings_dev ",
 			],
 			"windows": {
 				"command": "cmd",
 				"args": [
 					"/c",
-					"venv\\Scripts\\activate && python django\\manage.py migrate --settings=config.settings_dev",
+					"..\\venv\\Scripts\\activate && python manage.py migrate --settings=config.settings_dev",
 				],
 			},
 			"options": {
-				"cwd": "${workspaceFolder}",
+				"cwd": "${workspaceFolder}/django",
 				"env": {
 					"SECRET_KEY": "",
 				},
@@ -85,7 +85,7 @@
 				],
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/django"
+				"cwd": "${workspaceFolder}/django",
 			},
 			"problemMatcher": []
 		},
@@ -105,15 +105,38 @@
 				],
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/django"
+				"cwd": "${workspaceFolder}/django",
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "django_tests",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-c",
+				"source ../venv/bin/activate && python manage.py test --settings=config.settings_dev",
+			],
+			"windows": {
+				"command": "cmd",
+				"args": [
+					"/c",
+					"..\\venv\\Scripts\\activate && python manage.py test --settings=config.settings_dev",
+				],
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/django",
+				"env": {
+					"SECRET_KEY": " ",
+				},
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "django_prelaunch",
 			"dependsOn": [
-				"django_migrate",
 				"django_compile_messages",
+				"django_migrate",
 			]
 		}
 	]

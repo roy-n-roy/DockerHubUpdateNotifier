@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-27 00:53+0900\n"
+"POT-Creation-Date: 2020-01-28 21:57+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -71,11 +71,15 @@ msgstr ""
 msgid "date joined"
 msgstr "ユーザー登録日"
 
-#: .\account\models.py:88
+#: .\account\models.py:82
+msgid "timezone"
+msgstr "タイムゾーン"
+
+#: .\account\models.py:94
 msgid "user"
 msgstr ""
 
-#: .\account\models.py:89
+#: .\account\models.py:95
 msgid "users"
 msgstr ""
 
@@ -124,7 +128,7 @@ msgstr "パスワード変更"
 #: .\account\templates\registration\password_change_form.html:14
 #: .\account\templates\registration\profile.html:46
 #: .\account\templates\registration\profile.html:59
-#: .\repos\templates\repos\index.html:174 .\repos\views.py:48
+#: .\repos\templates\repos\index.html:207 .\repos\views.py:44
 msgid "Update"
 msgstr "更新"
 
@@ -200,7 +204,7 @@ msgid "Delete"
 msgstr "削除"
 
 #: .\account\templates\registration\profile.html:29
-#: .\repos\templates\repos\index.html:24 .\repos\templates\repos\index.html:64
+#: .\repos\templates\repos\index.html:25 .\repos\templates\repos\index.html:66
 msgid "Cancel"
 msgstr "キャンセル"
 
@@ -265,67 +269,47 @@ msgstr "<%(url)s|%(repo)s> が更新されました。 更新日時: %(last_upda
 msgid "Docker repository %(repo)s was Updated."
 msgstr "Dockerリポジトリ: %(repo)s が更新されました。"
 
-#: .\repos\templates\repos\index.html:12
+#: .\repos\templates\repos\index.html:13
 msgid "Removal Confirm"
 msgstr "削除確認"
 
-#: .\repos\templates\repos\index.html:18
+#: .\repos\templates\repos\index.html:19
 msgid "Do you want to remove <span id=\"del_name\"></span> notification?"
 msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 
-#: .\repos\templates\repos\index.html:23
+#: .\repos\templates\repos\index.html:24
 msgid "OK"
 msgstr "OK"
 
-#: .\repos\templates\repos\index.html:44
+#: .\repos\templates\repos\index.html:46
 msgid "owner"
 msgstr "オーナー"
 
-#: .\repos\templates\repos\index.html:50
+#: .\repos\templates\repos\index.html:52
 msgid "repository"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\index.html:56
+#: .\repos\templates\repos\index.html:58
 msgid "tag"
 msgstr "タグ"
 
-#: .\repos\templates\repos\index.html:75
+#: .\repos\templates\repos\index.html:78
 msgid "Repositories"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\index.html:76
+#: .\repos\templates\repos\index.html:79
 msgid "Last Update"
 msgstr "最終更新日"
 
-#: .\repos\templates\repos\index.html:93
+#: .\repos\templates\repos\index.html:97
 msgid "Edit"
 msgstr "変更"
 
-#: .\repos\templates\repos\index.html:100
+#: .\repos\templates\repos\index.html:104
 msgid "Remove"
 msgstr "削除"
 
-#: .\repos\templates\repos\index.html:105
-msgid "No notifications have been registered."
-msgstr "通知の登録がありません。"
-
-#: .\repos\templates\repos\index.html:152
-msgid ""
-"Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
-"'"
-msgstr ""
-"' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
-"しました。"
-
-#: .\repos\templates\repos\index.html:164
-msgid "Add Repository"
-msgstr "リポジトリを追加"
-
-#: .\repos\templates\repos\index.html:174
-msgid "Add"
-msgstr "追加"
-
-#: .\repos\templates\repos\index.html:238
+#: .\repos\templates\repos\index.html:151
 msgid ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
 "not be found on Docker Hub."
@@ -333,26 +317,42 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
 "Hubで見つけられませんでした。"
 
-#: .\repos\templates\repos\index.html:249
+#: .\repos\templates\repos\index.html:162
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 
-#: .\repos\views.py:41
+#: .\repos\templates\repos\index.html:198
+msgid ""
+"Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
+"'"
+msgstr ""
+"' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
+"しました。"
+
+#: .\repos\templates\repos\index.html:207
+msgid "Add"
+msgstr "追加"
+
+#: .\repos\templates\repos\index.html:228
+msgid "Add Repository"
+msgstr "リポジトリを追加"
+
+#: .\repos\views.py:37
 msgid "Deletion completed."
 msgstr "削除完了"
 
-#: .\repos\views.py:48
+#: .\repos\views.py:44
 msgid "Registration"
 msgstr "登録"
 
-#: .\repos\views.py:83
+#: .\repos\views.py:94
 msgid " is a duplicate."
 msgstr "は既に登録されています。"
 
-#: .\repos\views.py:85 .\repos\views.py:89
+#: .\repos\views.py:96 .\repos\views.py:100
 msgid " failed."
 msgstr "に失敗しました。"
 
-#: .\repos\views.py:87
+#: .\repos\views.py:98
 msgid " completed."
 msgstr "完了"

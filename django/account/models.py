@@ -78,6 +78,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
+    timezone = models.CharField(
+        _('timezone'),
+        max_length=50,
+        default=timezone.get_default_timezone_name()
+    )
+
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
@@ -104,7 +110,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         return result.status_code == requests.codes.ok
 
     def get_webhook_type(self):
-        if _SLACK_URL_PATTERN.match(self.webhook_url):
+        if self.webhook_url is None:
+            return WebhookType.NONE
+        elif _SLACK_URL_PATTERN.match(self.webhook_url):
             return WebhookType.SLACK
         elif _IFTTT_URL_PATTERN.match(self.webhook_url):
             return WebhookType.IFTTT

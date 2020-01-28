@@ -1,8 +1,13 @@
 import traceback
 
+import pytz
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
-from django.utils.translation import get_language, activate
+from django.utils.timezone import activate as tz_activate
+from django.utils.timezone import deactivate as tz_deactivate
+from django.utils.translation import activate as lang_activate
+from django.utils.translation import get_language
+
 from account.models import User, WebhookType
 
 from ...apps import ReposConfig as App
@@ -49,18 +54,22 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
     message = None
     if webhook_type == WebhookType.SLACK:
         try:
-            activate(str(user.language_code))
+            lang_activate(str(user.language_code))
+            tz_activate(pytz.timezone(user.timezone))
             message = render_to_string(
                 'messages/update_notify_slack.txt', context).encode('UTF-8')
         finally:
-            activate(SYS_LANGUAGE_CODE)
+            lang_activate(SYS_LANGUAGE_CODE)
+            tz_deactivate()
     elif webhook_type == WebhookType.IFTTT:
         try:
-            activate(str(user.language_code))
+            lang_activate(str(user.language_code))
+            tz_activate(pytz.timezone(user.timezone))
             message = render_to_string(
                 'messages/update_notify_slack.txt', context).encode('UTF-8')
         finally:
-            activate(SYS_LANGUAGE_CODE)
+            lang_activate(SYS_LANGUAGE_CODE)
+            tz_deactivate()
     elif webhook_type == WebhookType.UNKNOWN:
         command.stdout.write(command.style.ERROR(
             f'User {user} has UNKNOWN URL.\n{user.webhook_url}'
@@ -89,7 +98,8 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
     if user.is_notify_to_email:
         result = False
         try:
-            activate(str(user.language_code))
+            lang_activate(str(user.language_code))
+            tz_activate(pytz.timezone(user.timezone))
             result = user.email_user(
                 subject=render_to_string(
                     'messages/update_notify_subject.txt', context),
@@ -99,7 +109,8 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
         except Exception:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
         finally:
-            activate(SYS_LANGUAGE_CODE)
+            lang_activate(SYS_LANGUAGE_CODE)
+            tz_deactivate()
             if result:
                 command.stdout.write(command.style.SUCCESS(
                     f'E-mail notification was successfully.'
