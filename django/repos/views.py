@@ -1,5 +1,4 @@
 import json
-from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -7,13 +6,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import IntegrityError
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
-from django.shortcuts import get_object_or_404, redirect, reverse
+from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import ListView
 
 from .apps import ReposConfig as App
 from .forms import WatchingForm
-from .models import Repository, Watching
+from .models import Repository, RepositoryTag, Watching
 from django.utils.translation import gettext_lazy as _
 
 
@@ -26,9 +25,6 @@ class IndexListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         quieryset = Watching.objects.filter(user=self.request.user)
-        req = self.request.GET
-        if 'sortby' == req and req['sortby']:
-            quieryset = quieryset.order_by(req[''])
         return quieryset
 
 
@@ -59,45 +55,51 @@ def edit(request, watching_id=None):
     if 'owner' not in data or 'name' not in data or 'tag' not in data:
         return HttpResponseBadRequest()
 
-    keys = {
-        "owner": data['owner'],
-        "name": data['name'],
-        "tag": data['tag']
-    }
-    repo = Repository.objects.filter(**keys).first()
-    if repo is None:
-        repo = Repository(**keys)
-        last_updated = App.check_repository(**keys)
-        if last_updated is not None:
-            repo.last_updated = last_updated
-            repo.save()
+    repo_tag = RepositoryTag.objects.filter(
+        repository__owner=data['owner'],
+        repository__name=data['name'],
+        name=data['tag']
+    ).first()
+    if repo_tag is None:
+        repo, createed = Repository.objects.get_or_create(
+            owner=data['owner'],
+            name=data['name'],
+        )
+        if createed:
+            repo.last_updated = App.check_repository(
+                owner=data['owner'],
+                name=data['name'],
+                tag='')
+            if repo.last_updated is not None:
+                repo.save()
+            else:
+                raise Http404()
+
+        repo_tag = RepositoryTag(repository=repo, name=data['tag'])
+        repo_tag.last_updated = App.check_repository(
+                owner=data['owner'],
+                name=data['name'],
+                tag=data['tag'])
+        if repo_tag.last_updated is not None:
+            repo_tag.save()
         else:
             raise Http404()
 
-    form = WatchingForm(data={"repository": repo}, instance=watching)
+    form = WatchingForm(data={"repository_tag": repo_tag}, instance=watching)
     if form.is_valid():
         try:
             watching.save()
         except IntegrityError as e:
             if e.args[0].startswith('UNIQUE'):
-                messages.info(request, _(str(repo) + ' is a duplicate.'))
+                messages.info(request, _(str(repo_tag) + ' is a duplicate.'))
             else:
                 messages.error(request, _(action + ' failed.'))
         else:
-            messages.success(request, _(action + ' completed.') + str(repo))
+            messages.success(request, _(action + ' completed.') + str(repo_tag))
     else:
         messages.error(request, _(action + ' failed.'))
 
-    # POST元のURLクエリを保持しつつ、リダイレクト先のURLクエリで上書き
-    redirect_url = urlparse(reverse('repos:index'))._asdict()
-    referer_url = urlparse(request.META.get('HTTP_REFERER'))._asdict()
-
-    query = parse_qs(qs=referer_url.get('query'), keep_blank_values=True)
-    query.update(parse_qs(redirect_url.get('query'), keep_blank_values=True))
-
-    redirect_url['query'] = urlencode(query, doseq=True)
-
-    return redirect(urlunparse(redirect_url.values()))
+    return redirect('repos:index')
 
 
 @require_GET

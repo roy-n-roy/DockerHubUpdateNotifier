@@ -6,7 +6,7 @@ from django.utils.translation import get_language, activate
 from account.models import User, WebhookType
 
 from ...apps import ReposConfig as App
-from ...models import Repository, Watching
+from ...models import RepositoryTag, Watching
 
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
 
@@ -19,31 +19,31 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.NOTICE('Start Bach Application.'))
-        for repo in Repository.objects.all():
+        for tag in RepositoryTag.objects.all():
             try:
                 last_updated = App.check_repository(
-                    repo.owner, repo.name, repo.tag
+                    tag.repository.owner, tag.repository.name, tag.name
                 )
-                if last_updated is None or repo.last_updated != last_updated:
-                    repo.last_updated = last_updated
-                    for wch in Watching.objects.filter(repository=repo).all():
-                        send_notify(self, wch.user, repo)
-                    repo.save()
+                if last_updated is None or tag.last_updated != last_updated:
+                    tag.last_updated = last_updated
+                    for wch in Watching.objects.filter(repository_tag=tag).all():
+                        send_notify(self, wch.user, tag)
+                    tag.save()
                 else:
-                    self.stdout.write(f'No update on "{repo}".')
+                    self.stdout.write(f'No update on "{tag}".')
             except Exception:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
         self.stdout.write(self.style.NOTICE('Finished Bach Application.'))
 
 
-def send_notify(command: Command, user: User, repo: Repository):
+def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
     if not user.is_active:
         return
 
     context = {
-        "repo": str(repo),
-        "last_updated": repo.last_updated,
-        "url": repo.get_url(),
+        "repo": str(repo_tag),
+        "last_updated": repo_tag.last_updated,
+        "url": repo_tag.get_url(),
     }
     webhook_type = user.get_webhook_type()
     message = None

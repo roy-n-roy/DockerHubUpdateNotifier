@@ -5,6 +5,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
+<!-- Delete confirm modal form -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -28,6 +29,7 @@
     </div>
 </div>
 
+<!-- Edit modal form -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -70,6 +72,7 @@
 
 {% bootstrap_messages %}
 
+<!-- Repository list table -->
 <table id="main_table" class="table">
     <thead class="thead-light"><tr>
         <th scope="col">{% blocktrans %}Repositories{% endblocktrans %}</th>
@@ -81,41 +84,84 @@
         {% for item in items %}
         <tr>
             <td scope="row">
-                <a target="_" href="{{ item.repository.get_url }}">{{ item.repository }}</a>
-                <i class="small text-primary fas fa-external-link-alt"></i>
+                <a target="_" href="{{ item.repository_tag.get_url }}">
+                    {{ item.repository_tag }} <i class="small text-primary fas fa-external-link-alt"></i>
+                </a>
             </td>
-            <td>{{ item.repository.last_updated }}</td>
+            <td>{{ item.repository_tag.repository.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
-                        data-toggle="modal" data-target="#editModal" data-type="update" data-title="{{ item.repository }}"
-                        data-owner="{{ item.repository.owner }}" data-name="{{ item.repository.name }}"
-                        data-tag="{{ item.repository.tag }}" data-url="{% url 'repos:update' watching_id=item.id %}">
+                        data-toggle="modal" data-target="#editModal" data-type="update" data-title="{{ item.repository_tag }}"
+                        data-owner="{{ item.repository_tag.repository.owner }}" data-name="{{ item.repository_tag.repository.name }}"
+                        data-tag="{{ item.repository_tag.name }}" data-url="{% url 'repos:update' watching_id=item.id %}">
                     {% blocktrans %}Edit{% endblocktrans %}
                 </button>
             </td>
             <td>
                 <button class="btn btn-outline-danger btn-sm del_confirm"
                         data-toggle="modal" data-target="#deleteModal"
-                        data-title="{{ item.repository }}" data-url="{% url 'repos:delete' watching_id=item.id %}">
+                        data-title="{{ item.repository_tag }}" data-url="{% url 'repos:delete' watching_id=item.id %}">
                     {% blocktrans %}Remove{% endblocktrans %}
                 </button>
             </td>
         </tr>
-        {% empty %}
-        <tr><td class="text-center" colspan="2">{% blocktrans %}No notifications have been registered.{% endblocktrans %}</td></tr>
         {% endfor %}
     </tbody>
 </table>
-
-
 {% endblock %}
 
 {% block extra_js %}
+{% if user.language_code != LANGUAGE_CODE %}
+<script>
+$(() => {
+    $('#set_language_form input[name="language"]').val('{{ user.language_code }}');
+    $('#set_language_form').submit();
+});
+</script>
+{% endif %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css"/>
-<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
-$(document).ready(function() {
+$(() => {
+    $("#edit_submit").click((e) => {
+        var owner = $('#edit_form input[name="owner"]').val();
+        owner = owner === '' ? 'library' : owner;
+        var name = $('#edit_form input[name="name"]').val();
+        var tag = $('#edit_form select[name="tag"]').val();
+        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
+            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
+        $.ajax({
+            url      : url,
+            type     : 'GET',
+            dataType : 'json',
+        }).done(() => {
+            $('#edit_form input[name="owner"]').val((idx, val) => {
+                return val === '' ? 'library' : val;
+            });
+            $('#edit_form').off("submit");
+            $('#edit_form').submit();
+        }).fail((data) => {
+            $("#form_alert").remove();
+            $("#edit_form .modal-body").prepend(
+                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
+                '</div>'
+            );
+        });
+        return e.preventDefault();
+    });
+    $('#edit_form input').on('change', (e) => {
+        var owner = $('#edit_form input[name="owner"]').val();
+        owner = owner === '' ? 'library' : owner;
+        var name = $('#edit_form input[name="name"]').val();
+        $('#edit_form select[name="tag"]').children().remove();
+        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
+        set_tags(owner, name, 1, '');
+    });
     var set_tags = function (owner, name, page, current) {
         if (name) {
             var url = "{% url 'repos:tags' owner='_owner_' name='_name_' page=0%}"
@@ -124,7 +170,7 @@ $(document).ready(function() {
                 url      : url,
                 type     : 'GET',
                 dataType : 'json',
-            }).done(function(data) {
+            }).done((data) => {
                 var owner = $('#edit_form input[name="owner"]').val();
                 owner = owner === '' ? 'library' : owner;
                 if (owner === data.owner && $('#edit_form input[name="name"]').val() === data.name) {
@@ -140,7 +186,7 @@ $(document).ready(function() {
                         set_tags(owner, name, data.next, current);
                     }
                 }
-            }).fail(function(data) {
+            }).fail((data) => {
                 parent = $('#edit_form select[name="tag"]');
                 parent.children().remove();
                 parent.append('<option value="latest" selected>latest</option>');
@@ -152,47 +198,50 @@ $(document).ready(function() {
                         '<span>{% blocktrans %}Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + '{% endblocktrans %}</span>' +
                     '</div>'
                 );
-            }).always(function() {
+            }).always(() => {
                 $('#in_process_label').remove();
             });
         }
     };
-    $('#main_table').on('init.dt', function() {
-        $('#add-button-container').append($(
-        '<button class="btn btn-block btn-outline-secondary display_edit" ' +
-            'data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="' + "{% url 'repos:add' %}" + '">' +
-            '{% blocktrans %}Add Repository{% endblocktrans %}' +
-        '</button>'
-        ));
-    }).on('draw.dt', function() {
+    var pre_edit = () => {
+        var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
+        $('#edit_submit').text(label);
+        $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
+        $('#edit_name').text($(this).data('name'));
+        $('#edit_form').attr('action', $(this).data('url'));
+        $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
+        $('#edit_form input[name="name"]').val($(this).data('name'));
+        $('#edit_form select[name="tag"]').val($(this).data('tag'));
+        $("#form_alert").remove();
+        $('#edit_form select[name="tag"]').children().remove();
+        $('#edit_form input[name="name"]').focus();
+        set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
+    };
+    var pre_delete = () => {
+        $('#del_name').text($(this).data('title'));
+        $('#del_form').attr('action', $(this).data('url'));
+    };
+    $('#main_table').on('init.dt', () => {
+        $('#add-button-container').append(
+            $('<button class="btn btn-block btn-outline-secondary display_edit" ' +
+                'data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="' + "{% url 'repos:add' %}" + '">' +
+                '{% blocktrans %}Add Repository{% endblocktrans %}' +
+            '</button>').on('click', pre_edit)
+        );
+    }).on('draw.dt', () => {
         $('#main_table_paginate ul').addClass('justify-content-md-center');
-        $('.del_confirm').on('click', function() {
-            $('#del_name').text($(this).data('title'));
-            $('#del_form').attr('action', $(this).data('url'));
-        });
-        $('.display_edit').on('click', function() {
-            var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
-            $('#edit_submit').text(label);
-            $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
-            $('#edit_name').text($(this).data('name'));
-            $('#edit_form').attr('action', $(this).data('url'));
-            $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
-            $('#edit_form input[name="name"]').val($(this).data('name'));
-            $('#edit_form select[name="tag"]').val($(this).data('tag'));
-            $("#form_alert").remove();
-            $('#edit_form select[name="tag"]').children().remove();
-            $('#edit_form input[name="name"]').focus();
-            set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
-        });
+        $('.display_edit').on('click', pre_edit);
+        $('.del_confirm').on('click', pre_delete);
     }).DataTable({
         dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-12 col-md-3'i><'col-sm-12 col-md-6'p><'#add-button-container.col-sm-12 col-md-3'>>",
         stateSave: true,
         columns: [ null, null, { "orderable": false }, { "orderable": false } ],
-        order: [[ 0, 'asc' ], [ 1, 'desc' ], [ 0, 'asc' ], [ 0, 'asc' ]],
+        order: [[ 1, 'desc' ]],
         language: {
-            emptyTable: "テーブルにデータがありません",
+            emptyTable: "{% if  user.language_code == 'ja' %}リポジトリが登録されていません" + 
+                        "{% else %}Repository not registered{% endif %}{% if  user.language_code == 'ja' %}",
             info: " _TOTAL_ 件中 _START_ から _END_ まで表示",
             infoEmpty: " 0 件中 0 から 0 まで表示",
             infoFiltered: "（全 _MAX_ 件より抽出）",
@@ -202,7 +251,7 @@ $(document).ready(function() {
             loadingRecords: "読み込み中...",
             processing: "処理中...",
             search: "検索:",
-            zeroRecords: "一致するレコードがありません",
+            zeroRecords: "一致するレコードがありません{% endif %}",
             paginate: {
                 first:    '«',
                 previous: '‹',
@@ -211,48 +260,6 @@ $(document).ready(function() {
             },
         },
     });
-    $("#edit_submit").click(function(e) {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        var tag = $('#edit_form select[name="tag"]').val();
-        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
-            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
-        $.ajax({
-            url      : url,
-            type     : 'GET',
-            dataType : 'json',
-        }).done(function() {
-            $('#edit_form input[name="owner"]').val(function(idx, val) {
-                return val === '' ? 'library' : val;
-            });
-            $('#edit_form').off("submit");
-            $('#edit_form').submit();
-        }).fail(function(data) {
-            $("#form_alert").remove();
-            $("#edit_form .modal-body").prepend(
-                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
-                '</div>'
-            );
-        });
-        return e.preventDefault();
-    });
-    $('#edit_form input').on('change', function(e) {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
-        set_tags(owner, name, 1, '');
-    });
-    if ('{{ user.language_code }}'!=='{{ LANGUAGE_CODE }}') {
-        $('#set_language_form input[name="language"]').val('{{ user.language_code }}');
-        $('#set_language_form').submit();
-    };
 });
 </script>
 {% endblock %}
