@@ -50,7 +50,8 @@ services:
 
   postgres:
     image: postgres:12.1-alpine
-    container_name: postgres
+    container_name: django_postgres
+    restart: always
     environment:
       POSTGRES_DB: django
       POSTGRES_USER: django
@@ -61,9 +62,10 @@ services:
 
   nginx:
     image: nginx:1.17.8-alpine
-    container_name: nginx
+    container_name: django_nginx
     ports:
       - 80:80
+    restart: always
     environment:
       TZ: "Asia/Tokyo"
     volumes:
