@@ -31,7 +31,8 @@ class Command(BaseCommand):
                 )
                 if last_updated is None or tag.last_updated != last_updated:
                     tag.last_updated = last_updated
-                    for wch in Watching.objects.filter(repository_tag=tag).all():
+                    for wch in Watching.objects.filter(
+                            repository_tag=tag).all():
                         send_notify(self, wch.user, tag)
                     tag.save()
                 else:
@@ -86,12 +87,12 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
             if result:
                 command.stdout.write(command.style.SUCCESS(
                     f'Webhook notification was successfully.'
-                    f' "{repo}", last_updated: {repo.last_updated}'
+                    f' "{repo_tag}", last_updated: {repo_tag.last_updated}'
                 ))
             else:
                 command.stdout.write(command.style.ERROR(
                     f'Webhook notification was failed.'
-                    f' "{repo}", last_updated: {repo.last_updated}\n'
+                    f' "{repo_tag}", last_updated: {repo_tag.last_updated}\n'
                     f'message: {message}'
                 ))
 
@@ -114,11 +115,11 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
             if result:
                 command.stdout.write(command.style.SUCCESS(
                     f'E-mail notification was successfully.'
-                    f' "{repo}", last_updated: {repo.last_updated}'
+                    f' "{repo_tag}", last_updated: {repo_tag.last_updated}'
                 ))
             else:
                 command.stdout.write(command.style.ERROR(
                     f'E-mail notification was failed.'
-                    f' "{repo}", last_updated: {repo.last_updated}\n'
+                    f' "{repo_tag}", last_updated: {repo_tag.last_updated}\n'
                     f'message: {message}'
                 ))
