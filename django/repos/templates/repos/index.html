@@ -88,7 +88,7 @@
                     {{ item.repository_tag }} <i class="small text-primary fas fa-external-link-alt"></i>
                 </a>
             </td>
-            <td>{{ item.repository_tag.repository.last_updated }}</td>
+            <td>{{ item.repository_tag.last_updated }}</td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
                         data-toggle="modal" data-target="#editModal" data-type="update" data-title="{{ item.repository_tag }}"
