@@ -40,8 +40,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     webhook_url = models.URLField(
         _('Webhook URL'), max_length=500, blank=True, null=True, help_text=_(
-            'If set in this field, the Webhook URL you enter will'
-            ' be notified of updates to the Docker repository .'
+            'If you would like to be notified by the chat tool, '
+            'please obtain and enter your Webhook URL. '
             'Supported for Incoming Webhook URL of Slack and IFTTT.'
         ),
     )
