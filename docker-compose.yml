@@ -10,7 +10,7 @@ services:
       TZ: Asia/Tokyo
       ALLOWED_HOSTS: 'localhost, 127.0.0.1'
       DB_ENGINE: postgresql
-      DB_HOST: postgres
+      DB_HOST: django_postgres
       DB_NAME: django
       DB_USER: django
       DB_PASS: django

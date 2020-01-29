@@ -7,7 +7,7 @@ class TimezoneMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        tzname = request.user.timezone
+        tzname = getattr(request.user, 'timezone', None)
         if tzname:
             timezone.activate(pytz.timezone(tzname))
         else:

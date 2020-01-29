@@ -34,7 +34,7 @@ def delete(request, watching_id):
     watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
     watching.delete()
     messages.success(
-        request, _('Deletion completed.') + str(watching.repository))
+        request, _('Deletion completed.') + str(watching.repository_tag))
     return redirect('repos:index')
 
 

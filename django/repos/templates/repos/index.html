@@ -124,45 +124,7 @@ $(() => {
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
 $(() => {
-    $("#edit_submit").click((e) => {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        var tag = $('#edit_form select[name="tag"]').val();
-        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
-            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
-        $.ajax({
-            url      : url,
-            type     : 'GET',
-            dataType : 'json',
-        }).done(() => {
-            $('#edit_form input[name="owner"]').val((idx, val) => {
-                return val === '' ? 'library' : val;
-            });
-            $('#edit_form').off("submit");
-            $('#edit_form').submit();
-        }).fail((data) => {
-            $("#form_alert").remove();
-            $("#edit_form .modal-body").prepend(
-                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
-                '</div>'
-            );
-        });
-        return e.preventDefault();
-    });
-    $('#edit_form input').on('change', (e) => {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
-        set_tags(owner, name, 1, '');
-    });
-    var set_tags = function (owner, name, page, current) {
+    var set_tags = function(owner, name, page, current) {
         if (name) {
             var url = "{% url 'repos:tags' owner='_owner_' name='_name_' page=0%}"
                 .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/0/g, page);
@@ -203,7 +165,7 @@ $(() => {
             });
         }
     };
-    var pre_edit = () => {
+    var pre_edit = function() {
         var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
         $('#edit_submit').text(label);
         $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
@@ -217,10 +179,48 @@ $(() => {
         $('#edit_form input[name="name"]').focus();
         set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
     };
-    var pre_delete = () => {
+    var pre_delete = function() {
         $('#del_name').text($(this).data('title'));
         $('#del_form').attr('action', $(this).data('url'));
     };
+    $("#edit_submit").click((e) => {
+        var owner = $('#edit_form input[name="owner"]').val();
+        owner = owner === '' ? 'library' : owner;
+        var name = $('#edit_form input[name="name"]').val();
+        var tag = $('#edit_form select[name="tag"]').val();
+        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
+            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
+        $.ajax({
+            url      : url,
+            type     : 'GET',
+            dataType : 'json',
+        }).done(() => {
+            $('#edit_form input[name="owner"]').val((idx, val) => {
+                return val === '' ? 'library' : val;
+            });
+            $('#edit_form').off("submit");
+            $('#edit_form').submit();
+        }).fail((data) => {
+            $("#form_alert").remove();
+            $("#edit_form .modal-body").prepend(
+                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                        '<span aria-hidden="true">&times;</span>' +
+                    '</button>' +
+                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
+                '</div>'
+            );
+        });
+        return e.preventDefault();
+    });
+    $('#edit_form input').on('change', (e) => {
+        var owner = $('#edit_form input[name="owner"]').val();
+        owner = owner === '' ? 'library' : owner;
+        var name = $('#edit_form input[name="name"]').val();
+        $('#edit_form select[name="tag"]').children().remove();
+        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
+        set_tags(owner, name, 1, '');
+    });
     $('#main_table').on('init.dt', () => {
         $('#add-button-container').append(
             $('<button class="btn btn-block btn-outline-secondary display_edit" ' +
