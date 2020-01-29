@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-28 21:57+0900\n"
+"POT-Creation-Date: 2020-01-29 15:30+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -128,7 +128,7 @@ msgstr "パスワード変更"
 #: .\account\templates\registration\password_change_form.html:14
 #: .\account\templates\registration\profile.html:46
 #: .\account\templates\registration\profile.html:59
-#: .\repos\templates\repos\index.html:207 .\repos\views.py:44
+#: .\repos\templates\repos\index.html:169 .\repos\views.py:44
 msgid "Update"
 msgstr "更新"
 
@@ -309,19 +309,7 @@ msgstr "変更"
 msgid "Remove"
 msgstr "削除"
 
-#: .\repos\templates\repos\index.html:151
-msgid ""
-"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
-"not be found on Docker Hub."
-msgstr ""
-"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
-"Hubで見つけられませんでした。"
-
-#: .\repos\templates\repos\index.html:162
-msgid "Retrieving data..."
-msgstr "データ取得中..."
-
-#: .\repos\templates\repos\index.html:198
+#: .\repos\templates\repos\index.html:160
 msgid ""
 "Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
 "'"
@@ -329,9 +317,21 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
 "しました。"
 
-#: .\repos\templates\repos\index.html:207
+#: .\repos\templates\repos\index.html:169
 msgid "Add"
 msgstr "追加"
+
+#: .\repos\templates\repos\index.html:210
+msgid ""
+"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
+"not be found on Docker Hub."
+msgstr ""
+"' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
+"Hubで見つけられませんでした。"
+
+#: .\repos\templates\repos\index.html:221
+msgid "Retrieving data..."
+msgstr "データ取得中..."
 
 #: .\repos\templates\repos\index.html:228
 msgid "Add Repository"
@@ -346,13 +346,16 @@ msgid "Registration"
 msgstr "登録"
 
 #: .\repos\views.py:94
-msgid " is a duplicate."
-msgstr "は既に登録されています。"
+#, python-format
+msgid "%(repo_tag)s is a duplicate."
+msgstr "%(repo_tag)s は既に登録されています。"
 
-#: .\repos\views.py:96 .\repos\views.py:100
-msgid " failed."
-msgstr "に失敗しました。"
+#: .\repos\views.py:99 .\repos\views.py:107
+#, python-format
+msgid "%(action)s failed."
+msgstr "%(action)s に失敗しました。"
 
-#: .\repos\views.py:98
-msgid " completed."
-msgstr "完了"
+#: .\repos\views.py:102
+#, python-format
+msgid "%(action)s completed. %(repo_tag)s"
+msgstr "%(action)s完了 %(repo_tag)ss"

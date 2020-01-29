@@ -7,13 +7,13 @@ from django.db import IntegrityError
 from django.http import (Http404, HttpResponse, HttpResponseBadRequest,
                          HttpResponseForbidden)
 from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import ListView
 
 from .apps import ReposConfig as App
 from .forms import WatchingForm
 from .models import Repository, RepositoryTag, Watching
-from django.utils.translation import gettext_lazy as _
 
 
 class IndexListView(LoginRequiredMixin, ListView):
@@ -34,7 +34,7 @@ def delete(request, watching_id):
     watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
     watching.delete()
     messages.success(
-        request, _('Deletion completed.') + str(watching.repository_tag))
+        request, _('Deletion completed.') + ' ' + str(watching.repository_tag))
     return redirect('repos:index')
 
 
@@ -91,13 +91,20 @@ def edit(request, watching_id=None):
             watching.save()
         except IntegrityError as e:
             if e.args[0].startswith('UNIQUE'):
-                messages.info(request, _(str(repo_tag) + ' is a duplicate.'))
+                messages.info(request, _('%(repo_tag)s is a duplicate.') % {
+                    'repo_tag': str(repo_tag)
+                })
             else:
-                messages.error(request, _(action + ' failed.'))
+                messages.error(
+                    request, _('%(action)s failed.') % {'action': action})
         else:
-            messages.success(request, _(action + ' completed.') + str(repo_tag))
+            messages.success(
+                request, _('%(action)s completed. %(repo_tag)s') % {
+                    'action': action, 'repo_tag': str(repo_tag)
+                }
+            )
     else:
-        messages.error(request, _(action + ' failed.'))
+        messages.error(request, _('%(action)s failed.') % {'action': action})
 
     return redirect('repos:index')
 
