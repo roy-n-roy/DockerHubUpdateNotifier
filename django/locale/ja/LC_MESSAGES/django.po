@@ -358,4 +358,4 @@ msgstr "%(action)s に失敗しました。"
 #: .\repos\views.py:102
 #, python-format
 msgid "%(action)s completed. %(repo_tag)s"
-msgstr "%(action)s完了 %(repo_tag)ss"
+msgstr "%(action)s完了 %(repo_tag)s"
