@@ -66,14 +66,7 @@ def edit(request, watching_id=None):
             name=data['name'],
         )
         if createed:
-            repo.last_updated = App.check_repository(
-                owner=data['owner'],
-                name=data['name'],
-                tag='')
-            if repo.last_updated is not None:
-                repo.save()
-            else:
-                raise Http404()
+            repo.save()
 
         repo_tag = RepositoryTag(repository=repo, name=data['tag'])
         repo_tag.last_updated = App.check_repository(

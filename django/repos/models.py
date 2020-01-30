@@ -8,7 +8,6 @@ class Repository(models.Model):
     """
     owner = models.CharField(max_length=1024)
     name = models.CharField(max_length=1024)
-    last_updated = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         unique_together = ("owner", "name")

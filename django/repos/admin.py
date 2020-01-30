@@ -7,8 +7,8 @@ from .models import Repository, RepositoryTag, Watching
 
 @admin.register(Repository)
 class RepositoryAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'last_updated')
-    fields = ['owner', 'name', 'last_updated']
+    list_display = ('__str__',)
+    fields = ['owner', 'name']
 
 
 @admin.register(RepositoryTag)

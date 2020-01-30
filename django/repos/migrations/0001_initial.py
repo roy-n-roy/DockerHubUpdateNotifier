@@ -20,7 +20,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('owner', models.CharField(max_length=1024)),
                 ('name', models.CharField(max_length=1024)),
-                ('last_updated', models.DateTimeField(blank=True, null=True)),
             ],
             options={
                 'unique_together': {('owner', 'name')},
