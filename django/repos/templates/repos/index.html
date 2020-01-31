@@ -67,9 +67,14 @@ $(() => {
     $('#main_table').on('init.dt', () => {
         $('#add-button-container').append(
             $('<button class="btn btn-block btn-outline-secondary display_edit" ' +
-                'data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="' + "{% url 'repos:add' %}" + '">' +
+                'data-toggle="modal" data-target="#editModal" data-type="add" data-title="" data-url="">' +
                 '{% blocktrans %}Add Repository{% endblocktrans %}' +
-            '</button>').on('click', pre_edit)
+            '</button>').attr('data-url', "{% url 'repos:add' %}").on('click', pre_edit)
+        );
+        $('#main_table_filter label').append($(
+            '<button class="btn rounded-circle bg-transparent mt-n2 ml-n4 p-0" style="width: 1.5rem;">×</button>').on('click', () => {
+                $('#main_table').dataTable().fnFilter('');
+            })
         );
     }).on('draw.dt', () => {
         $('#main_table_paginate ul').addClass('justify-content-md-center');
