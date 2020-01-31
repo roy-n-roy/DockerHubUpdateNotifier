@@ -5,70 +5,8 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<!-- Delete confirm modal form -->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">{% blocktrans %}Removal Confirm{% endblocktrans %}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>{% blocktrans %}Do you want to remove <span id="del_name"></span> notification?{% endblocktrans %}</p>
-            </div>
-            <div class="modal-footer">
-                <form id="del_form" method="POST" action="">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">{% blocktrans %}OK{% endblocktrans %}</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit modal form -->
-<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="edit_form" method="POST" action="">
-                {% csrf_token %}
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label for="owner" class="col-sm-2 col-form-label">{% blocktrans %}owner{% endblocktrans %}</label>
-                        <div class="col-sm-10">
-                            <input id="owner" name="owner" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="name" class="col-sm-2 col-form-label">{% blocktrans %}repository{% endblocktrans %}</label>
-                        <div class="col-sm-10">
-                            <input id="name" name="name" type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="tag" class="col-sm-2 col-form-label">{% blocktrans %}tag{% endblocktrans %}</label>
-                        <div class="col-sm-10">
-                            <select id="tag" name="tag" class="form-control"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="edit_submit"></button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+{% include 'repos/delete_form.html' %}
+{% include 'repos/edit_form.html' %}
 
 {% bootstrap_messages %}
 
@@ -124,103 +62,8 @@ $(() => {
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
 $(() => {
-    var set_tags = function(owner, name, page, current) {
-        if (name) {
-            var url = "{% url 'repos:tags' owner='_owner_' name='_name_' page=0%}"
-                .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/0/g, page);
-            $.ajax({
-                url      : url,
-                type     : 'GET',
-                dataType : 'json',
-            }).done((data) => {
-                var owner = $('#edit_form input[name="owner"]').val();
-                owner = owner === '' ? 'library' : owner;
-                if (owner === data.owner && $('#edit_form input[name="name"]').val() === data.name) {
-                    parent = $('#edit_form select[name="tag"]');
-                    for (var i in data.tags) {
-                        if (data.tags[i] === current) {
-                            parent.append($('<option>').val(data.tags[i]).html(data.tags[i]).attr('selected', ''));
-                        } else {
-                            parent.append($('<option>').val(data.tags[i]).html(data.tags[i]));
-                        }
-                    };
-                    if (data.next) {
-                        set_tags(owner, name, data.next, current);
-                    }
-                }
-            }).fail((data) => {
-                parent = $('#edit_form select[name="tag"]');
-                parent.children().remove();
-                parent.append('<option value="latest" selected>latest</option>');
-                $("#edit_form .modal-body").prepend(
-                    '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
-                        '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                            '<span aria-hidden="true">&times;</span>' +
-                        '</button>' +
-                        '<span>{% blocktrans %}Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + '{% endblocktrans %}</span>' +
-                    '</div>'
-                );
-            }).always(() => {
-                $('#in_process_label').remove();
-            });
-        }
-    };
-    var pre_edit = function() {
-        var label = $(this).data('type') === 'update' ? '{% blocktrans %}Update{% endblocktrans %}' : '{% blocktrans %}Add{% endblocktrans %}';
-        $('#edit_submit').text(label);
-        $('#editModalLabel').text(label + ($(this).data('title') === '' ? '' : ' : ' + $(this).data('title')));
-        $('#edit_name').text($(this).data('name'));
-        $('#edit_form').attr('action', $(this).data('url'));
-        $('#edit_form input[name="owner"]').val($(this).data('owner') === 'library' ? '' : $(this).data('owner'));
-        $('#edit_form input[name="name"]').val($(this).data('name'));
-        $('#edit_form select[name="tag"]').val($(this).data('tag'));
-        $("#form_alert").remove();
-        $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form input[name="name"]').focus();
-        set_tags($(this).data('owner'), $(this).data('name'), 1, $(this).data('tag'));
-    };
-    var pre_delete = function() {
-        $('#del_name').text($(this).data('title'));
-        $('#del_form').attr('action', $(this).data('url'));
-    };
-    $("#edit_submit").click((e) => {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        var tag = $('#edit_form select[name="tag"]').val();
-        var url = "{% url 'repos:check' owner='_owner_' name='_name_' tag='_tag_' %}"
-            .replace(/_owner_/g, owner).replace(/_name_/g, name).replace(/_tag_/g, tag);
-        $.ajax({
-            url      : url,
-            type     : 'GET',
-            dataType : 'json',
-        }).done(() => {
-            $('#edit_form input[name="owner"]').val((idx, val) => {
-                return val === '' ? 'library' : val;
-            });
-            $('#edit_form').off("submit");
-            $('#edit_form').submit();
-        }).fail((data) => {
-            $("#form_alert").remove();
-            $("#edit_form .modal-body").prepend(
-                '<div id="form_alert" class="alert alert-warning alert-dismissible" role="alert">' +
-                    '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                        '<span aria-hidden="true">&times;</span>' +
-                    '</button>' +
-                    '<span>{% blocktrans %}' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could not be found on Docker Hub.{% endblocktrans %}</span>' +
-                '</div>'
-            );
-        });
-        return e.preventDefault();
-    });
-    $('#edit_form input').on('change', (e) => {
-        var owner = $('#edit_form input[name="owner"]').val();
-        owner = owner === '' ? 'library' : owner;
-        var name = $('#edit_form input[name="name"]').val();
-        $('#edit_form select[name="tag"]').children().remove();
-        $('#edit_form select[name="tag"]').append('<option id="in_process_label" value="" selected>{% blocktrans %}Retrieving data...{% endblocktrans %}</option>');
-        set_tags(owner, name, 1, '');
-    });
+//{% include 'repos_js/edit_form.js' %}
+//{% include 'repos_js/delete_form.js' %}
     $('#main_table').on('init.dt', () => {
         $('#add-button-container').append(
             $('<button class="btn btn-block btn-outline-secondary display_edit" ' +

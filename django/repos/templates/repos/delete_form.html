@@ -1,0 +1,23 @@
+{% load i18n %}<!-- Delete confirm modal form -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">{% blocktrans %}Removal Confirm{% endblocktrans %}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>{% blocktrans %}Do you want to remove <span id="del_name"></span> notification?{% endblocktrans %}</p>
+            </div>
+            <div class="modal-footer">
+                <form id="del_form" method="POST" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">{% blocktrans %}OK{% endblocktrans %}</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

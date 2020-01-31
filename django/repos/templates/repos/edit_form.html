@@ -1,0 +1,40 @@
+{% load i18n %}<!-- Edit modal form -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="edit_form" method="POST" action="">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="owner" class="col-sm-2 col-form-label">{% blocktrans %}owner{% endblocktrans %}</label>
+                        <div class="col-sm-10">
+                            <input id="owner" name="owner" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="name" class="col-sm-2 col-form-label">{% blocktrans %}repository{% endblocktrans %}</label>
+                        <div class="col-sm-10">
+                            <input id="name" name="name" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="tag" class="col-sm-2 col-form-label">{% blocktrans %}tag{% endblocktrans %}</label>
+                        <div class="col-sm-10">
+                            <select id="tag" name="tag" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" id="edit_submit"></button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{% blocktrans %}Cancel{% endblocktrans %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
