@@ -1,4 +1,4 @@
-//{% load i18n %}
+// for #editModal {% load i18n %}
 var set_tags = function(owner, name, page, current) {
     if (name) {
         var url = "{% url 'repos:tags' owner='_owner_' name='_name_' page=0%}"
