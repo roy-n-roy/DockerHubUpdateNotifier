@@ -26,6 +26,7 @@ Access To "http://localhost/"
 - [x] 一覧ページ送り
 - [x] 通知機能: slack (Webhook)
 - [x] 通知機能: メール
+- [x] BookmarkletによるDocker Hubページからの登録画面Open
 - [ ] 利用方法のページを作成
 - [ ] Webhook URLバリデーション
 - [ ] テスト
@@ -34,7 +35,7 @@ Access To "http://localhost/"
 - [x] ユーザ単位のタイムゾーン対応
 - [ ] タグ一覧のサーバーサイドキャッシュ
 - [ ] ドキュメント整備
-- [ ] リポジトリ登録画面の初期フォーカス
+- [x] リポジトリ登録画面の初期フォーカス
 - [x] 一覧のソート
 - [ ] README整備
 - [ ] 通知履歴画面
