@@ -54,6 +54,7 @@ class ProfileView(LoginRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["password_change_form"] = PasswordChangeForm(self.request.user)
+        context['password_change_form'].fields['old_password'].widget.attrs.pop('autofocus')
         return context
 
 

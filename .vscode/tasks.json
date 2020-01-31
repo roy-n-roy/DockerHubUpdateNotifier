@@ -72,13 +72,14 @@
 			"command": "bash",
 			"args": [
 				"-c",
-				"source ../venv/bin/activate && django-admin makemessages",
+				"source ../venv/bin/activate && django-admin makemessages -e html,py,txt,js",
 			],
 			"windows": {
 				"command": "cmd",
 				"args": [
 					"/c",
-					"..\\venv\\Scripts\\activate && django-admin makemessages",
+					// django.js が更新されておらず、Django3.0で動かないため、-d djangojsでなく-e jsを使用
+					"..\\venv\\Scripts\\activate && django-admin makemessages -e html,py,txt,js",
 				],
 			},
 			"options": {

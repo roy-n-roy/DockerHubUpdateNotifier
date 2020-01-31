@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.urls import path
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -11,5 +13,9 @@ urlpatterns = [
     path('delete/<int:watching_id>', views.delete, name="delete"),
     path('last_updated/<str:owner>/<str:name>/<str:tag>',
          views.check, name="check"),
-    path('tags/<str:owner>/<str:name>/<int:page>', views.tags, name="tags")
+    path('tags/<str:owner>/<str:name>/<int:page>', views.tags, name="tags"),
+    path('js/bookmarklet.js', TemplateView.as_view(
+        template_name="repos_js/bookmarklet.js"), name='bookmarklet'),
+    path('open_in/<str:owner>/<str:name>', login_required(TemplateView.as_view(
+        template_name="repos/openin.html")), name='openin'),
 ]

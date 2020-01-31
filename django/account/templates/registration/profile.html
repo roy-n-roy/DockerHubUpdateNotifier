@@ -61,6 +61,11 @@
             </div>
         </form>
     </div></div>
+    <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border rounded-lg my-3 px-4 py-2">
+        <legend>{% blocktrans %}Bookmarklet{% endblocktrans %}</legend>
+        <p class="col">{% blocktrans %}Drag and drop this button onto the bookmark toolbar to register a bookmarklet. When run from a Docker Hub repository page, you can open the repository registration page for this site.{% endblocktrans %}</p>
+        <a href="{% include 'repos_js/bookmarklet.js' %}" class="btn btn-primary">{{ site_title }} {% blocktrans %}Bookmarklet{% endblocktrans %}</a>
+    </div></div>
     <div class="row flex-xl-nowrap justify-content-md-center"><div class="col-12 col-md-9 border border-danger rounded-lg my-3 px-4 py-2">
         <legend>{% blocktrans %}Account Deletion{% endblocktrans %}</legend>
         <p class="col">{% blocktrans %}Once you delete your account, there is no going back. Please be certain.{% endblocktrans %}</p>

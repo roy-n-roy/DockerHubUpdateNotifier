@@ -1,0 +1,1 @@
+javascript:(function() {var arr = location.href.match(/^https?:\/\/hub\.docker\.com\/(_|r\/[a-z0-9]+)\/([a-z0-9_\.\-]+).*$/);if (arr) {if (arr[1] === '_') {owner = 'library';name = arr[2];} else {owner = arr[1].slice(2);name = arr[2];}window.open('{{request.scheme }}://{{ request.get_host }}/repos/open_in/' + owner + '/' + name);}})();

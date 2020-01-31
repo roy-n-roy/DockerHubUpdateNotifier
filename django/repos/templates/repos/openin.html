@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'repos/edit_form.html' %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(() => {
+    //{% include 'repos_js/edit_form.js' %}
+    $('#editModal').attr('data-backdrop', 'static');
+    $(this).data('type', 'add');
+    $(this).data('title', '');
+    $(this).data('owner', '{{ owner }}');
+    $(this).data('name', '{{ name }}');
+    $(this).data('url', "{% url 'repos:add' %}");
+    pre_edit();
+    $('#editModal').modal('show');
+    $('#editModal').on('hidden.bs.modal', () => {
+        window.location.href = "{% url 'repos:index' %}"
+    })
+});
+</script>
+{% endblock %}
