@@ -173,6 +173,24 @@ if 'EMAIL_SSL_CERTFILE' in os.environ:
 if 'EMAIL_FILE_PATH' in os.environ:
     EMAIL_FILE_PATH = os.environ['EMAIL_FILE_PATH']
 
+# Logging Settings
+# https://docs.djangoproject.com/en/3.0/topics/logging/
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
     "error_css_class": "bootstrap4-error",
