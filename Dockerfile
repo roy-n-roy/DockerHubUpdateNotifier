@@ -15,4 +15,4 @@ COPY django/ /app/
 RUN django-admin compilemessages
 
 EXPOSE 3031
-CMD export SECRET_KEY="`cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 50 | head -n 1`" && python manage.py migrate && uwsgi uwsgi.ini
+CMD export SECRET_KEY="`cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1`" && python manage.py migrate && uwsgi uwsgi.ini

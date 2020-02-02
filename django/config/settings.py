@@ -21,6 +21,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
+# Security
+# https://docs.djangoproject.com/en/3.0/topics/security/
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -31,6 +34,16 @@ ALLOWED_HOSTS = [
     i.strip() for i in os.environ['ALLOWED_HOSTS'].split(',')
     if not i.strip() == ''
 ] if 'ALLOWED_HOSTS' in os.environ else []
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+
+SECURE_REFERRER_POLICY = 'same-origin'
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+X_FRAME_OPTIONS = 'Deny'
 
 # Application definition
 
@@ -199,16 +212,17 @@ BOOTSTRAP4 = {
     "include_jquery": True,
 }
 
+MESSAGE_TAGS = {
+    messages.DEBUG: 'dark',
+    messages.ERROR: 'danger',
+}
+
 AUTH_USER_MODEL = 'account.User'
 LOGIN_REDIRECT_URL = '/'
+
 LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'), )
 
 DOCKER_HUB_API = (
     'https://hub.docker.com/v2/repositories/'
     '{0}/{1}/tags/{2}?page={3}&page_size=100'
 )
-
-MESSAGE_TAGS = {
-    messages.DEBUG: 'dark',
-    messages.ERROR: 'danger',
-}
