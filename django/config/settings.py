@@ -14,8 +14,6 @@ import os
 
 from django.contrib.messages import constants as messages
 
-ENV = os.environ
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,14 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ENV['SECRET_KEY']
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    i.strip() for i in ENV['ALLOWED_HOSTS'].split(',') if not i.strip() == '']\
-        if 'ALLOWED_HOSTS' in ENV else []
+    i.strip() for i in os.environ['ALLOWED_HOSTS'].split(',')
+    if not i.strip() == ''
+] if 'ALLOWED_HOSTS' in os.environ else []
 
 # Application definition
 
@@ -88,13 +87,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': ('django.db.backends.' +
-                   ENV['DB_ENGINE'] if 'DB_ENGINE' in ENV else ''),
-        'NAME': ENV['DB_NAME'] if 'DB_NAME' in ENV else '',
-        'USER': ENV['DB_USER'] if 'DB_USER' in ENV else '',
-        'PASSWORD': ENV['DB_PASS'] if 'DB_PASS' in ENV else '',
-        'HOST': ENV['DB_HOST'] if 'DB_HOST' in ENV else '',
-        'PORT': ENV['DB_PORT'] if 'DB_PORT' in ENV else '',
+        'ENGINE': ('django.db.backends.' + os.getenv('DB_ENGINE', 'sqlite3')),
+        'NAME': os.getenv('DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': os.getenv('DB_USER', ''),
+        'PASSWORD': os.getenv('DB_PASS', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', ''),
     }
 }
 
@@ -125,9 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = ENV['LANGUAGE_CODE'] if 'LANGUAGE_CODE' in ENV else 'en-us'
+LANGUAGE_CODE = os.getenv('LANGUAGE_CODE', 'en-us')
 
-TIME_ZONE = ENV['TZ'] if 'TZ' in ENV else 'UTC'
+TIME_ZONE = os.getenv('TZ', 'UTC')
 
 USE_I18N = True
 
@@ -143,36 +141,37 @@ STATIC_URL = '/static/'
 
 # E-mail Settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
-if 'EMAIL_BACKEND' in ENV:
+if 'EMAIL_BACKEND' in os.environ:
     EMAIL_BACKEND = (
-        'django.core.mail.backends.' + ENV['EMAIL_BACKEND'] + '.EmailBackend'
+        'django.core.mail.backends.' +
+        os.environ['EMAIL_BACKEND'] + '.EmailBackend'
     )
-if 'EMAIL_HOST' in ENV:
-    EMAIL_HOST = ENV['EMAIL_HOST']
-if 'EMAIL_PORT' in ENV:
-    EMAIL_PORT = ENV['EMAIL_PORT']
-if 'EMAIL_USE_SSL' in ENV:
-    EMAIL_USE_SSL = ENV['EMAIL_USE_SSL'].upper() == 'TRUE'
-if 'EMAIL_USE_TLS' in ENV:
-    EMAIL_USE_TLS = ENV['EMAIL_USE_TLS'].upper() == 'TRUE'
-if 'EMAIL_HOST_USER' in ENV:
-    EMAIL_HOST_USER = ENV['EMAIL_HOST_USER']
-if 'EMAIL_HOST_PASSWORD' in ENV:
-    EMAIL_HOST_PASSWORD = ENV['EMAIL_HOST_PASSWORD']
-if 'EMAIL_USE_LOCALTIME' in ENV:
-    EMAIL_USE_LOCALTIME = ENV['EMAIL_USE_LOCALTIME'].upper() == 'TRUE'
-if 'EMAIL_TIMEOUT' in ENV:
-    EMAIL_TIMEOUT = ENV['EMAIL_TIMEOUT']
-if 'DEFAULT_FROM_EMAIL' in ENV:
-    DEFAULT_FROM_EMAIL = ENV['DEFAULT_FROM_EMAIL']
-if 'EMAIL_SUBJECT_PREFIX' in ENV:
-    EMAIL_SUBJECT_PREFIX = ENV['EMAIL_SUBJECT_PREFIX']
-if 'EMAIL_SSL_KEYFILE' in ENV:
-    EMAIL_SSL_KEYFILE = ENV['EMAIL_SSL_KEYFILE']
-if 'EMAIL_SSL_CERTFILE' in ENV:
-    EMAIL_SSL_CERTFILE = ENV['EMAIL_SSL_CERTFILE']
-if 'EMAIL_FILE_PATH' in ENV:
-    EMAIL_FILE_PATH = ENV['EMAIL_FILE_PATH']
+if 'EMAIL_HOST' in os.environ:
+    EMAIL_HOST = os.environ['EMAIL_HOST']
+if 'EMAIL_PORT' in os.environ:
+    EMAIL_PORT = os.environ['EMAIL_PORT']
+if 'EMAIL_USE_SSL' in os.environ:
+    EMAIL_USE_SSL = os.environ['EMAIL_USE_SSL'].upper() == 'TRUE'
+if 'EMAIL_USE_TLS' in os.environ:
+    EMAIL_USE_TLS = os.environ['EMAIL_USE_TLS'].upper() == 'TRUE'
+if 'EMAIL_HOST_USER' in os.environ:
+    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']
+if 'EMAIL_HOST_PASSWORD' in os.environ:
+    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']
+if 'EMAIL_USE_LOCALTIME' in os.environ:
+    EMAIL_USE_LOCALTIME = os.environ['EMAIL_USE_LOCALTIME'].upper() == 'TRUE'
+if 'EMAIL_TIMEOUT' in os.environ:
+    EMAIL_TIMEOUT = os.environ['EMAIL_TIMEOUT']
+if 'DEFAULT_FROM_EMAIL' in os.environ:
+    DEFAULT_FROM_EMAIL = os.environ['DEFAULT_FROM_EMAIL']
+if 'EMAIL_SUBJECT_PREFIX' in os.environ:
+    EMAIL_SUBJECT_PREFIX = os.environ['EMAIL_SUBJECT_PREFIX']
+if 'EMAIL_SSL_KEYFILE' in os.environ:
+    EMAIL_SSL_KEYFILE = os.environ['EMAIL_SSL_KEYFILE']
+if 'EMAIL_SSL_CERTFILE' in os.environ:
+    EMAIL_SSL_CERTFILE = os.environ['EMAIL_SSL_CERTFILE']
+if 'EMAIL_FILE_PATH' in os.environ:
+    EMAIL_FILE_PATH = os.environ['EMAIL_FILE_PATH']
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
