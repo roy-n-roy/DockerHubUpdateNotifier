@@ -2,15 +2,11 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 from cachecontrol import CacheControl
-from cachecontrol.caches.file_cache import FileCache
 from django.apps import AppConfig
 from django.conf import settings
 from django.utils.dateparse import parse_datetime
 
-sess = CacheControl(
-    requests.Session(),
-    cache=FileCache('.web_cache')
-)
+sess = CacheControl(requests.Session())
 
 
 class ReposConfig(AppConfig):
