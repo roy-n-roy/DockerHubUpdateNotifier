@@ -158,6 +158,8 @@ LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'), )
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.getenv('STATIC_ROOT', os.path.join(BASE_DIR, 'static'))
+
 # E-mail Settings
 # https://docs.djangoproject.com/en/3.0/topics/email/
 if 'EMAIL_BACKEND' in os.environ:
