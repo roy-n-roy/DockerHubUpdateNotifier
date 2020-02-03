@@ -150,6 +150,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'), )
+
 
 # Static files (CpipSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -223,8 +225,6 @@ MESSAGE_TAGS = {
 
 AUTH_USER_MODEL = 'account.User'
 LOGIN_REDIRECT_URL = '/'
-
-LOCALE_PATHS = (os.path.join(BASE_DIR, 'locale'), )
 
 DOCKER_HUB_API = (
     'https://hub.docker.com/v2/repositories/'
