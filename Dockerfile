@@ -13,6 +13,7 @@ RUN pip install -r requirements.txt
 COPY django/ /app/
 
 RUN django-admin compilemessages
+RUN echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~/.profile
 
 EXPOSE 3031
-CMD export SECRET_KEY="`cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1`" && python manage.py migrate && uwsgi uwsgi.ini
+CMD . ~/.profile && python manage.py migrate && uwsgi uwsgi.ini

@@ -29,7 +29,7 @@ services:
     image: docker-hub-update-notifier
     container_name: batch
     restart: always
-    command: sh -c "export SECRET_KEY=\"`cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1`\" && python scheduler.py batch"
+    command: /bin/sh -c ". ~/.profile && python scheduler.py batch"
     environment:
       TZ: Asia/Tokyo
       DB_ENGINE: postgresql
