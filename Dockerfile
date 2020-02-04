@@ -18,4 +18,4 @@ COPY django/ /app/
 RUN django-admin compilemessages
 
 EXPOSE 3031
-CMD . ~/.profile && python manage.py migrate && python manage.py collectstatic && uwsgi uwsgi.ini
+CMD . ~/.profile && python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && uwsgi uwsgi.ini
