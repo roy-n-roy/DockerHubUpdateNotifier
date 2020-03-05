@@ -13,5 +13,6 @@
 		"**/site-packages/**/*.py",
 	],
 	"python.formatting.provider": "autopep8",
-	"python.pythonPath": "venv\\Scripts\\python.exe",
+	"python.pythonPath": ".venv\\Scripts\\python.exe",
+	"docker.defaultRegistryPath": "royroyeuph",
 }

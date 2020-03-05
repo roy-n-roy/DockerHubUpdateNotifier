@@ -4,129 +4,147 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "setup_venv",
+			"label": "create requirements.txt",
 			"type": "shell",
-			"command": "bash",
+			"linux": {
+				"command": "sh",
+				"args": [ "-c", "cat production/requirements.txt >> requirements.txt; rm production/requirements.txt" ],
+			},
+			"windows": {
+				"command": "powershell",
+				"args": [ "-Command", "Get-Content production/requirements.txt | Add-Content requirements.txt; rm production/requirements.txt" ],
+			},
+			"dependsOn": [
+				"export requirements.txt",
+				"export productions requirements.txt"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "export requirements.txt",
+			"type": "shell",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"[ ! -e venv/bin/activate ] && python3 -m venv venv; source venv/bin/activate && python -m pip install --upgrade pip && pip install -r requirements.txt autopep8 flake8 rope",
+				"lock",
+				"--requirements",
+				">",
+				"requirements.txt"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"label": "export productions requirements.txt",
+			"type": "shell",
+			"command": "pipenv",
+			"args": [
+				"lock",
+				"--requirements"
 			],
 			"windows": {
-				"command": "cmd",
+				"command": "docker",
 				"args": [
-					"/c",
-					"(if not exist venv\\Scripts\\activate python -m venv venv) & venv\\Scripts\\activate && python -m pip install --upgrade pip && pip install -r requirements.txt autopep8 flake8 rope",
-				],
+					"run",
+					"--rm",
+					"--volume=${workspaceFolder}/production:/production:rw",
+					"--workdir=/production",
+					"python:3.8",
+					"sh",
+					"-c",
+					"pip install pipenv && pipenv lock -r > requirements.txt"
+				]
 			},
-			"problemMatcher": [],
+			"options": {
+				"cwd": "${workspaceFolder}/production"
+			}
 		},
 		{
 			"label": "django_make_migrations",
 			"type": "shell",
-			"command": "bash",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"../source venv/bin/activate && python manage.py makemigrations account repos --settings=config.settings_dev && python manage.py makemigrations --merge --settings=config.settings_dev",
+				"run",
+				"python",
+				"manage.py",
+				"makemigrations",
+				"account",
+				"repos",
+				"--settings=config.settings_dev"
 			],
-			"windows": {
-				"command": "cmd",
-				"args": [
-					"/c",
-					"..\\venv\\Scripts\\activate && python manage.py makemigrations account repos --settings=config.settings_dev && python manage.py makemigrations --merge --settings=config.settings_dev",
-				],
-			},
 			"options": {
 				"cwd": "${workspaceFolder}/django",
 				"env": {
-					"SECRET_KEY": "",
-				},
+					"SECRET_KEY": ""
+				}
 			},
-			"problemMatcher": [],
+			"problemMatcher": []
 		},
 		{
 			"label": "django_migrate",
 			"type": "shell",
-			"command": "bash",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"source ../venv/bin/activate && python manage.py migrate --settings=config.settings_dev ",
+				"run",
+				"python",
+				"manage.py",
+				"migrate",
+				"--settings=config.settings_dev"
 			],
-			"windows": {
-				"command": "cmd",
-				"args": [
-					"/c",
-					"..\\venv\\Scripts\\activate && python manage.py migrate --settings=config.settings_dev",
-				],
-			},
 			"options": {
 				"cwd": "${workspaceFolder}/django",
 				"env": {
-					"SECRET_KEY": "",
-				},
+					"SECRET_KEY": ""
+				}
 			},
-			"problemMatcher": [],
+			"problemMatcher": []
 		},
 		{
 			"label": "django_make_messages",
 			"type": "shell",
-			"command": "bash",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"source ../venv/bin/activate && django-admin makemessages -e html,py,txt,js",
+				"run",
+				"django-admin",
+				"makemessages",
+				"-e",
+				"html,py,txt,js"
 			],
-			"windows": {
-				"command": "cmd",
-				"args": [
-					"/c",
-					// django.js が更新されておらず、Django3.0で動かないため、-d djangojsでなく-e jsを使用
-					"..\\venv\\Scripts\\activate && django-admin makemessages -e html,py,txt,js",
-				],
-			},
 			"options": {
-				"cwd": "${workspaceFolder}/django",
+				"cwd": "${workspaceFolder}/django"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "django_compile_messages",
 			"type": "shell",
-			"command": "bash",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"source ../venv/bin/activate && django-admin compilemessages",
+				"run",
+				"django-admin",
+				"compilemessages"
 			],
-			"windows": {
-				"command": "cmd",
-				"args": [
-					"/c",
-					"..\\venv\\Scripts\\activate && django-admin compilemessages",
-				],
-			},
 			"options": {
-				"cwd": "${workspaceFolder}/django",
+				"cwd": "${workspaceFolder}/django"
 			},
 			"problemMatcher": []
 		},
 		{
 			"label": "django_tests",
 			"type": "shell",
-			"command": "bash",
+			"command": "pipenv",
 			"args": [
-				"-c",
-				"source ../venv/bin/activate && python manage.py test --settings=config.settings_dev",
+				"run",
+				"python",
+				"manage.py",
+				"test",
+				"--settings=config.settings_dev"
 			],
-			"windows": {
-				"command": "cmd",
-				"args": [
-					"/c",
-					"..\\venv\\Scripts\\activate && python manage.py test --settings=config.settings_dev",
-				],
-			},
 			"options": {
 				"cwd": "${workspaceFolder}/django",
 				"env": {
-					"SECRET_KEY": " ",
-				},
+					"SECRET_KEY": " "
+				}
 			},
 			"problemMatcher": []
 		},
@@ -134,7 +152,7 @@
 			"label": "django_prelaunch",
 			"dependsOn": [
 				"django_compile_messages",
-				"django_migrate",
+				"django_migrate"
 			]
 		}
 	]

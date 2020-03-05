@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+psycopg2 = ">=2.8.4"
+psycopg2-binary = ">=2.8.4"
+uWSGI = ">=2.0.18"
+
+[requires]
+python_version = "3.8"
