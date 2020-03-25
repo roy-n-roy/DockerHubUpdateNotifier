@@ -106,6 +106,7 @@ DATABASES = {
     'default': {
         'ENGINE': ('django.db.backends.' + os.getenv('DB_ENGINE', 'sqlite3')),
         'NAME': os.getenv('DB_NAME', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'CONN_MAX_AGE': os.getenv('DB_CONN_MAX_AGE', '0'),
         'USER': os.getenv('DB_USER', ''),
         'PASSWORD': os.getenv('DB_PASS', ''),
         'HOST': os.getenv('DB_HOST', ''),
