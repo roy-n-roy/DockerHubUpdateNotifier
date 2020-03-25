@@ -1,0 +1,21 @@
+-i https://pypi.org/simple
+asgiref==3.2.3
+beautifulsoup4==4.8.2
+cachecontrol[filecache]==0.12.6
+certifi==2019.11.28
+chardet==3.0.4
+django-bootstrap4==1.1.1
+django==3.0.4
+idna==2.9
+lockfile==0.12.2
+msgpack==1.0.0
+pytz==2019.3
+requests==2.23.0
+schedule==0.6.0
+soupsieve==2.0
+sqlparse==0.3.1
+urllib3==1.25.8
+-i https://pypi.org/simple
+psycopg2-binary==2.8.4
+psycopg2==2.8.4
+uwsgi==2.0.18
