@@ -31,6 +31,7 @@ jobs:
     - name: Genetate and commit requirements.txt
       run: |
         git checkout -B release
+        git ls-remote --exit-code origin release && git pull origin release
         pipenv lock --requirements > ${{ github.workspace }}/requirements.txt
         cd ${{ github.workspace }}/production
         pipenv lock --requirements >> ${{ github.workspace }}/requirements.txt
