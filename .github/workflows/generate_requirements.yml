@@ -31,16 +31,15 @@ jobs:
     - name: Genetate and commit requirements.txt
       run: |
         git checkout -B release
-        git ls-remote --exit-code origin release && git pull origin release
         pipenv lock --requirements > ${{ github.workspace }}/requirements.txt
         cd ${{ github.workspace }}/production
         pipenv lock --requirements >> ${{ github.workspace }}/requirements.txt
         cd ${{ github.workspace }}
         git add requirements.txt
         git commit -m "release ${VERSION}"
-        git ls-remote --exit-code origin release-${VERSION} && git push origin :release-${VERSION}
+        git log -1 release-${VERSION} && git tag -d release-${VERSION}
+        git ls-remote --exit-code origin release-${VERSION} && git push -d origin release-${VERSION}
         git tag release-${VERSION}
-        git push origin release
         git push origin release-${VERSION}
 
     - name: Notify Slack
