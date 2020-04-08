@@ -213,6 +213,20 @@ LOGGING = {
     },
 }
 
+# Settings for SENTRY
+if os.getenv('SENTRY_DSN'):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn=os.getenv('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True
+    )
+
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
     "error_css_class": "bootstrap4-error",

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d7536b2d0f7832e40b4155a2baa908b9e30a724b3df88bc52e6fa0ca5e4ae254"
+            "sha256": "0855aa085df27b7e1e9447b29755c9118f7fa3041e1a3403dcca448a45d45090"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,13 @@
         ]
     },
     "default": {
+        "certifi": {
+            "hashes": [
+                "sha256:1d987a998c75633c40847cc966fcf5904906c920a7f17ef374f5aa4282abd304",
+                "sha256:51fcb31174be6e6664c5f69e3e1691a2d72a1a12e90f872cbdb1567eb47b6519"
+            ],
+            "version": "==2020.4.5.1"
+        },
         "psycopg2": {
             "hashes": [
                 "sha256:132efc7ee46a763e68a815f4d26223d9c679953cd190f1f218187cb60decf535",
@@ -70,6 +77,21 @@
             ],
             "index": "pypi",
             "version": "==2.8.5"
+        },
+        "sentry-sdk": {
+            "hashes": [
+                "sha256:23808d571d2461a4ce3784ec12bbee5bdb8c026c143fe79d36cef8a6d653e71f",
+                "sha256:bb90a4e19c7233a580715fc986cc44be2c48fc10b31e71580a2037e1c94b6950"
+            ],
+            "index": "pypi",
+            "version": "==0.14.3"
+        },
+        "urllib3": {
+            "hashes": [
+                "sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc",
+                "sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc"
+            ],
+            "version": "==1.25.8"
         },
         "uwsgi": {
             "hashes": [
