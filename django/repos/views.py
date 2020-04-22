@@ -109,7 +109,7 @@ def check(request, owner, name, tag):
     if last_update:
         return HttpResponse(json.dumps({"lastupdated": str(last_update)}))
     else:
-        raise Http404
+        raise Http404()
 
 
 @require_GET
@@ -121,4 +121,4 @@ def tags(request, owner, name, page):
         tags['name'] = name
         return HttpResponse(json.dumps(tags))
     else:
-        raise Http404
+        raise Http404()

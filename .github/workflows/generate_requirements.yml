@@ -28,19 +28,48 @@ jobs:
     - name: Get Version
       run: echo ::set-env name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
+    - name: Get Sentry-CLI tool
+      run: |
+        export INSTALL_DIR=.
+        curl -sL https://sentry.io/get-cli/ | bash
+
+    - name: Create release to Sentry
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      run: |
+        ./sentry-cli releases new -p dockerhubupdatenotifier "v${VERSION}"
+        ./sentry-cli releases set-commits --auto "v${VERSION}"
+
     - name: Genetate and commit requirements.txt
       run: |
         git checkout -B release
+        echo "__version__ = 'v${VERSION}'" > ${{ github.workspace }}/django/config/__init__.py
         pipenv lock --requirements > ${{ github.workspace }}/requirements.txt
         cd ${{ github.workspace }}/production
         pipenv lock --requirements >> ${{ github.workspace }}/requirements.txt
         cd ${{ github.workspace }}
-        git add requirements.txt
+        git add requirements.txt django/config/__init__.py
         git commit -m "release ${VERSION}"
         git log -1 release-${VERSION} && git tag -d release-${VERSION}
         git ls-remote --exit-code origin release-${VERSION} && git push -d origin release-${VERSION}
         git tag release-${VERSION}
         git push origin release-${VERSION}
+
+    - name: Finalize release of Sentry
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      run: |
+        ./sentry-cli releases finalize "v${VERSION}"
+
+    - name: Delete release of Sentry
+      if: failure()
+      env:
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      run: |
+        ./sentry-cli releases delete "v${VERSION}"
 
     - name: Notify Slack
       if: always()
