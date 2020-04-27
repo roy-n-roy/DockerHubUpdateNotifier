@@ -42,7 +42,6 @@ class ReposConfig(AppConfig):
         if 'results' not in json or 'count' not in json or json['count'] <= 0:
             return None
 
-        json['results']
         for tag in json['results']:
             if 'name' in tag:
                 tags.append(tag['name'])

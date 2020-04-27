@@ -36,10 +36,10 @@ jobs:
     - name: Create release to Sentry
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_ORG: roy-n-roy
       run: |
-        ./sentry-cli releases new -p dockerhubupdatenotifier "v${VERSION}"
-        ./sentry-cli releases set-commits --auto "v${VERSION}"
+        ./sentry-cli releases new -p docker_hub_update_notifier_webapp -p docker_hub_update_notifier_batch "DockerHubUpdateNotifier@v${VERSION}"
+        ./sentry-cli releases set-commits --auto "DockerHubUpdateNotifier@v${VERSION}"
 
     - name: Genetate and commit requirements.txt
       run: |
@@ -59,17 +59,17 @@ jobs:
     - name: Finalize release of Sentry
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_ORG: roy-n-roy
       run: |
-        ./sentry-cli releases finalize "v${VERSION}"
+        ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
 
     - name: Delete release of Sentry
       if: failure()
       env:
         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_ORG: roy-n-roy
       run: |
-        ./sentry-cli releases delete "v${VERSION}"
+        ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
 
     - name: Notify Slack
       if: always()
