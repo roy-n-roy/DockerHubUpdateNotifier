@@ -4,7 +4,10 @@ ENV PYTHONUNBUFFERED 1
 
 WORKDIR /app
 
-RUN echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~/.profile
+RUN addgroup -g 1000 django \
+ && adduser -S -u 1000 django -G django
+
+RUN echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
 
 COPY requirements.txt .
 
@@ -16,6 +19,8 @@ RUN apk add --no-cache gettext postgresql-libs \
 COPY django/ /app/
 
 RUN django-admin compilemessages
+
+USER django
 
 EXPOSE 3031
 CMD . ~/.profile && python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && uwsgi uwsgi.ini

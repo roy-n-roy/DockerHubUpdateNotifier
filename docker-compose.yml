@@ -29,6 +29,7 @@ services:
       - postgres
 
   batch:
+    build: .
     image: docker-hub-update-notifier
     container_name: batch
     restart: always
