@@ -33,7 +33,7 @@ services:
     image: docker-hub-update-notifier
     container_name: batch
     restart: always
-    command: /bin/sh -c ". ~/.profile && python scheduler.py batch"
+    command: "batch"
     environment:
       TZ: Asia/Tokyo
       DB_ENGINE: postgresql

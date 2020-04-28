@@ -20,7 +20,13 @@ COPY django/ /app/
 
 RUN django-admin compilemessages
 
+COPY entrypoint.sh /usr/local/bin/
+
+ADD https://github.com/getsentry/sentry-cli/releases/latest/download/sentry-cli-Linux-x86_64 /usr/local/bin/sentry-cli
+RUN chmod 755 /usr/local/bin/sentry-cli /usr/local/bin/entrypoint.sh
+
 USER django
 
 EXPOSE 3031
-CMD . ~/.profile && python manage.py migrate --noinput && python manage.py collectstatic --noinput --clear && uwsgi uwsgi.ini
+ENTRYPOINT [ "entrypoint.sh" ]
+CMD [ "webapp" ]

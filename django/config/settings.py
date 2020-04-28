@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 from django.contrib.messages import constants as messages
+
 from . import __version__
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
