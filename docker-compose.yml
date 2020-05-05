@@ -69,7 +69,9 @@ services:
     container_name: django_nginx
     ports:
       - 80:80
+      - 443:443
     restart: always
+    command: sh -c "apk add --no-cache openssl && mkdir -p /etc/nginx/cert && openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/cert/server.key -out /etc/nginx/cert/server.crt -subj '/C=JP/CN=localhost' && nginx -g daemon\ off\;"
     environment:
       TZ: Asia/Tokyo
     volumes:
