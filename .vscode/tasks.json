@@ -40,7 +40,9 @@
 			"command": "pipenv",
 			"args": [
 				"lock",
-				"--requirements"
+				"--requirements",
+				">",
+				"requirements.txt"
 			],
 			"windows": {
 				"command": "docker",

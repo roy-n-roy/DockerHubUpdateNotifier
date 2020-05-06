@@ -5,9 +5,8 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 RUN addgroup -g 1000 django \
- && adduser -S -u 1000 django -G django
-
-RUN echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
+ && adduser -S -u 1000 django -G django \
+ && echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
 
 COPY requirements.txt .
 
