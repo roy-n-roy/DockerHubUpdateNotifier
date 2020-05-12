@@ -1,16 +1,37 @@
 version: '3.7'
 
 services:
-  webapp:
+  batch:
     build: .
     image: docker-hub-update-notifier
-    container_name: webapp
+    restart: always
+    command: "batch"
+    environment:
+      TZ: Asia/Tokyo
+      DB_ENGINE: postgresql
+      DB_HOST: postgres
+      DB_NAME: django
+      DB_USER: django
+      DB_PASS: django
+      EMAIL_BACKEND: smtp
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
+      EMAIL_USE_TLS: 'true'
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_LOCALTIME: 'false'
+      DEFAULT_FROM_EMAIL: ''
+    depends_on:
+      - postgres
+
+  webapp:
+    image: docker-hub-update-notifier
     restart: always
     environment:
       TZ: Asia/Tokyo
       ALLOWED_HOSTS: 'localhost, 127.0.0.1'
       DB_ENGINE: postgresql
-      DB_HOST: django_postgres
+      DB_HOST: postgres
       DB_NAME: django
       DB_USER: django
       DB_PASS: django
@@ -28,33 +49,8 @@ services:
     depends_on:
       - postgres
 
-  batch:
-    build: .
-    image: docker-hub-update-notifier
-    container_name: batch
-    restart: always
-    command: "batch"
-    environment:
-      TZ: Asia/Tokyo
-      DB_ENGINE: postgresql
-      DB_HOST: django_postgres
-      DB_NAME: django
-      DB_USER: django
-      DB_PASS: django
-      EMAIL_BACKEND: smtp
-      EMAIL_HOST: smtp.gmail.com
-      EMAIL_PORT: 587
-      EMAIL_USE_TLS: 'true'
-      EMAIL_HOST_USER: ''
-      EMAIL_HOST_PASSWORD: ''
-      EMAIL_USE_LOCALTIME: 'false'
-      DEFAULT_FROM_EMAIL: ''
-    depends_on:
-      - postgres
-
   postgres:
     image: postgres:12.1-alpine
-    container_name: django_postgres
     restart: always
     environment:
       POSTGRES_DB: django
@@ -66,7 +62,6 @@ services:
 
   nginx:
     image: nginx:1.17.8-alpine
-    container_name: django_nginx
     ports:
       - 80:80
       - 443:443
