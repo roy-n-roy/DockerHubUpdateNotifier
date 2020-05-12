@@ -13,8 +13,9 @@ if [ "$#" -gt "0" ]; then
         end=$(date +%s)
 
         if [ ! -z "${SENTRY_AUTH_TOKEN}" -a ! -z "${SENTRY_ORG}" ]; then
-            version=$(cut -d'=' -f 2 < ./config/__init__.py | tr -d "' ")
-            sentry-cli releases deploys "DockerHubUpdateNotifier@${version}" new -e "${SENTRY_ENV:-prod}" -t $((now-start))
+            version=$(cut -d'=' -f 2 < ./config/__init__.py | tr -d "' \r")
+            echo "Version ${version} deployment information is being sent to Sentry."
+            sentry-cli releases deploys "DockerHubUpdateNotifier@${version}" new -e "${SENTRY_ENV:-prod}" -t $((end-start))
         fi
 
         exec uwsgi uwsgi.ini

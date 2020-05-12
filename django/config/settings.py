@@ -224,13 +224,12 @@ if os.getenv('SENTRY_DSN'):
         dsn=os.getenv('SENTRY_DSN'),
         integrations=[DjangoIntegration()],
         release='DockerHubUpdateNotifier@' + __version__,
-        environment='prod',
+        environment=os.getenv('SENTRY_ENV', 'prod'),
 
         # If you wish to associate users to errors (assuming you are using
         # django.contrib.auth) you may enable sending PII data.
         send_default_pii=True
     )
-    sentry_sdk.capture_message('The application has been launched.')
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
