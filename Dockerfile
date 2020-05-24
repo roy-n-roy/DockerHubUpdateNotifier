@@ -17,7 +17,7 @@ RUN apk add --no-cache postgresql-libs \
  && python get-poetry.py \
  && source $HOME/.poetry/env \
  && poetry config virtualenvs.create false \
- && poetry install --no-dev -E pgsql -E uwsgi -E sentry \
+ && poetry install --no-dev -E production \
  && python get-poetry.py --uninstall \
  && rm -rf ~/.poetry ~/.cache \
  && apk del --no-cache --purge .build-deps

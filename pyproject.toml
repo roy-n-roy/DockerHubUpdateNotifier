@@ -14,7 +14,6 @@ schedule = "^0.6.0"
 CacheControl = {extras = ["filecache"], version = "^0.12.6"}
 uWSGI = {version = "^2.0.18", optional = true}
 psycopg2 = {version = "^2.8.5", optional = true}
-psycopg2-binary = {version = "^2.8.5", optional = true}
 sentry-sdk = {version = "^0.14.4", optional = true}
 
 [tool.poetry.dev-dependencies]
@@ -23,9 +22,7 @@ flake8 = "^3.8.1"
 rope = "^0.17.0"
 
 [tool.poetry.extras]
-pgsql = ["psycopg2", "psycopg2-binary"]
-sentry = ["sentry-sdk"]
-uwsgi = ["uWSGI"]
+production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [build-system]
 requires = ["poetry>=0.12"]
