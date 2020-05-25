@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-31 12:53+0900\n"
+"POT-Creation-Date: 2020-05-25 19:54+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -14,15 +14,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: .\account\models.py:40
+#: account/models.py:40
 msgid "email address"
 msgstr "Eメールアドレス"
 
-#: .\account\models.py:42
+#: account/models.py:42
 msgid "Webhook URL"
 msgstr "Webhook URL"
 
-#: .\account\models.py:43
+#: account/models.py:43
 msgid ""
 "If you would like to be notified by the chat tool, please obtain and enter "
 "your Webhook URL. Supported for Incoming Webhook URL of Slack and IFTTT."
@@ -30,120 +30,120 @@ msgstr ""
 "チャットツールでの通知を希望する場合は、Webhook URLを取得の上、入力して下さ"
 "い。SlackとIFTTTのIncoming Webhook URLをサポートしています。"
 
-#: .\account\models.py:50
+#: account/models.py:50
 msgid "Language"
 msgstr "言語"
 
-#: .\account\models.py:53
+#: account/models.py:53
 msgid "Language used to display."
 msgstr "表示に使用する言語です。"
 
-#: .\account\models.py:57
+#: account/models.py:57
 msgid "is notity to E-mail"
 msgstr "Eメールアドレスへ通知"
 
-#: .\account\models.py:59
+#: account/models.py:59
 msgid ""
 "If enabled, it will notify your email address of updates to the Docker "
 "repository."
 msgstr "Eメールでの通知を希望する場合はチェックして下さい。"
 
-#: .\account\models.py:65
+#: account/models.py:65
 msgid "staff status"
 msgstr ""
 
-#: .\account\models.py:68
+#: account/models.py:68
 msgid "Designates whether the user can log into this admin site."
 msgstr ""
 
-#: .\account\models.py:72
+#: account/models.py:72
 msgid "active"
 msgstr ""
 
-#: .\account\models.py:75
+#: account/models.py:75
 msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting accounts."
 msgstr ""
 
-#: .\account\models.py:79
+#: account/models.py:79
 msgid "date joined"
 msgstr "ユーザー登録日"
 
-#: .\account\models.py:82
+#: account/models.py:82
 msgid "timezone"
 msgstr "タイムゾーン"
 
-#: .\account\models.py:94
+#: account/models.py:94
 msgid "user"
 msgstr ""
 
-#: .\account\models.py:95
+#: account/models.py:95
 msgid "users"
 msgstr ""
 
-#: .\account\templates\registration\base.html:13
-#: .\account\templates\registration\delete_complete.html:10
-#: .\account\templates\registration\password_reset_done.html:10
+#: account/templates/registration/base.html:13
+#: account/templates/registration/delete_complete.html:10
+#: account/templates/registration/password_reset_complete.html:10
+#: account/templates/registration/password_reset_done.html:10
 msgid "Back"
 msgstr "戻る"
 
-#: .\account\templates\registration\delete_complete.html:5
+#: account/templates/registration/delete_complete.html:5
 msgid "Your account deleted successfully."
 msgstr "ユーザーアカウントを削除しました。"
 
-#: .\account\templates\registration\delete_confirm.html:7
-#: .\account\templates\registration\profile.html:19
+#: account/templates/registration/delete_confirm.html:7
+#: account/templates/registration/profile.html:19
 msgid "Delete your account. Are you sure?"
 msgstr "ユーザーアカウントを削除します。よろしいですか?"
 
-#: .\account\templates\registration\delete_confirm.html:8
+#: account/templates/registration/delete_confirm.html:8
 msgid "Sure"
 msgstr "はい"
 
-#: .\account\templates\registration\logged_out.html:5
+#: account/templates/registration/logged_out.html:5
 msgid "You have signed out."
 msgstr "ログアウトしました。"
 
-#: .\account\templates\registration\login.html:5
-#: .\account\templates\registration\login.html:9
-#: .\account\templates\registration\login.html:12
-#: .\repos\templates\base.html:29
+#: account/templates/registration/login.html:5
+#: account/templates/registration/login.html:9
+#: account/templates/registration/login.html:12 repos/templates/base.html:32
 msgid "Sign in"
 msgstr "ログイン"
 
-#: .\account\templates\registration\login.html:16
+#: account/templates/registration/login.html:16
 msgid "Forgot your password?"
 msgstr "パスワードをお忘れですか?"
 
-#: .\account\templates\registration\password_change_done.html:5
+#: account/templates/registration/password_change_done.html:5
 msgid "Your password has been changed."
 msgstr "パスワードを変更しました。"
 
-#: .\account\templates\registration\password_change_form.html:5
+#: account/templates/registration/password_change_form.html:5
 msgid "change password"
 msgstr "パスワード変更"
 
-#: .\account\templates\registration\password_change_form.html:14
-#: .\account\templates\registration\profile.html:46
-#: .\account\templates\registration\profile.html:59
-#: .\repos\templates\repos_js\edit_form.js:44 .\repos\views.py:44
+#: account/templates/registration/password_change_form.html:14
+#: account/templates/registration/profile.html:46
+#: account/templates/registration/profile.html:59
+#: repos/templates/repos_js/edit_form.js:44 repos/views.py:44
 msgid "Update"
 msgstr "更新"
 
-#: .\account\templates\registration\password_reset_complete.html:5
+#: account/templates/registration/password_reset_complete.html:5
 msgid "Your password has been reset."
 msgstr "パスワードをリセットしました。"
 
-#: .\account\templates\registration\password_reset_confirm.html:9
+#: account/templates/registration/password_reset_confirm.html:9
 msgid "Reset Password"
 msgstr "パスワードのリセット"
 
-#: .\account\templates\registration\password_reset_confirm.html:12
+#: account/templates/registration/password_reset_confirm.html:12
 msgid "Change my password"
 msgstr "パスワードを変更する"
 
-#: .\account\templates\registration\password_reset_done.html:5
+#: account/templates/registration/password_reset_done.html:5
 msgid ""
 "The email was sent to the address you entered. Reset the password from the "
 "link in the body of the mail."
@@ -151,7 +151,7 @@ msgstr ""
 "入力されたアドレスにメールを送信しました。メール本文にあるリンクからパスワー"
 "ドをリセットしてください。"
 
-#: .\account\templates\registration\password_reset_email.html:2
+#: account/templates/registration/password_reset_email.html:2
 #, python-format
 msgid ""
 "You're receiving this email because you requested a password reset for your "
@@ -162,66 +162,65 @@ msgstr ""
 "このメールは %(site_name)s でご利用中のユーザアカウントにて、パスワードリセッ"
 "トのリクエストを頂いたユーザ様へ送信しています。"
 
-#: .\account\templates\registration\password_reset_email.html:4
+#: account/templates/registration/password_reset_email.html:4
 msgid "Please go to the following page and choose a new password:"
 msgstr "以下のリンクから、パスワードのリセットをお願いします。"
 
-#: .\account\templates\registration\password_reset_email.html:9
+#: account/templates/registration/password_reset_email.html:9
 msgid "Thanks for using our site!"
 msgstr "今後とものご利用お待ちしております。"
 
-#: .\account\templates\registration\password_reset_form.html:9
+#: account/templates/registration/password_reset_form.html:9
 msgid "Please enter your email address."
 msgstr "メールアドレスの入力"
 
-#: .\account\templates\registration\password_reset_subject.txt:2
+#: account/templates/registration/password_reset_subject.txt:2
 #, python-format
 msgid "Password reset on %(site_name)s"
 msgstr "%(site_name)s : パスワード再設定のご案内"
 
-#: .\account\templates\registration\profile.html:5
-#: .\repos\templates\base.html:24
+#: account/templates/registration/profile.html:5 repos/templates/base.html:26
 msgid "User settings"
 msgstr "ユーザー設定"
 
-#: .\account\templates\registration\profile.html:12
+#: account/templates/registration/profile.html:12
 msgid "Account Deletion Confirm"
 msgstr "ユーザー削除確認"
 
-#: .\account\templates\registration\profile.html:20
+#: account/templates/registration/profile.html:20
 msgid "Please enter your email address if you wish to delete your account."
 msgstr ""
 "もしユーザーアカウントを削除される場合は、メールアドレスを入力してください。"
 
-#: .\account\templates\registration\profile.html:22
+#: account/templates/registration/profile.html:22
 msgid "Email address"
 msgstr "Eメールアドレス"
 
-#: .\account\templates\registration\profile.html:28
-#: .\account\templates\registration\profile.html:74
+#: account/templates/registration/profile.html:28
+#: account/templates/registration/profile.html:74
 msgid "Delete"
 msgstr "削除"
 
-#: .\account\templates\registration\profile.html:29
-#: .\repos\templates\repos\delete_form.html:18
-#: .\repos\templates\repos\edit_form.html:35
+#: account/templates/registration/profile.html:29
+#: repos/templates/repos/delete_form.html:18
+#: repos/templates/repos/edit_form.html:35
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: .\account\templates\registration\profile.html:40
+#: account/templates/registration/profile.html:40
 msgid "Notification"
 msgstr "通知"
 
-#: .\account\templates\registration\profile.html:53
+#: account/templates/registration/profile.html:53
 msgid "Password change"
 msgstr "パスワード変更"
 
-#: .\account\templates\registration\profile.html:65
-#: .\account\templates\registration\profile.html:67
+#: account/templates/registration/profile.html:65
+#: account/templates/registration/profile.html:67
 msgid "Bookmarklet"
 msgstr "ブックマークレット"
 
-#: .\account\templates\registration\profile.html:66
+#: account/templates/registration/profile.html:66
 msgid ""
 "Drag and drop this button onto the bookmark toolbar to register a "
 "bookmarklet. When run from a Docker Hub repository page, you can open the "
@@ -231,104 +230,229 @@ msgstr ""
 "レットを登録してください。Docker Hubのリポジトリページで実行すると、このサイ"
 "トのリポジトリ登録ページを開くことができます。"
 
-#: .\account\templates\registration\profile.html:70
+#: account/templates/registration/profile.html:70
 msgid "Account Deletion"
 msgstr "ユーザーアカウント削除"
 
-#: .\account\templates\registration\profile.html:71
+#: account/templates/registration/profile.html:71
 msgid ""
 "Once you delete your account, there is no going back. Please be certain."
 msgstr ""
 "一度ユーザーアカウントを削除すると、元に戻すことはできません。ご注意くださ"
 "い。"
 
-#: .\account\templates\registration\signup.html:5
-#: .\account\templates\registration\signup.html:8
+#: account/templates/registration/signup.html:5
+#: account/templates/registration/signup.html:8
 msgid "User registration"
 msgstr "ユーザー登録"
 
-#: .\account\templates\registration\signup.html:12
+#: account/templates/registration/signup.html:12
 msgid "Register"
 msgstr "登録"
 
-#: .\repos\templates\base.html:25
+#: repos/templates/base.html:25 repos/templates/base.html:31
+#: repos/templates/repos/usage.html:13
+msgid "Usage"
+msgstr "利用方法"
+
+#: repos/templates/base.html:27
 msgid "Sign out"
 msgstr "ログアウト"
 
-#: .\repos\templates\base.html:30
+#: repos/templates/base.html:33 repos/templates/repos/usage.html:15
 msgid "Sign up"
 msgstr "ユーザー登録"
 
-#: .\repos\templates\messages\update_notify_email.html:2
+#: repos/templates/messages/update_notify_email.html:2
 #, python-format
 msgid "The Docker Hub repository %(repo)s was updated at %(last_updated)s."
 msgstr ""
 "Docker Hubのリポジトリ: %(repo)s が %(last_updated)s に更新されました。"
 
-#: .\repos\templates\messages\update_notify_email.html:3
+#: repos/templates/messages/update_notify_email.html:3
 msgid "To view the repository on Docker Hub, go to the following URL:"
 msgstr "Docker Hubで確認するには、以下のURLへアクセスしてください。"
 
-#: .\repos\templates\messages\update_notify_ifttt.txt:1
+#: repos/templates/messages/update_notify_ifttt.txt:1
 #, python-format
 msgid "%(repo)s was updated on %(last_updated)s."
 msgstr "%(repo)s が更新されました。 更新日時: %(last_updated)s"
 
-#: .\repos\templates\messages\update_notify_slack.txt:1
+#: repos/templates/messages/update_notify_slack.txt:1
 #, python-format
 msgid "<%(url)s|%(repo)s> was updated on %(last_updated)s."
 msgstr "<%(url)s|%(repo)s> が更新されました。 更新日時: %(last_updated)s"
 
-#: .\repos\templates\messages\update_notify_subject.txt:1
+#: repos/templates/messages/update_notify_subject.txt:1
 #, python-format
 msgid "Docker repository %(repo)s was Updated."
 msgstr "Dockerリポジトリ: %(repo)s が更新されました。"
 
-#: .\repos\templates\repos\delete_form.html:6
+#: repos/templates/repos/delete_form.html:6
 msgid "Removal Confirm"
 msgstr "削除確認"
 
-#: .\repos\templates\repos\delete_form.html:12
+#: repos/templates/repos/delete_form.html:12
 msgid "Do you want to remove <span id=\"del_name\"></span> notification?"
 msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 
-#: .\repos\templates\repos\delete_form.html:17
+#: repos/templates/repos/delete_form.html:17
 msgid "OK"
 msgstr "OK"
 
-#: .\repos\templates\repos\edit_form.html:15
+#: repos/templates/repos/edit_form.html:15 repos/templates/repos/usage.html:46
 msgid "owner"
 msgstr "オーナー"
 
-#: .\repos\templates\repos\edit_form.html:21
+#: repos/templates/repos/edit_form.html:21 repos/templates/repos/usage.html:47
 msgid "repository"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\edit_form.html:27
+#: repos/templates/repos/edit_form.html:27 repos/templates/repos/usage.html:48
 msgid "tag"
 msgstr "タグ"
 
-#: .\repos\templates\repos\index.html:16
+#: repos/templates/repos/index.html:16
 msgid "Repositories"
 msgstr "リポジトリ"
 
-#: .\repos\templates\repos\index.html:17
+#: repos/templates/repos/index.html:17
 msgid "Last Update"
 msgstr "最終更新日"
 
-#: .\repos\templates\repos\index.html:35
+#: repos/templates/repos/index.html:35
 msgid "Edit"
 msgstr "変更"
 
-#: .\repos\templates\repos\index.html:42
+#: repos/templates/repos/index.html:42
 msgid "Remove"
 msgstr "削除"
 
-#: .\repos\templates\repos\index.html:71
+#: repos/templates/repos/index.html:70
 msgid "Add Repository"
 msgstr "リポジトリを追加"
 
-#: .\repos\templates\repos_js\edit_form.js:35
+#: repos/templates/repos/usage.html:17
+msgid ""
+"You will need to sign up using your email address to be notified of "
+"container image updates."
+msgstr "コンテナイメージの更新を通知するため、メールアドレスを使用してユーザ登録が必要です。"
+
+#: repos/templates/repos/usage.html:18
+msgid "Click the sign-up button at the top right of the screen to register."
+msgstr "画面右上の ユーザ登録 ボタンから登録を行います。"
+
+#: repos/templates/repos/usage.html:21
+msgid "Notification Settings"
+msgstr "通知の設定"
+
+#: repos/templates/repos/usage.html:24
+msgid ""
+"You can open the settings page by clicking the User Settings button at the "
+"top right of your screen."
+msgstr "画面右上のユーザー設定ボタンから、設定画面を開くことができます。"
+
+#: repos/templates/repos/usage.html:25
+msgid "By default, you will be notified of Docker image updates via email."
+msgstr "デフォルトでは、EメールでDockerイメージの更新を通知します。"
+
+#: repos/templates/repos/usage.html:26
+msgid "You can select the following options for notifications."
+msgstr "通知については以下のオプションを選択できます。"
+
+#: repos/templates/repos/usage.html:28
+msgid "Enable/Disable email notifications"
+msgstr "Eメールでの通知の有効/無効"
+
+#: repos/templates/repos/usage.html:29
+msgid "Notifications on the Slack Incoming Webhook. *"
+msgstr "Slack Incoming Webhook※ での通知"
+
+#: repos/templates/repos/usage.html:31
+msgid ""
+"* For more information on using Incoming Webhook in your workspace, visit "
+"the <a href=\"https://slack.com/help/articles/115005265063\">Slack's help "
+"page</a>."
+msgstr ""
+"※ Incoming Webhookをワークスペースで利用する方法については、<a href="
+"\"https://slack.com/intl/ja-jp/help/articles/115005265063\">Slackのヘルプペー"
+"ジ</a>を参照してください。"
+
+#: repos/templates/repos/usage.html:34
+msgid "List View"
+msgstr "一覧画面"
+
+#: repos/templates/repos/usage.html:36
+msgid ""
+"The list view shows the repository/tag of the registered container image and "
+"its last modified date and time."
+msgstr ""
+"一覧画面では、登録したコンテナイメージのリポジトリ/タグと、その最終更新日時が"
+"表示されます。"
+
+#: repos/templates/repos/usage.html:38
+msgid "'Edit' button"
+msgstr "変更 ボタン"
+
+#: repos/templates/repos/usage.html:38
+msgid ""
+"Edit the notification of container image updates.<br>Click on the button to "
+"open the update view."
+msgstr ""
+"コンテナイメージの更新通知を変更します。<br>ボタンをクリックすると、更新画面"
+"が開きます。"
+
+#: repos/templates/repos/usage.html:39
+msgid "'Remove' button"
+msgstr "削除 ボタン"
+
+#: repos/templates/repos/usage.html:39
+msgid ""
+"Removes the update notification for the container image.<br>Click the button "
+"to open the deletion confirmation dialog."
+msgstr ""
+"コンテナイメージの更新通知を削除します。<br>ボタンをクリックすると、削除確認"
+"ダイアログが開きます。"
+
+#: repos/templates/repos/usage.html:40
+msgid "'Add Repository' button"
+msgstr "リポジトリを追加 ボタン"
+
+#: repos/templates/repos/usage.html:40
+msgid ""
+"Register a new update notification for the container image.<br>Click on the "
+"button to open the add view."
+msgstr ""
+"コンテナイメージの更新通知を新たに登録します。<br>ボタンをクリックすると追加"
+"画面が開きます。"
+
+#: repos/templates/repos/usage.html:43
+msgid "Register/Update Notification View"
+msgstr "通知の登録/更新"
+
+#: repos/templates/repos/usage.html:44
+msgid ""
+"This is the view to add or change the notification of the container image "
+"update."
+msgstr "コンテナイメージ更新の通知を追加・変更する画面です。"
+
+#: repos/templates/repos/usage.html:46
+msgid ""
+"The user who owns the container image in Docker Hub.<br>In the case of "
+"Docker official images, please leave this field blank."
+msgstr ""
+"Docker Hubでのコンテナイメージの所有ユーザ。<br>Docker 公式イメージの場合は空"
+"欄のまま登録してください。"
+
+#: repos/templates/repos/usage.html:47
+msgid "The name of the container image."
+msgstr "コンテナイメージの名前"
+
+#: repos/templates/repos/usage.html:48
+msgid "The tag name of the container image."
+msgstr "コンテナイメージのタグ名"
+
+#: repos/templates/repos_js/edit_form.js:35
 msgid ""
 "Failed to get tags for ' + (owner === 'library' ? '' : owner + '/') + name + "
 "'"
@@ -336,11 +460,11 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ' のタグ一覧取得に失敗"
 "しました。"
 
-#: .\repos\templates\repos_js\edit_form.js:44
+#: repos/templates/repos_js/edit_form.js:44
 msgid "Add"
 msgstr "追加"
 
-#: .\repos\templates\repos_js\edit_form.js:81
+#: repos/templates/repos_js/edit_form.js:81
 msgid ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' could "
 "not be found on Docker Hub."
@@ -348,29 +472,29 @@ msgstr ""
 "' + (owner === 'library' ? '' : owner + '/') + name + ':' + tag + ' をDocker "
 "Hubで見つけられませんでした。"
 
-#: .\repos\templates\repos_js\edit_form.js:92
+#: repos/templates/repos_js/edit_form.js:92
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 
-#: .\repos\views.py:37
+#: repos/views.py:37
 msgid "Deletion completed."
 msgstr "削除完了"
 
-#: .\repos\views.py:44
+#: repos/views.py:44
 msgid "Registration"
 msgstr "登録"
 
-#: .\repos\views.py:87
+#: repos/views.py:87
 #, python-format
 msgid "%(repo_tag)s is a duplicate."
 msgstr "%(repo_tag)s は既に登録されています。"
 
-#: .\repos\views.py:92 .\repos\views.py:100
+#: repos/views.py:92 repos/views.py:100
 #, python-format
 msgid "%(action)s failed."
 msgstr "%(action)s に失敗しました。"
 
-#: .\repos\views.py:95
+#: repos/views.py:95
 #, python-format
 msgid "%(action)s completed. %(repo_tag)s"
 msgstr "%(action)s完了 %(repo_tag)s"

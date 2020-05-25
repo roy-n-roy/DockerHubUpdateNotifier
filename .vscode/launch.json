@@ -14,11 +14,11 @@
 			"name": "Python: Django",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\django\\manage.py",
+			"program": "${workspaceFolder}/django/manage.py",
 			"args": [
 				"runserver",
 				"--settings=config.settings_dev",
-				"--noreload",
+				//"--noreload",
 			],
 			"env": {
 				"SECRET_KEY": "0a+n%!tanydfp1)fmkb58t21u(ufwg-ce84ia3kxnsbuwav#k$",
@@ -32,7 +32,7 @@
 			"name": "Python: Django Batch",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}\\django\\manage.py",
+			"program": "${workspaceFolder}/django/manage.py",
 			"args": [
 				"batch",
 				"--settings=config.settings_dev",

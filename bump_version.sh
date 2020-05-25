@@ -27,7 +27,7 @@ git add pyproject.toml ./django/config/__init__.py
 
 git commit -m "Bump version to ${VERSION}"
 
-git log -1 ${VERSION} && git tag -d ${VERSION}
+git log -1 ${VERSION} >& /dev/null && git tag -d ${VERSION}
 git ls-remote --exit-code origin ${VERSION} && git push -d origin ${VERSION}
 
 git tag ${VERSION}

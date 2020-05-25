@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row flex-xl-nowrap justify-content-md-center">
+        <div class="col-12 col-md-8 rounded-lg my-3 px-4">
+            {% bootstrap_messages %}
+
+            <h1>{% blocktrans %}Usage{% endblocktrans %}</h1>
+
+            <h3 class="mt-2">{% blocktrans %}Sign up{% endblocktrans %}</h3>
+            <p>
+                {% blocktrans %}You will need to sign up using your email address to be notified of container image updates.{% endblocktrans %}<br>
+                {% blocktrans %}Click the sign-up button at the top right of the screen to register.{% endblocktrans %}
+            </p>
+            <br>
+
+            <h3 class="mt-2">{% blocktrans %}Notification Settings{% endblocktrans %}</h3>
+            <img class="img-fluid img-thumbnail mb-3" src="{% static 'images/account_jp.png' %}" alt="usagge notification">
+            <p>
+                {% blocktrans %}You can open the settings page by clicking the User Settings button at the top right of your screen.{% endblocktrans %}<br>
+                {% blocktrans %}By default, you will be notified of Docker image updates via email.{% endblocktrans %}<br>
+                {% blocktrans %}You can select the following options for notifications.{% endblocktrans %}
+                <ul class="list">
+                    <li>{% blocktrans %}Enable/Disable email notifications{% endblocktrans %}</li>
+                    <li>{% blocktrans %}Notifications on the Slack Incoming Webhook. *{% endblocktrans %}</li>
+                </ul>
+                {% blocktrans %}* For more information on using Incoming Webhook in your workspace, visit the <a href="https://slack.com/help/articles/115005265063">Slack's help page</a>.{% endblocktrans %}
+            </p>
+
+            <h3 class="mt-2">{% blocktrans %}List View{% endblocktrans %}</h3>
+            <img class="img-fluid img-thumbnail mb-3" src="{% static 'images/top_jp.png' %}" alt="usagge top page">
+            <p>{% blocktrans %}The list view shows the repository/tag of the registered container image and its last modified date and time.{% endblocktrans %}</p>
+            <table class="table table-borderless">
+                <tr><td>{% blocktrans %}'Edit' button{% endblocktrans %}</td><td>{% blocktrans %}Edit the notification of container image updates.<br>Click on the button to open the update view.{% endblocktrans %}</td></tr>
+                <tr><td>{% blocktrans %}'Remove' button{% endblocktrans %}</td><td>{% blocktrans %}Removes the update notification for the container image.<br>Click the button to open the deletion confirmation dialog.{% endblocktrans %}</td></tr>
+                <tr><td>{% blocktrans %}'Add Repository' button{% endblocktrans %}</td><td>{% blocktrans %}Register a new update notification for the container image.<br>Click on the button to open the add view.{% endblocktrans %}</td></tr>
+            </table>
+
+            <h3 class="mt-2">{% blocktrans %}Register/Update Notification View{% endblocktrans %}</h3>
+            <p>{% blocktrans %}This is the view to add or change the notification of the container image update.{% endblocktrans %}</p>
+            <table class="table table-borderless">
+                <tr><td>{% blocktrans %}owner{% endblocktrans %}</td><td>{% blocktrans %}The user who owns the container image in Docker Hub.<br>In the case of Docker official images, please leave this field blank.{% endblocktrans %}</td></tr>
+                <tr><td>{% blocktrans %}repository{% endblocktrans %}</td><td>{% blocktrans %}The name of the container image.{% endblocktrans %}</td></tr>
+                <tr><td>{% blocktrans %}tag{% endblocktrans %}</td><td>{% blocktrans %}The tag name of the container image.{% endblocktrans %}</td></tr>
+            </table>
+        <img class="img-fluid img-thumbnail mb-3" src="{% static 'images/repo_add_jp.png' %}" alt="usage register">
+            <img class="img-fluid img-thumbnail mb-3" src="{% static 'images/repo_edit_jp.png' %}" alt="usage update">
+        </div>
+    </div>
+</div>
+{% endblock %}

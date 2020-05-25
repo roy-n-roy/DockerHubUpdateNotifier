@@ -4,67 +4,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "create requirements.txt",
-			"type": "shell",
-			"linux": {
-				"command": "sh",
-				"args": [ "-c", "cat production/requirements.txt >> requirements.txt; rm production/requirements.txt" ],
-			},
-			"windows": {
-				"command": "powershell",
-				"args": [ "-Command", "Get-Content production/requirements.txt | Add-Content requirements.txt; rm production/requirements.txt" ],
-			},
-			"dependsOn": [
-				"export requirements.txt",
-				"export productions requirements.txt"
-			],
-			"problemMatcher": []
-		},
-		{
-			"label": "export requirements.txt",
-			"type": "shell",
-			"command": "pipenv",
-			"args": [
-				"lock",
-				"--requirements",
-				">",
-				"requirements.txt"
-			],
-			"options": {
-				"cwd": "${workspaceFolder}"
-			}
-		},
-		{
-			"label": "export productions requirements.txt",
-			"type": "shell",
-			"command": "pipenv",
-			"args": [
-				"lock",
-				"--requirements",
-				">",
-				"requirements.txt"
-			],
-			"windows": {
-				"command": "docker",
-				"args": [
-					"run",
-					"--rm",
-					"--volume=${workspaceFolder}/production:/production:rw",
-					"--workdir=/production",
-					"python:3.8",
-					"sh",
-					"-c",
-					"pip install pipenv && pipenv lock -r > requirements.txt"
-				]
-			},
-			"options": {
-				"cwd": "${workspaceFolder}/production"
-			}
-		},
-		{
 			"label": "django_make_migrations",
 			"type": "shell",
-			"command": "pipenv",
+			"command": "poetry",
 			"args": [
 				"run",
 				"python",
@@ -85,7 +27,7 @@
 		{
 			"label": "django_migrate",
 			"type": "shell",
-			"command": "pipenv",
+			"command": "poetry",
 			"args": [
 				"run",
 				"python",
@@ -104,7 +46,7 @@
 		{
 			"label": "django_make_messages",
 			"type": "shell",
-			"command": "pipenv",
+			"command": "poetry",
 			"args": [
 				"run",
 				"django-admin",
@@ -120,7 +62,7 @@
 		{
 			"label": "django_compile_messages",
 			"type": "shell",
-			"command": "pipenv",
+			"command": "poetry",
 			"args": [
 				"run",
 				"django-admin",
@@ -132,9 +74,28 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "django_createsuperuser",
+			"type": "shell",
+			"command": "poetry",
+			"args": [
+				"run",
+				"python",
+				"manage.py",
+				"createsuperuser",
+				"--settings=config.settings_dev"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/django",
+				"env": {
+					"SECRET_KEY": " "
+				}
+			},
+			"problemMatcher": []
+		},
+		{
 			"label": "django_tests",
 			"type": "shell",
-			"command": "pipenv",
+			"command": "poetry",
 			"args": [
 				"run",
 				"python",

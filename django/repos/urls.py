@@ -18,4 +18,6 @@ urlpatterns = [
         template_name="repos_js/bookmarklet.js"), name='bookmarklet'),
     path('open_in/<str:owner>/<str:name>', login_required(TemplateView.as_view(
         template_name="repos/openin.html")), name='openin'),
+    path('usage', TemplateView.as_view(
+        template_name="repos/usage.html"), name='usage'),
 ]
