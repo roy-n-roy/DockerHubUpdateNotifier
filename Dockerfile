@@ -8,6 +8,9 @@ RUN addgroup -g 1000 django \
  && adduser -S -u 1000 django -G django \
  && echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
 
+RUN mkdir /static \
+ && chown django:django /static
+
 ADD https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py .
 
 COPY pyproject.toml poetry.lock /app/

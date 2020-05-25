@@ -25,6 +25,7 @@ services:
       - postgres
 
   webapp:
+    build: .
     image: docker-hub-update-notifier
     restart: always
     environment:
