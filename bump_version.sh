@@ -19,14 +19,16 @@ if [[ ! ${VERSION} =~ ^v[0-9]+\.[0-9]+\.[0-9]+[ab]?$ ]]; then
 	exit 1
 fi
 
-poetry version ${VERSION}
+if [[ ${VERSION} != $(poetry version --no-ansi | cut -d' ' -f2) ]]; then
+	poetry version ${VERSION}
 
-echo "__version__ = '${VERSION}'" > ./django/config/__init__.py
+	echo "__version__ = '${VERSION}'" > ./django/config/__init__.py
 
-git add pyproject.toml ./django/config/__init__.py
+	git add pyproject.toml ./django/config/__init__.py
 
-git commit -m "Bump version to ${VERSION}"
+	git commit -m "Bump version to ${VERSION}"
 
+fi
 git log -1 ${VERSION} >& /dev/null && git tag -d ${VERSION}
 git ls-remote --exit-code origin ${VERSION} && git push -d origin ${VERSION}
 
