@@ -27,7 +27,7 @@ Access To "http://localhost/"
 - [x] 通知機能: slack (Webhook)
 - [x] 通知機能: メール
 - [x] BookmarkletによるDocker Hubページからの登録画面Open
-- [ ] 利用方法のページを作成
+- [x] 利用方法のページを作成
 - [ ] Webhook URLバリデーション
 - [ ] テスト
 - [x] レスポンシブデザイン対応
