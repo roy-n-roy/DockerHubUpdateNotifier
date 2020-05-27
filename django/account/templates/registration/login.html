@@ -14,6 +14,9 @@
         {% csrf_token %}
     </form>
     <a href="{% url 'password_reset' %}">{% blocktrans %}Forgot your password?{% endblocktrans %}</a>
-
+    <hr>
+    <p class="card-text">{% blocktrans %}For the first time, click the following link{% endblocktrans %}</p>
+    <a class="btn btn-outline-secondary btn-block" href="{% url 'repos:usage' %}"><i class="fas fa-question"></i> {% blocktrans %}Usage{% endblocktrans %}</a>
+    <a class="btn btn-outline-primary btn-block" href="{% url 'accounts:signup' %}">{% blocktrans %}Sign up{% endblocktrans %}</a>
 
 {% endblock %}

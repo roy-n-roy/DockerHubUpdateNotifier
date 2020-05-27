@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 19:54+0900\n"
+"POT-Creation-Date: 2020-05-27 18:52+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -115,6 +115,20 @@ msgstr "ログイン"
 #: account/templates/registration/login.html:16
 msgid "Forgot your password?"
 msgstr "パスワードをお忘れですか?"
+
+#: account/templates/registration/login.html:18
+msgid "For the first time, click the following link"
+msgstr "はじめての方はこちら"
+
+#: account/templates/registration/login.html:19 repos/templates/base.html:25
+#: repos/templates/base.html:31 repos/templates/repos/usage.html:13
+msgid "Usage"
+msgstr "利用方法"
+
+#: account/templates/registration/login.html:20 repos/templates/base.html:33
+#: repos/templates/repos/usage.html:15
+msgid "Sign up"
+msgstr "ユーザー登録"
 
 #: account/templates/registration/password_change_done.html:5
 msgid "Your password has been changed."
@@ -250,18 +264,9 @@ msgstr "ユーザー登録"
 msgid "Register"
 msgstr "登録"
 
-#: repos/templates/base.html:25 repos/templates/base.html:31
-#: repos/templates/repos/usage.html:13
-msgid "Usage"
-msgstr "利用方法"
-
 #: repos/templates/base.html:27
 msgid "Sign out"
 msgstr "ログアウト"
-
-#: repos/templates/base.html:33 repos/templates/repos/usage.html:15
-msgid "Sign up"
-msgstr "ユーザー登録"
 
 #: repos/templates/messages/update_notify_email.html:2
 #, python-format
@@ -300,15 +305,15 @@ msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 msgid "OK"
 msgstr "OK"
 
-#: repos/templates/repos/edit_form.html:15 repos/templates/repos/usage.html:46
+#: repos/templates/repos/edit_form.html:15 repos/templates/repos/usage.html:47
 msgid "owner"
 msgstr "オーナー"
 
-#: repos/templates/repos/edit_form.html:21 repos/templates/repos/usage.html:47
+#: repos/templates/repos/edit_form.html:21 repos/templates/repos/usage.html:48
 msgid "repository"
 msgstr "リポジトリ"
 
-#: repos/templates/repos/edit_form.html:27 repos/templates/repos/usage.html:48
+#: repos/templates/repos/edit_form.html:27 repos/templates/repos/usage.html:49
 msgid "tag"
 msgstr "タグ"
 
@@ -336,39 +341,41 @@ msgstr "リポジトリを追加"
 msgid ""
 "You will need to sign up using your email address to be notified of "
 "container image updates."
-msgstr "コンテナイメージの更新を通知するため、メールアドレスを使用してユーザ登録が必要です。"
+msgstr ""
+"コンテナイメージの更新を通知するため、メールアドレスを使用してユーザ登録が必"
+"要です。"
 
 #: repos/templates/repos/usage.html:18
 msgid "Click the sign-up button at the top right of the screen to register."
 msgstr "画面右上の ユーザ登録 ボタンから登録を行います。"
 
-#: repos/templates/repos/usage.html:21
+#: repos/templates/repos/usage.html:22
 msgid "Notification Settings"
 msgstr "通知の設定"
 
-#: repos/templates/repos/usage.html:24
+#: repos/templates/repos/usage.html:25
 msgid ""
 "You can open the settings page by clicking the User Settings button at the "
 "top right of your screen."
 msgstr "画面右上のユーザー設定ボタンから、設定画面を開くことができます。"
 
-#: repos/templates/repos/usage.html:25
+#: repos/templates/repos/usage.html:26
 msgid "By default, you will be notified of Docker image updates via email."
 msgstr "デフォルトでは、EメールでDockerイメージの更新を通知します。"
 
-#: repos/templates/repos/usage.html:26
+#: repos/templates/repos/usage.html:27
 msgid "You can select the following options for notifications."
 msgstr "通知については以下のオプションを選択できます。"
 
-#: repos/templates/repos/usage.html:28
+#: repos/templates/repos/usage.html:29
 msgid "Enable/Disable email notifications"
 msgstr "Eメールでの通知の有効/無効"
 
-#: repos/templates/repos/usage.html:29
+#: repos/templates/repos/usage.html:30
 msgid "Notifications on the Slack Incoming Webhook. *"
 msgstr "Slack Incoming Webhook※ での通知"
 
-#: repos/templates/repos/usage.html:31
+#: repos/templates/repos/usage.html:32
 msgid ""
 "* For more information on using Incoming Webhook in your workspace, visit "
 "the <a href=\"https://slack.com/help/articles/115005265063\">Slack's help "
@@ -378,11 +385,11 @@ msgstr ""
 "\"https://slack.com/intl/ja-jp/help/articles/115005265063\">Slackのヘルプペー"
 "ジ</a>を参照してください。"
 
-#: repos/templates/repos/usage.html:34
+#: repos/templates/repos/usage.html:35
 msgid "List View"
 msgstr "一覧画面"
 
-#: repos/templates/repos/usage.html:36
+#: repos/templates/repos/usage.html:37
 msgid ""
 "The list view shows the repository/tag of the registered container image and "
 "its last modified date and time."
@@ -390,11 +397,11 @@ msgstr ""
 "一覧画面では、登録したコンテナイメージのリポジトリ/タグと、その最終更新日時が"
 "表示されます。"
 
-#: repos/templates/repos/usage.html:38
+#: repos/templates/repos/usage.html:39
 msgid "'Edit' button"
 msgstr "変更 ボタン"
 
-#: repos/templates/repos/usage.html:38
+#: repos/templates/repos/usage.html:39
 msgid ""
 "Edit the notification of container image updates.<br>Click on the button to "
 "open the update view."
@@ -402,11 +409,11 @@ msgstr ""
 "コンテナイメージの更新通知を変更します。<br>ボタンをクリックすると、更新画面"
 "が開きます。"
 
-#: repos/templates/repos/usage.html:39
+#: repos/templates/repos/usage.html:40
 msgid "'Remove' button"
 msgstr "削除 ボタン"
 
-#: repos/templates/repos/usage.html:39
+#: repos/templates/repos/usage.html:40
 msgid ""
 "Removes the update notification for the container image.<br>Click the button "
 "to open the deletion confirmation dialog."
@@ -414,11 +421,11 @@ msgstr ""
 "コンテナイメージの更新通知を削除します。<br>ボタンをクリックすると、削除確認"
 "ダイアログが開きます。"
 
-#: repos/templates/repos/usage.html:40
+#: repos/templates/repos/usage.html:41
 msgid "'Add Repository' button"
 msgstr "リポジトリを追加 ボタン"
 
-#: repos/templates/repos/usage.html:40
+#: repos/templates/repos/usage.html:41
 msgid ""
 "Register a new update notification for the container image.<br>Click on the "
 "button to open the add view."
@@ -426,17 +433,17 @@ msgstr ""
 "コンテナイメージの更新通知を新たに登録します。<br>ボタンをクリックすると追加"
 "画面が開きます。"
 
-#: repos/templates/repos/usage.html:43
+#: repos/templates/repos/usage.html:44
 msgid "Register/Update Notification View"
 msgstr "通知の登録/更新"
 
-#: repos/templates/repos/usage.html:44
+#: repos/templates/repos/usage.html:45
 msgid ""
 "This is the view to add or change the notification of the container image "
 "update."
 msgstr "コンテナイメージ更新の通知を追加・変更する画面です。"
 
-#: repos/templates/repos/usage.html:46
+#: repos/templates/repos/usage.html:47
 msgid ""
 "The user who owns the container image in Docker Hub.<br>In the case of "
 "Docker official images, please leave this field blank."
@@ -444,11 +451,11 @@ msgstr ""
 "Docker Hubでのコンテナイメージの所有ユーザ。<br>Docker 公式イメージの場合は空"
 "欄のまま登録してください。"
 
-#: repos/templates/repos/usage.html:47
+#: repos/templates/repos/usage.html:48
 msgid "The name of the container image."
 msgstr "コンテナイメージの名前"
 
-#: repos/templates/repos/usage.html:48
+#: repos/templates/repos/usage.html:49
 msgid "The tag name of the container image."
 msgstr "コンテナイメージのタグ名"
 
