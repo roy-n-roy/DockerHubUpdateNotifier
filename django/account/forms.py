@@ -29,6 +29,7 @@ class UserCreateForm(UserCreationForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
     language_code = language_code_choice
+    timezone = timezone_choice
 
 
 class UserUpdateFrom(UserChangeForm):

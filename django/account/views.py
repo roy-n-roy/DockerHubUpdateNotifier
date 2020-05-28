@@ -9,7 +9,7 @@ from django.contrib.auth.views import (csrf_protect, login_required,
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
-
+from django.utils import timezone
 from .forms import UserCreateForm, UserUpdateFrom
 
 User = get_user_model()
@@ -23,7 +23,10 @@ class SignUpView(generic.CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs.update({
-            'initial': {'language_code': self.request.LANGUAGE_CODE}
+            'initial': {
+                'language_code': self.request.LANGUAGE_CODE,
+                'timezone': timezone.get_default_timezone_name()
+            }
         })
         return kwargs
 
