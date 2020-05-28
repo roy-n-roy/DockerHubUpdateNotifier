@@ -8,8 +8,8 @@ RUN addgroup -g 1000 django \
  && adduser -S -u 1000 django -G django \
  && echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
 
-RUN mkdir /static \
- && chown django:django /static
+RUN mkdir -p /static /var/run/django \
+ && chown django:django /static /var/run/django
 
 ADD https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py .
 
@@ -38,6 +38,7 @@ RUN chmod 755 /usr/local/bin/sentry-cli /usr/local/bin/entrypoint.sh
 
 USER django
 
-EXPOSE 3031
+VOLUME [ "/var/run/django" ]
+
 ENTRYPOINT [ "entrypoint.sh" ]
 CMD [ "webapp" ]

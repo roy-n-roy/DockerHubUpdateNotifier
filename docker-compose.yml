@@ -47,6 +47,7 @@ services:
       STATIC_ROOT: '/static'
     volumes:
       - django_statics:/static:rw
+      - django_domain_socket:/var/run/django:rw
     depends_on:
       - postgres
 
@@ -73,6 +74,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - django_statics:/usr/share/nginx/html/static:ro
+      - django_domain_socket:/var/run/django:rw
     depends_on:
       - webapp
 
@@ -80,4 +82,6 @@ volumes:
   pgdata:
     driver: local
   django_statics:
+    driver: local
+  django_domain_socket:
     driver: local
