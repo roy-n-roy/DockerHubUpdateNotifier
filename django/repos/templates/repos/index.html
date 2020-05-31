@@ -7,6 +7,7 @@
 {% block content %}
 {% include 'repos/delete_form.html' %}
 {% include 'repos/edit_form.html' %}
+{% include 'repos/history.html' %}
 
 {% bootstrap_messages %}
 
@@ -15,6 +16,7 @@
     <thead class="thead-light"><tr>
         <th scope="col">{% blocktrans %}Repositories{% endblocktrans %}</th>
         <th scope="col">{% blocktrans %}Last Update{% endblocktrans %}</th>
+        <th></th>
         <th></th>
         <th></th>
     </tr></thead>
@@ -27,6 +29,13 @@
                 </a>
             </td>
             <td data-sort="{{ item.repository_tag.last_updated|date:'YmdHis' }}">{{ item.repository_tag.last_updated }}</td>
+            <td>
+                <button class="btn btn-outline-info btn-sm hist_confirm"
+                        data-toggle="modal" data-target="#historyModal"
+                        data-title="{{ item.repository_tag }}" data-url="{% url 'repos:history' watching_id=item.id %}">
+                    {% blocktrans %}History{% endblocktrans %}
+                </button>
+            </td>
             <td>
                 <button class="btn btn-outline-primary btn-sm display_edit"
                         data-toggle="modal" data-target="#editModal" data-type="update" data-title="{{ item.repository_tag }}"
@@ -61,6 +70,7 @@ $(() => {
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
 $(() => {
+//{% include 'repos_js/history.js' %}
 //{% include 'repos_js/edit_form.js' %}
 //{% include 'repos_js/delete_form.js' %}
     $('#main_table').on('init.dt', () => {
@@ -79,12 +89,13 @@ $(() => {
         $('#main_table_paginate ul').addClass('justify-content-md-center');
         $('.display_edit').on('click', pre_edit);
         $('.del_confirm').on('click', pre_delete);
+        $('.hist_confirm').on('click', pre_history);
     }).DataTable({
         dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-12 col-md-3'i><'col-sm-12 col-md-6'p><'#add-button-container.col-sm-12 col-md-3'>>",
         stateSave: true,
-        columns: [ null, null, { "orderable": false }, { "orderable": false } ],
+        columns: [ null, null, { "orderable": false }, { "orderable": false }, { "orderable": false } ],
         order: [[ 1, 'desc' ]],
         language: {
             emptyTable: "{% if  user.language_code == 'ja' %}リポジトリが登録されていません" + 
