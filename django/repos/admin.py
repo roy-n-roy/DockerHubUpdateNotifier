@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from .models import Repository, RepositoryTag, Watching
+from .models import (Repository, RepositoryTag, RepositoryTagHistory, Watching,
+                     WatichingHistory)
 
 # Register your models here.
 
@@ -21,3 +22,15 @@ class RepositoryTagAdmin(admin.ModelAdmin):
 class WatchingAdmin(admin.ModelAdmin):
     list_display = ('user', 'repository_tag')
     list_display_links = ('repository_tag',)
+
+
+@admin.register(RepositoryTagHistory)
+class RepositoryTagHistoryAdmin(admin.ModelAdmin):
+    list_display = ('repository_tag', 'updated')
+    list_display_links = ('repository_tag',)
+
+
+@admin.register(WatichingHistory)
+class WatchingHistoryAdmin(admin.ModelAdmin):
+    list_display = ('watching',)
+    list_display_links = ('watching',)

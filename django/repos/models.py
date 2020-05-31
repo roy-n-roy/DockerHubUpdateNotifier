@@ -52,3 +52,23 @@ class Watching(models.Model):
 
     class Meta:
         unique_together = ("user", "repository_tag")
+
+
+class RepositoryTagHistory(models.Model):
+    """
+    リポジトリ+タグ 更新履歴
+    """
+    repository_tag = models.ForeignKey(RepositoryTag, on_delete=models.CASCADE)
+    updated = models.DateTimeField(null=False, blank=False)
+
+    class Meta:
+        unique_together = ("repository_tag", "updated")
+
+
+class WatichingHistory(models.Model):
+    """
+    通知履歴
+    """
+    watching = models.ForeignKey(Watching, on_delete=models.CASCADE)
+    tag_history = \
+        models.ForeignKey(RepositoryTagHistory, on_delete=models.CASCADE)
