@@ -61,12 +61,10 @@ def edit(request, watching_id=None):
         name=data['tag']
     ).first()
     if repo_tag is None:
-        repo, createed = Repository.objects.get_or_create(
+        repo, created = Repository.objects.get_or_create(
             owner=data['owner'],
             name=data['name'],
         )
-        if createed:
-            repo.save()
 
         repo_tag = RepositoryTag(repository=repo, name=data['tag'])
         repo_tag.last_updated = App.check_repository(
