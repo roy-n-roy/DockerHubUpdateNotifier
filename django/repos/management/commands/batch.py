@@ -24,7 +24,7 @@ class Command(BaseCommand):
     output_transaction = True
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.NOTICE('Start Bach Application.'))
+        self.stdout.write('Start Bach Application.')
         for tag in RepositoryTag.objects.all():
             try:
                 last_updated = App.check_repository(
@@ -34,9 +34,8 @@ class Command(BaseCommand):
                     tag.last_updated = last_updated
                     tag.save()
 
-                    hist = RepositoryTagHistory(
+                    hist, _ = RepositoryTagHistory.objects.get_or_create(
                         repository_tag=tag, updated=last_updated)
-                    hist.save()
 
                     for wch in Watching.objects.filter(
                             repository_tag=tag).all():
@@ -46,7 +45,7 @@ class Command(BaseCommand):
                     self.stdout.write(f'No update on "{tag}".')
             except Exception:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
-        self.stdout.write(self.style.NOTICE('Finished Bach Application.'))
+        self.stdout.write('Finished Bach Application.')
 
 
 def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
