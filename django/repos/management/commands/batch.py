@@ -11,7 +11,8 @@ from django.utils.translation import get_language
 from account.models import User, WebhookType
 
 from ...apps import ReposConfig as App
-from ...models import RepositoryTag, Watching
+from ...models import (RepositoryTag, RepositoryTagHistory, Watching,
+                       WatichingHistory)
 
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
 
@@ -31,10 +32,16 @@ class Command(BaseCommand):
                 )
                 if last_updated is None or tag.last_updated != last_updated:
                     tag.last_updated = last_updated
+                    tag.save()
+
+                    hist = RepositoryTagHistory(
+                        repository_tag=tag, updated=last_updated)
+                    hist.save()
+
                     for wch in Watching.objects.filter(
                             repository_tag=tag).all():
+                        WatichingHistory(watching=wch, tag_history=hist).save()
                         send_notify(self, wch.user, tag)
-                    tag.save()
                 else:
                     self.stdout.write(f'No update on "{tag}".')
             except Exception:
@@ -43,6 +50,9 @@ class Command(BaseCommand):
 
 
 def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
+    """
+    ユーザーに通知を送信する
+    """
     if not user.is_active:
         return
 
