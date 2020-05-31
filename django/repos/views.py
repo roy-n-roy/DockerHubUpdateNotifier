@@ -13,7 +13,7 @@ from django.views.generic import ListView
 
 from .apps import ReposConfig as App
 from .forms import WatchingForm
-from .models import Repository, RepositoryTag, Watching
+from .models import Repository, RepositoryTag, Watching, WatichingHistory
 
 
 class IndexListView(LoginRequiredMixin, ListView):
@@ -120,3 +120,17 @@ def tags(request, owner, name, page):
         return HttpResponse(json.dumps(tags))
     else:
         raise Http404()
+
+
+@require_GET
+@login_required
+def history(request, watching_id):
+    watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
+    hists = WatichingHistory.objects.filter(watching=watching) \
+        .order_by('tag_history__updated').reverse()
+
+    data = []
+    for hist in hists:
+        data.append({'update': str(hist.tag_history.updated)})
+
+    return HttpResponse(json.dumps(data))
