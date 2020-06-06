@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "DockerHubUpdateNotifier"
-version = "v1.1.15"
+version = "v1.1.16"
 description = ""
 authors = ["roy-n-roy"]
 license = "MIT"
