@@ -8,7 +8,7 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.8"
 Django = "^3.0.7"
-django-bootstrap4 = "^1.1.1"
+django-bootstrap4 = "^2.0.1"
 requests = "^2.23.0"
 schedule = "^0.6.0"
 CacheControl = {extras = ["filecache"], version = "^0.12.6"}
