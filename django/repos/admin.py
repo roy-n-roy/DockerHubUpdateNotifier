@@ -32,5 +32,5 @@ class RepositoryTagHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(WatichingHistory)
 class WatchingHistoryAdmin(admin.ModelAdmin):
-    list_display = ('watching',)
-    list_display_links = ('watching',)
+    list_display = ('__str__',)
+    list_display_links = ('__str__',)

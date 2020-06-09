@@ -53,6 +53,9 @@ class Watching(models.Model):
     class Meta:
         unique_together = ("user", "repository_tag")
 
+    def __str__(self):
+        return f'{self.user} / {self.repository_tag}'
+
 
 class RepositoryTagHistory(models.Model):
     """
@@ -64,6 +67,9 @@ class RepositoryTagHistory(models.Model):
     class Meta:
         unique_together = ("repository_tag", "updated")
 
+    def __str__(self):
+        return f'{self.repository_tag}  {self.updated}'
+
 
 class WatichingHistory(models.Model):
     """
@@ -72,3 +78,6 @@ class WatichingHistory(models.Model):
     watching = models.ForeignKey(Watching, on_delete=models.CASCADE)
     tag_history = \
         models.ForeignKey(RepositoryTagHistory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.watching.user} / {self.tag_history}'
