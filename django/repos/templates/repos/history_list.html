@@ -1,0 +1,12 @@
+{% load i18n %}<!-- history list form -->
+<ul class="list-group">
+    {% for history in histories %}
+    <li class="list-group-item">
+        {{ history.tag_history.updated }}
+    </li>
+    {% empty %}
+    <li class="list-group-item">
+        {% blocktrans %}No history data.{% endblocktrans %}
+    </li>
+    {% endfor %}
+</ul>

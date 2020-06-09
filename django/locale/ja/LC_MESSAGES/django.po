@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-27 18:52+0900\n"
+"POT-Creation-Date: 2020-06-09 12:29+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -141,7 +141,7 @@ msgstr "パスワード変更"
 #: account/templates/registration/password_change_form.html:14
 #: account/templates/registration/profile.html:46
 #: account/templates/registration/profile.html:59
-#: repos/templates/repos_js/edit_form.js:44 repos/views.py:44
+#: repos/templates/repos_js/edit_form.js:44 repos/views.py:49
 msgid "Update"
 msgstr "更新"
 
@@ -302,6 +302,7 @@ msgid "Do you want to remove <span id=\"del_name\"></span> notification?"
 msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 
 #: repos/templates/repos/delete_form.html:17
+#: repos/templates/repos/history_form.html:14
 msgid "OK"
 msgstr "OK"
 
@@ -317,23 +318,35 @@ msgstr "リポジトリ"
 msgid "tag"
 msgstr "タグ"
 
-#: repos/templates/repos/index.html:16
+#: repos/templates/repos/history_form.html:6
+msgid "update history"
+msgstr "更新履歴"
+
+#: repos/templates/repos/history_list.html:9
+msgid "No history data."
+msgstr "履歴データがありません。"
+
+#: repos/templates/repos/index.html:17
 msgid "Repositories"
 msgstr "リポジトリ"
 
-#: repos/templates/repos/index.html:17
+#: repos/templates/repos/index.html:18
 msgid "Last Update"
 msgstr "最終更新日"
 
-#: repos/templates/repos/index.html:35
+#: repos/templates/repos/index.html:36
+msgid "History"
+msgstr "履歴"
+
+#: repos/templates/repos/index.html:44
 msgid "Edit"
 msgstr "変更"
 
-#: repos/templates/repos/index.html:42
+#: repos/templates/repos/index.html:51
 msgid "Remove"
 msgstr "削除"
 
-#: repos/templates/repos/index.html:70
+#: repos/templates/repos/index.html:80
 msgid "Add Repository"
 msgstr "リポジトリを追加"
 
@@ -483,25 +496,29 @@ msgstr ""
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 
-#: repos/views.py:37
+#: repos/templates/repos_js/history.js:11
+msgid "Failed to get history data."
+msgstr "履歴データの取得に失敗しました。"
+
+#: repos/views.py:42
 msgid "Deletion completed."
 msgstr "削除完了"
 
-#: repos/views.py:44
+#: repos/views.py:49
 msgid "Registration"
 msgstr "登録"
 
-#: repos/views.py:87
+#: repos/views.py:90
 #, python-format
 msgid "%(repo_tag)s is a duplicate."
 msgstr "%(repo_tag)s は既に登録されています。"
 
-#: repos/views.py:92 repos/views.py:100
+#: repos/views.py:95 repos/views.py:103
 #, python-format
 msgid "%(action)s failed."
 msgstr "%(action)s に失敗しました。"
 
-#: repos/views.py:95
+#: repos/views.py:98
 #, python-format
 msgid "%(action)s completed. %(repo_tag)s"
 msgstr "%(action)s完了 %(repo_tag)s"

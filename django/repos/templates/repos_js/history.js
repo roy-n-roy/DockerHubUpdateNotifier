@@ -4,19 +4,11 @@ var pre_history = function() {
     $.ajax({
         url      : $(this).data('url'),
         type     : 'GET',
-        dataType : 'json',
+        dataType : 'html',
     }).done((data) => {
-        var list = $('#hist_body').html('<ul class="="list-group"">');
-        if (data.length > 0) {
-            for (var i in data) {
-                list.append('<li class="list-group-item">' + data[i].update + '</li>');
-            };
-        } else {
-            list.append('<li class="list-group-item">{% blocktrans %}No history data.{% endblocktrans %}</li>');
-        };
+        $('#hist_body').html(data);
     }).fail((data) => {
         $('#hist_body').text('<p>{% blocktrans %}Failed to get history data.{% endblocktrans %}</p>');
     }).always(() => {
-        //$('#in_process_label').remove();
     });
 };
