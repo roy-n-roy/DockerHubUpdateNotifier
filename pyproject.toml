@@ -18,7 +18,7 @@ sentry-sdk = {version = "^0.14.4", optional = true}
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.5.3"
-flake8 = "^3.8.1"
+flake8 = "^3.8.3"
 rope = "^0.17.0"
 
 [tool.poetry.extras]
