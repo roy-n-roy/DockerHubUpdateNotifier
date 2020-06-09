@@ -24,8 +24,13 @@ class IndexListView(LoginRequiredMixin, ListView):
     paginate_by = 0
 
     def get_queryset(self):
-        quieryset = Watching.objects.filter(user=self.request.user)
-        return quieryset
+        queryset = self.model.objects.filter(user=self.request.user)
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+            queryset = queryset.order_by(*ordering)
+        return queryset
 
 
 @require_POST
@@ -122,15 +127,23 @@ def tags(request, owner, name, page):
         raise Http404()
 
 
-@require_GET
-@login_required
-def history(request, watching_id):
-    watching = get_object_or_404(Watching, pk=watching_id, user=request.user)
-    hists = WatichingHistory.objects.filter(watching=watching) \
-        .order_by('tag_history__updated').reverse()
+class HistoryView(LoginRequiredMixin, ListView):
+    http_method_names = ['get']
+    model = WatichingHistory
+    context_object_name = 'histories'
+    template_name = "repos/history_list.html"
+    paginate_by = 0
+    ordering = '-tag_history__updated'
+    allow_empty = True
 
-    data = []
-    for hist in hists:
-        data.append({'update': str(hist.tag_history.updated)})
-
-    return HttpResponse(json.dumps(data))
+    def get_queryset(self):
+        queryset = self.model.objects.filter(
+            watching__id=self.kwargs['watching_id'],
+            watching__user=self.request.user
+        )
+        ordering = self.get_ordering()
+        if ordering:
+            if isinstance(ordering, str):
+                ordering = (ordering,)
+            queryset = queryset.order_by(*ordering)
+        return queryset

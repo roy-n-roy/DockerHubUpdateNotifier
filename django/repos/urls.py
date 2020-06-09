@@ -20,5 +20,6 @@ urlpatterns = [
         template_name="repos/openin.html")), name='openin'),
     path('usage', TemplateView.as_view(
         template_name="repos/usage.html"), name='usage'),
-    path('history/<int:watching_id>', views.history, name='history'),
+    path('history/<int:watching_id>', views.HistoryView.as_view(),
+         name='history'),
 ]
