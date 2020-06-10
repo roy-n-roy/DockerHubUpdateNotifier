@@ -36,6 +36,7 @@
             <img class="img-fluid img-thumbnail mb-3" src="{% static 'images/top_jp.png' %}" alt="usagge top page">
             <p>{% blocktrans %}The list view shows the repository/tag of the registered container image and its last modified date and time.{% endblocktrans %}</p>
             <table class="table table-borderless">
+                <tr><td>{% blocktrans %}'History' button{% endblocktrans %}</td><td>{% blocktrans %}Show the update history of the repository/tag <br>from the time it was registered to the currently.<br>Click on the button to open the history view.{% endblocktrans %}</td></tr>
                 <tr><td>{% blocktrans %}'Edit' button{% endblocktrans %}</td><td>{% blocktrans %}Edit the notification of container image updates.<br>Click on the button to open the update view.{% endblocktrans %}</td></tr>
                 <tr><td>{% blocktrans %}'Remove' button{% endblocktrans %}</td><td>{% blocktrans %}Removes the update notification for the container image.<br>Click the button to open the deletion confirmation dialog.{% endblocktrans %}</td></tr>
                 <tr><td>{% blocktrans %}'Add Repository' button{% endblocktrans %}</td><td>{% blocktrans %}Register a new update notification for the container image.<br>Click on the button to open the add view.{% endblocktrans %}</td></tr>

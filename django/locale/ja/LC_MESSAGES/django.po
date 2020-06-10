@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-10 15:30+0900\n"
+"POT-Creation-Date: 2020-06-10 20:47+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -141,6 +141,7 @@ msgstr "パスワード変更"
 #: account/templates/registration/password_change_form.html:14
 #: account/templates/registration/profile.html:46
 #: account/templates/registration/profile.html:59
+#: repos/templates/repos/history_list.html:7
 #: repos/templates/repos_js/edit_form.js:44 repos/views.py:45
 msgid "Update"
 msgstr "更新"
@@ -306,29 +307,30 @@ msgstr "<span id=\"del_name\"></span> の通知を削除しますか?"
 msgid "OK"
 msgstr "OK"
 
-#: repos/templates/repos/edit_form.html:15 repos/templates/repos/usage.html:47
+#: repos/templates/repos/edit_form.html:15 repos/templates/repos/usage.html:48
 msgid "owner"
 msgstr "オーナー"
 
-#: repos/templates/repos/edit_form.html:21 repos/templates/repos/usage.html:48
+#: repos/templates/repos/edit_form.html:21 repos/templates/repos/usage.html:49
 msgid "repository"
 msgstr "リポジトリ"
 
-#: repos/templates/repos/edit_form.html:27 repos/templates/repos/usage.html:49
+#: repos/templates/repos/edit_form.html:27 repos/templates/repos/usage.html:50
 msgid "tag"
 msgstr "タグ"
 
 #: repos/templates/repos/history_form.html:6
-msgid "update history"
+msgid "Update history"
 msgstr "更新履歴"
+
+#: repos/templates/repos/history_list.html:6
+#: repos/templates/repos/index.html:17
+msgid "Repositories"
+msgstr "リポジトリ"
 
 #: repos/templates/repos/history_list.html:18
 msgid "No history data."
 msgstr "履歴データがありません。"
-
-#: repos/templates/repos/index.html:17
-msgid "Repositories"
-msgstr "リポジトリ"
 
 #: repos/templates/repos/index.html:18
 msgid "Last Update"
@@ -337,6 +339,11 @@ msgstr "最終更新日"
 #: repos/templates/repos/index.html:36
 msgid "History"
 msgstr "履歴"
+
+#: repos/templates/repos/index.html:37
+#, python-format
+msgid "%(cnt)s"
+msgstr "%(cnt)s件"
 
 #: repos/templates/repos/index.html:45
 msgid "Edit"
@@ -411,10 +418,22 @@ msgstr ""
 "表示されます。"
 
 #: repos/templates/repos/usage.html:39
+msgid "'History' button"
+msgstr "履歴 ボタン"
+
+#: repos/templates/repos/usage.html:39
+msgid ""
+"Show the update history of the repository/tag <br>from the time it was "
+"registered to the currently.<br>Click on the button to open the history view."
+msgstr ""
+"リポジトリ/タグを登録してから現在までの更新履歴を<br>表示します。<br>ボタンをク"
+"リックすると、履歴画面が開きます。"
+
+#: repos/templates/repos/usage.html:40
 msgid "'Edit' button"
 msgstr "変更 ボタン"
 
-#: repos/templates/repos/usage.html:39
+#: repos/templates/repos/usage.html:40
 msgid ""
 "Edit the notification of container image updates.<br>Click on the button to "
 "open the update view."
@@ -422,11 +441,11 @@ msgstr ""
 "コンテナイメージの更新通知を変更します。<br>ボタンをクリックすると、更新画面"
 "が開きます。"
 
-#: repos/templates/repos/usage.html:40
+#: repos/templates/repos/usage.html:41
 msgid "'Remove' button"
 msgstr "削除 ボタン"
 
-#: repos/templates/repos/usage.html:40
+#: repos/templates/repos/usage.html:41
 msgid ""
 "Removes the update notification for the container image.<br>Click the button "
 "to open the deletion confirmation dialog."
@@ -434,11 +453,11 @@ msgstr ""
 "コンテナイメージの更新通知を削除します。<br>ボタンをクリックすると、削除確認"
 "ダイアログが開きます。"
 
-#: repos/templates/repos/usage.html:41
+#: repos/templates/repos/usage.html:42
 msgid "'Add Repository' button"
 msgstr "リポジトリを追加 ボタン"
 
-#: repos/templates/repos/usage.html:41
+#: repos/templates/repos/usage.html:42
 msgid ""
 "Register a new update notification for the container image.<br>Click on the "
 "button to open the add view."
@@ -446,17 +465,17 @@ msgstr ""
 "コンテナイメージの更新通知を新たに登録します。<br>ボタンをクリックすると追加"
 "画面が開きます。"
 
-#: repos/templates/repos/usage.html:44
+#: repos/templates/repos/usage.html:45
 msgid "Register/Update Notification View"
 msgstr "通知の登録/更新"
 
-#: repos/templates/repos/usage.html:45
+#: repos/templates/repos/usage.html:46
 msgid ""
 "This is the view to add or change the notification of the container image "
 "update."
 msgstr "コンテナイメージ更新の通知を追加・変更する画面です。"
 
-#: repos/templates/repos/usage.html:47
+#: repos/templates/repos/usage.html:48
 msgid ""
 "The user who owns the container image in Docker Hub.<br>In the case of "
 "Docker official images, please leave this field blank."
@@ -464,11 +483,11 @@ msgstr ""
 "Docker Hubでのコンテナイメージの所有ユーザ。<br>Docker 公式イメージの場合は空"
 "欄のまま登録してください。"
 
-#: repos/templates/repos/usage.html:48
+#: repos/templates/repos/usage.html:49
 msgid "The name of the container image."
 msgstr "コンテナイメージの名前"
 
-#: repos/templates/repos/usage.html:49
+#: repos/templates/repos/usage.html:50
 msgid "The tag name of the container image."
 msgstr "コンテナイメージのタグ名"
 

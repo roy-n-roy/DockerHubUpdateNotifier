@@ -34,7 +34,7 @@
                         data-toggle="modal" data-target="#historyModal"
                         data-title="{{ item.repository_tag }}" data-url="{% url 'repos:history' watching_id=item.id %}">
                     {% blocktrans %}History{% endblocktrans %}
-                    <span class="badge badge-info">{{ item.history_count }}件</span>
+                    <span class="badge badge-info">{% blocktrans with cnt=item.history_count %}{{ cnt }}{% endblocktrans %}</span>
                 </button>
             </td>
             <td>
