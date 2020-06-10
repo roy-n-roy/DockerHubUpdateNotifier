@@ -34,6 +34,7 @@
                         data-toggle="modal" data-target="#historyModal"
                         data-title="{{ item.repository_tag }}" data-url="{% url 'repos:history' watching_id=item.id %}">
                     {% blocktrans %}History{% endblocktrans %}
+                    <span class="badge badge-info">{{ item.history_count }}件</span>
                 </button>
             </td>
             <td>
@@ -70,7 +71,7 @@ $(() => {
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
 <script>
 $(() => {
-//{% include 'repos_js/history.js' %}
+//{% include 'repos_js/history_form.js' %}
 //{% include 'repos_js/edit_form.js' %}
 //{% include 'repos_js/delete_form.js' %}
     $('#main_table').on('init.dt', () => {

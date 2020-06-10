@@ -1,12 +1,24 @@
 {% load i18n %}<!-- history list form -->
 <ul class="list-group">
-    {% for history in histories %}
-    <li class="list-group-item">
-        {{ history.tag_history.updated }}
-    </li>
-    {% empty %}
-    <li class="list-group-item">
-        {% blocktrans %}No history data.{% endblocktrans %}
-    </li>
-    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="border-top: none;">リポジトリ</th>
+                <th style="border-top: none;">更新日付</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for history in histories %}
+            <tr>
+                <td>{{ history.tag_history.repository_tag }}</td>
+                <td>{{ history.tag_history.updated }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">{% blocktrans %}No history data.{% endblocktrans %}</td>
+                <td>{{ history.tag_history.updated }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </ul>

@@ -1,6 +1,5 @@
 // for #historyModal {% load i18n %}
 var pre_history = function() {
-    $('#hist_name').text($(this).data('title'));
     $.ajax({
         url      : $(this).data('url'),
         type     : 'GET',
