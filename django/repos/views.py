@@ -13,7 +13,8 @@ from django.views.generic import ListView
 
 from .apps import ReposConfig as App
 from .forms import WatchingForm
-from .models import Repository, RepositoryTag, Watching, WatichingHistory
+from .models import (Repository, RepositoryTag, RepositoryTagHistory, Watching,
+                     WatichingHistory)
 
 
 class IndexListView(LoginRequiredMixin, ListView):
@@ -25,11 +26,6 @@ class IndexListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = self.model.objects.filter(user=self.request.user)
-        ordering = self.get_ordering()
-        if ordering:
-            if isinstance(ordering, str):
-                ordering = (ordering,)
-            queryset = queryset.order_by(*ordering)
         return queryset
 
 
@@ -60,12 +56,18 @@ def edit(request, watching_id=None):
     if 'owner' not in data or 'name' not in data or 'tag' not in data:
         return HttpResponseBadRequest()
 
-    repo_tag = RepositoryTag.objects.filter(
-        repository__owner=data['owner'],
-        repository__name=data['name'],
-        name=data['tag']
-    ).first()
+    repo_tag = (
+        RepositoryTag.objects
+        .filter(
+            repository__owner=data['owner'],
+            repository__name=data['name'],
+            name=data['tag']
+        )
+        .first()
+    )
     if repo_tag is None:
+        # created=True : Repositoryは無い、Tagも無い
+        # created=False: Repositoryは有る、Tagは無い
         repo, created = Repository.objects.get_or_create(
             owner=data['owner'],
             name=data['name'],
@@ -78,13 +80,27 @@ def edit(request, watching_id=None):
                 tag=data['tag'])
         if repo_tag.last_updated is not None:
             repo_tag.save()
+            # Tagが無い場合は、必ずHistoryも無いので新規生成する
+            repotag_hist = RepositoryTagHistory(
+                repository_tag=repo_tag, updated=repo_tag.last_updated)
         else:
             raise Http404()
+    else:
+        # Tagが有る場合は、Historyの中で最新のものを取得
+        repotag_hist = (
+            RepositoryTagHistory.objects
+            .filter(repository_tag=repo_tag)
+            .order_by('-updated')
+            .first()
+        )
 
     form = WatchingForm(data={"repository_tag": repo_tag}, instance=watching)
     if form.is_valid():
         try:
             watching.save()
+            wch_hist, created = WatichingHistory.objects.get_or_create(
+                watching=watching, tag_history=repotag_hist)
+
         except IntegrityError as e:
             if e.args[0].startswith('UNIQUE'):
                 messages.info(request, _('%(repo_tag)s is a duplicate.') % {
@@ -137,9 +153,12 @@ class HistoryView(LoginRequiredMixin, ListView):
     allow_empty = True
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(
-            watching__id=self.kwargs['watching_id'],
-            watching__user=self.request.user
+        queryset = (
+            self.model.objects
+            .filter(
+                watching__id=self.kwargs['watching_id'],
+                watching__user=self.request.user
+            )
         )
         ordering = self.get_ordering()
         if ordering:
