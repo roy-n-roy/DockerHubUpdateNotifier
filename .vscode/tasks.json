@@ -112,6 +112,29 @@
 			"problemMatcher": []
 		},
 		{
+			"label": "django_create_ER_diagram",
+			"type": "shell",
+			"command": "poetry",
+			"args": [
+				"run",
+				"python",
+				"manage.py",
+				"graph_models",
+				"-a",
+				"-g",
+				"-o",
+				"ER-diagram.png",
+				"--settings=config.settings_dev"
+			],
+			"options": {
+				"cwd": "${workspaceFolder}/django",
+				"env": {
+					"SECRET_KEY": " "
+				}
+			},
+			"problemMatcher": []
+		},
+		{
 			"label": "django_prelaunch",
 			"dependsOn": [
 				"django_compile_messages",

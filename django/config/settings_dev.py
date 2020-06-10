@@ -21,6 +21,7 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
 INSTALLED_APPS.append('django.contrib.admin')
+INSTALLED_APPS.append('django_extensions')
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
