@@ -42,19 +42,9 @@ class RepositoryTag(models.Model):
                 f'{self.repository.name}/tags?name={self.name}'
             )
 
-
-class Watching(models.Model):
-    """
-    通知設定
-    """
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    repository_tag = models.ForeignKey(RepositoryTag, on_delete=models.PROTECT)
-
-    class Meta:
-        unique_together = ("user", "repository_tag")
-
-    def __str__(self):
-        return f'{self.user} / {self.repository_tag}'
+    def history_count(self):
+        hists = RepositoryTagHistory.objects.filter(repository_tag=self)
+        return 0 if hists is None else hists.count()
 
 
 class RepositoryTagHistory(models.Model):
@@ -69,6 +59,24 @@ class RepositoryTagHistory(models.Model):
 
     def __str__(self):
         return f'{self.repository_tag}  {self.updated}'
+
+
+class Watching(models.Model):
+    """
+    通知設定
+    """
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    repository_tag = models.ForeignKey(RepositoryTag, on_delete=models.PROTECT)
+
+    class Meta:
+        unique_together = ("user", "repository_tag")
+
+    def __str__(self):
+        return f'{self.user} / {self.repository_tag}'
+
+    def history_count(self):
+        hists = WatchingHistory.objects.filter(watching=self)
+        return 0 if hists is None else hists.count()
 
 
 class WatchingHistory(models.Model):

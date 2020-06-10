@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-09 12:29+0900\n"
+"POT-Creation-Date: 2020-06-10 15:30+0900\n"
 "PO-Revision-Date: 2020-10-24 14:43+0900\n"
 "Last-Translator: Roy. <royroy.euph@gmail.com>\n"
 "Language-Team: None\n"
@@ -141,7 +141,7 @@ msgstr "パスワード変更"
 #: account/templates/registration/password_change_form.html:14
 #: account/templates/registration/profile.html:46
 #: account/templates/registration/profile.html:59
-#: repos/templates/repos_js/edit_form.js:44 repos/views.py:49
+#: repos/templates/repos_js/edit_form.js:44 repos/views.py:45
 msgid "Update"
 msgstr "更新"
 
@@ -322,7 +322,7 @@ msgstr "タグ"
 msgid "update history"
 msgstr "更新履歴"
 
-#: repos/templates/repos/history_list.html:9
+#: repos/templates/repos/history_list.html:18
 msgid "No history data."
 msgstr "履歴データがありません。"
 
@@ -338,15 +338,15 @@ msgstr "最終更新日"
 msgid "History"
 msgstr "履歴"
 
-#: repos/templates/repos/index.html:44
+#: repos/templates/repos/index.html:45
 msgid "Edit"
 msgstr "変更"
 
-#: repos/templates/repos/index.html:51
+#: repos/templates/repos/index.html:52
 msgid "Remove"
 msgstr "削除"
 
-#: repos/templates/repos/index.html:80
+#: repos/templates/repos/index.html:81
 msgid "Add Repository"
 msgstr "リポジトリを追加"
 
@@ -496,29 +496,29 @@ msgstr ""
 msgid "Retrieving data..."
 msgstr "データ取得中..."
 
-#: repos/templates/repos_js/history.js:11
+#: repos/templates/repos_js/history_form.js:10
 msgid "Failed to get history data."
 msgstr "履歴データの取得に失敗しました。"
 
-#: repos/views.py:42
+#: repos/views.py:38
 msgid "Deletion completed."
 msgstr "削除完了"
 
-#: repos/views.py:49
+#: repos/views.py:45
 msgid "Registration"
 msgstr "登録"
 
-#: repos/views.py:90
+#: repos/views.py:111
 #, python-format
 msgid "%(repo_tag)s is a duplicate."
 msgstr "%(repo_tag)s は既に登録されています。"
 
-#: repos/views.py:95 repos/views.py:103
+#: repos/views.py:116 repos/views.py:124
 #, python-format
 msgid "%(action)s failed."
 msgstr "%(action)s に失敗しました。"
 
-#: repos/views.py:98
+#: repos/views.py:119
 #, python-format
 msgid "%(action)s completed. %(repo_tag)s"
 msgstr "%(action)s完了 %(repo_tag)s"
