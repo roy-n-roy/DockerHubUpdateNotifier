@@ -1,6 +1,7 @@
 import traceback
 
 import pytz
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.template.loader import render_to_string
 from django.utils.timezone import activate as tz_activate
@@ -13,6 +14,10 @@ from account.models import User, WebhookType
 from ...apps import ReposConfig as App
 from ...models import (RepositoryTag, RepositoryTagHistory, Watching,
                        WatchingHistory)
+
+if hasattr(settings, 'USE_SENTRY') and settings.USE_SENTRY:
+    import sentry_sdk
+
 
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
 
@@ -30,7 +35,7 @@ class Command(BaseCommand):
                 last_updated = App.check_repository(
                     tag.repository.owner, tag.repository.name, tag.name
                 )
-                if last_updated is None or tag.last_updated != last_updated:
+                if tag.last_updated is None or tag.last_updated != last_updated:
                     tag.last_updated = last_updated
                     tag.save()
 
@@ -43,8 +48,10 @@ class Command(BaseCommand):
                         send_notify(self, wch.user, tag)
                 else:
                     self.stdout.write(f'No update on "{tag}".')
-            except Exception:
+            except Exception as e:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
+                if hasattr(settings, 'USE_SENTRY') and settings.USE_SENTRY:
+                    sentry_sdk.capture_exception(e)
         self.stdout.write('Finished Bach Application.')
 
 
@@ -90,8 +97,10 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
         try:
             if message:
                 result = user.post_webhook(message)
-        except Exception:
+        except Exception as e:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
+            if hasattr(settings, 'USE_SENTRY') and settings.USE_SENTRY:
+                sentry_sdk.capture_exception(e)
         finally:
             if result:
                 command.stdout.write(command.style.SUCCESS(
@@ -116,8 +125,10 @@ def send_notify(command: Command, user: User, repo_tag: RepositoryTag):
                 message=render_to_string(
                     'messages/update_notify_email.html', context)
             )
-        except Exception:
+        except Exception as e:
             command.stdout.write(command.style.ERROR(traceback.format_exc()))
+            if hasattr(settings, 'USE_SENTRY') and settings.USE_SENTRY:
+                sentry_sdk.capture_exception(e)
         finally:
             lang_activate(SYS_LANGUAGE_CODE)
             tz_deactivate()

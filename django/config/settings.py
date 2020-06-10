@@ -231,6 +231,8 @@ if os.getenv('SENTRY_DSN'):
         send_default_pii=True
     )
 
+    USE_SENTRY = True
+
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
     "error_css_class": "bootstrap4-error",
