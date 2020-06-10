@@ -75,14 +75,15 @@ def edit(request, watching_id=None):
 
         repo_tag = RepositoryTag(repository=repo, name=data['tag'])
         repo_tag.last_updated = App.check_repository(
-                owner=data['owner'],
-                name=data['name'],
-                tag=data['tag'])
+            owner=data['owner'],
+            name=data['name'],
+            tag=data['tag'])
         if repo_tag.last_updated is not None:
             repo_tag.save()
             # Tagが無い場合は、必ずHistoryも無いので新規生成する
             repotag_hist = RepositoryTagHistory(
                 repository_tag=repo_tag, updated=repo_tag.last_updated)
+            repotag_hist.save()
         else:
             raise Http404()
     else:
@@ -93,6 +94,10 @@ def edit(request, watching_id=None):
             .order_by('-updated')
             .first()
         )
+        if not repotag_hist:
+            repotag_hist = RepositoryTagHistory(
+                repository_tag=repo_tag, updated=repo_tag.last_updated)
+            repotag_hist.save()
 
     form = WatchingForm(data={"repository_tag": repo_tag}, instance=watching)
     if form.is_valid():
