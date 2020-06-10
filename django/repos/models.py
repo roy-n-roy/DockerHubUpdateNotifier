@@ -71,7 +71,7 @@ class RepositoryTagHistory(models.Model):
         return f'{self.repository_tag}  {self.updated}'
 
 
-class WatichingHistory(models.Model):
+class WatchingHistory(models.Model):
     """
     通知履歴
     """

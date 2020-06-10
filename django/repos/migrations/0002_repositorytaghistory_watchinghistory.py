@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='WatichingHistory',
+            name='WatchingHistory',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('tag_history', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='repos.RepositoryTagHistory')),

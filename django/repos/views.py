@@ -14,7 +14,7 @@ from django.views.generic import ListView
 from .apps import ReposConfig as App
 from .forms import WatchingForm
 from .models import (Repository, RepositoryTag, RepositoryTagHistory, Watching,
-                     WatichingHistory)
+                     WatchingHistory)
 
 
 class IndexListView(LoginRequiredMixin, ListView):
@@ -98,7 +98,7 @@ def edit(request, watching_id=None):
     if form.is_valid():
         try:
             watching.save()
-            wch_hist, created = WatichingHistory.objects.get_or_create(
+            wch_hist, created = WatchingHistory.objects.get_or_create(
                 watching=watching, tag_history=repotag_hist)
 
         except IntegrityError as e:
@@ -145,7 +145,7 @@ def tags(request, owner, name, page):
 
 class HistoryView(LoginRequiredMixin, ListView):
     http_method_names = ['get']
-    model = WatichingHistory
+    model = WatchingHistory
     context_object_name = 'histories'
     template_name = "repos/history_list.html"
     paginate_by = 0

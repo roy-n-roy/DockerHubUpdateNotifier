@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (Repository, RepositoryTag, RepositoryTagHistory, Watching,
-                     WatichingHistory)
+                     WatchingHistory)
 
 # Register your models here.
 
@@ -30,7 +30,7 @@ class RepositoryTagHistoryAdmin(admin.ModelAdmin):
     list_display_links = ('repository_tag',)
 
 
-@admin.register(WatichingHistory)
+@admin.register(WatchingHistory)
 class WatchingHistoryAdmin(admin.ModelAdmin):
     list_display = ('__str__',)
     list_display_links = ('__str__',)

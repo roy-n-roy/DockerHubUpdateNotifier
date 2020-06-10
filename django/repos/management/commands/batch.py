@@ -12,7 +12,7 @@ from account.models import User, WebhookType
 
 from ...apps import ReposConfig as App
 from ...models import (RepositoryTag, RepositoryTagHistory, Watching,
-                       WatichingHistory)
+                       WatchingHistory)
 
 RESULT_LOG = '{type} notification was {result}. "{repo}", last_updated: {date}'
 
@@ -39,7 +39,7 @@ class Command(BaseCommand):
 
                     for wch in Watching.objects.filter(
                             repository_tag=tag).all():
-                        WatichingHistory(watching=wch, tag_history=hist).save()
+                        WatchingHistory(watching=wch, tag_history=hist).save()
                         send_notify(self, wch.user, tag)
                 else:
                     self.stdout.write(f'No update on "{tag}".')
