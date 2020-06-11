@@ -10,6 +10,7 @@ RUN apk add --no-cache curl \
 COPY pyproject.toml poetry.lock /tmp/poetry/
 
 RUN source $HOME/.poetry/env \
+ && poetry self update \
  && poetry export -f requirements.txt -E production -o /tmp/poetry/requirements.txt
 
 FROM python:3.8-alpine
@@ -45,8 +46,6 @@ COPY entrypoint.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 USER django
-
-VOLUME [ "/var/run/django" ]
 
 ENTRYPOINT [ "entrypoint.sh" ]
 CMD [ "webapp" ]
