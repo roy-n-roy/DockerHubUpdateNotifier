@@ -1,3 +1,17 @@
+FROM getsentry/sentry-cli:latest AS sentry-cli
+
+FROM python:3.8-alpine AS poetry
+
+WORKDIR /tmp/poetry
+
+RUN apk add --no-cache curl \
+ && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
+
+COPY pyproject.toml poetry.lock /tmp/poetry/
+
+RUN source $HOME/.poetry/env \
+ && poetry export -f requirements.txt -E production -o /tmp/poetry/requirements.txt
+
 FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED 1
@@ -11,18 +25,13 @@ RUN addgroup -g 1000 django \
 RUN mkdir -p /static /var/run/django \
  && chown django:django /static /var/run/django
 
-ADD https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py .
+COPY --from=sentry-cli /bin/sentry-cli /usr/local/bin/
 
-COPY pyproject.toml poetry.lock /app/
+COPY --from=poetry /tmp/poetry/requirements.txt .
 
 RUN apk add --no-cache postgresql-libs \
  && apk add --no-cache --virtual .build-deps gcc linux-headers musl-dev postgresql-dev \
- && python get-poetry.py \
- && source $HOME/.poetry/env \
- && poetry config virtualenvs.create false \
- && poetry install --no-dev -E production \
- && python get-poetry.py --uninstall \
- && rm -rf ~/.poetry ~/.cache \
+ && pip install --no-cache-dir -r requirements.txt \
  && apk del --no-cache --purge .build-deps
 
 COPY django/ /app/
@@ -33,8 +42,7 @@ RUN apk add --no-cache gettext \
 
 COPY entrypoint.sh /usr/local/bin/
 
-ADD https://github.com/getsentry/sentry-cli/releases/latest/download/sentry-cli-Linux-x86_64 /usr/local/bin/sentry-cli
-RUN chmod 755 /usr/local/bin/sentry-cli /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 USER django
 
