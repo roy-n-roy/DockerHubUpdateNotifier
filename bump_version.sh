@@ -3,6 +3,7 @@
 set -e
 
 if [[ $# != 1 ]]; then
+	echo "current version: $(poetry version --no-ansi | cut -d' ' -f2)"
 	exit 1
 fi
 
@@ -13,9 +14,10 @@ if [[ $(git branch --show-current) != "master" ]]; then
 	exit 1
 fi
 
-if [[ ! ${VERSION} =~ ^v[0-9]+\.[0-9]+\.[0-9]+[ab]?$ ]]; then
+if [[ ! ${VERSION} =~ ^v([1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)((a|b|rc)(0|[1-9][0-9]*))?(\.post(0|[1-9][0-9]*))?(\.dev(0|[1-9][0-9]*))?$ ]]; then
 	echo "The version number is invalid."
 	echo "E.g. v1.2.3"
+	echo "current version: $(poetry version --no-ansi | cut -d' ' -f2)"
 	exit 1
 fi
 
