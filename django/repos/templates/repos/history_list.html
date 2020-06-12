@@ -1,24 +1,22 @@
 {% load i18n %}<!-- history list form -->
-<ul class="list-group">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col" style="border-top: none;">{% blocktrans %}Repositories{% endblocktrans %}</th>
-                <th scope="col" style="border-top: none;">{% blocktrans %}Update{% endblocktrans %}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for history in histories %}
-            <tr>
-                <td>{{ history.tag_history.repository_tag }}</td>
-                <td>{{ history.tag_history.updated }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="2">{% blocktrans %}No history data.{% endblocktrans %}</td>
-                <td>{{ history.tag_history.updated }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col" style="border-top: none;">{% blocktrans %}Repositories{% endblocktrans %}</th>
+            <th scope="col" style="border-top: none;">{% blocktrans %}Update{% endblocktrans %}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for history in histories %}
+        <tr>
+            <td>{{ history.tag_history.repository_tag }}</td>
+            <td>{{ history.tag_history.updated }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">{% blocktrans %}No history data.{% endblocktrans %}</td>
+            <td>{{ history.tag_history.updated }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

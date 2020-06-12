@@ -7,7 +7,7 @@ var pre_history = function() {
     }).done((data) => {
         $('#hist_body').html(data);
     }).fail((data) => {
-        $('#hist_body').text('<p>{% blocktrans %}Failed to get history data.{% endblocktrans %}</p>');
+        $('#hist_body').html('<p>{% blocktrans %}Failed to get history data.{% endblocktrans %}</p>');
     }).always(() => {
     });
 };
