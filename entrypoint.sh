@@ -6,7 +6,7 @@ if [ -f ~/.profile ]; then
 fi
 
 if [ "$#" -gt "0" ]; then
-    if [ "$1" == "webapp" ]; then
+    if [ "$1" == "uwsgi" ]; then
         start=$(date +%s)
 
         python manage.py migrate --noinput
@@ -20,13 +20,7 @@ if [ "$#" -gt "0" ]; then
             sentry-cli releases deploys "DockerHubUpdateNotifier@${version}" new -e "${SENTRY_ENV:-prod}" -t $((end-start))
             touch ~/.deployed
         fi
-
-        exec uwsgi uwsgi.ini
-
-    elif [ "$1" == "batch" ]; then
-        exec python scheduler.py batch
-
-    else
-        exec "$@"
     fi
+
+    exec "$@"
 fi

@@ -48,4 +48,4 @@ RUN chmod 755 /usr/local/bin/entrypoint.sh
 USER django
 
 ENTRYPOINT [ "entrypoint.sh" ]
-CMD [ "webapp" ]
+CMD [ "uwsgi", "uwsgi.ini" ]

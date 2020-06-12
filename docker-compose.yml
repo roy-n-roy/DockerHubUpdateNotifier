@@ -1,29 +1,6 @@
 version: '3.7'
 
 services:
-  batch:
-    build: .
-    image: docker-hub-update-notifier
-    restart: always
-    command: "batch"
-    environment:
-      TZ: Asia/Tokyo
-      DB_ENGINE: postgresql
-      DB_HOST: postgres
-      DB_NAME: django
-      DB_USER: django
-      DB_PASS: django
-      EMAIL_BACKEND: smtp
-      EMAIL_HOST: smtp.gmail.com
-      EMAIL_PORT: 587
-      EMAIL_USE_TLS: 'true'
-      EMAIL_HOST_USER: ''
-      EMAIL_HOST_PASSWORD: ''
-      EMAIL_USE_LOCALTIME: 'false'
-      DEFAULT_FROM_EMAIL: ''
-    depends_on:
-      - postgres
-
   webapp:
     build: .
     image: docker-hub-update-notifier
@@ -48,6 +25,29 @@ services:
     volumes:
       - django_statics:/static:rw
       - django_socket_sharing:/var/run/django:rw
+    depends_on:
+      - postgres
+
+  batch:
+    build: .
+    image: docker-hub-update-notifier
+    restart: always
+    command: python scheduler.py batch
+    environment:
+      TZ: Asia/Tokyo
+      DB_ENGINE: postgresql
+      DB_HOST: postgres
+      DB_NAME: django
+      DB_USER: django
+      DB_PASS: django
+      EMAIL_BACKEND: smtp
+      EMAIL_HOST: smtp.gmail.com
+      EMAIL_PORT: 587
+      EMAIL_USE_TLS: 'true'
+      EMAIL_HOST_USER: ''
+      EMAIL_HOST_PASSWORD: ''
+      EMAIL_USE_LOCALTIME: 'false'
+      DEFAULT_FROM_EMAIL: ''
     depends_on:
       - postgres
 
