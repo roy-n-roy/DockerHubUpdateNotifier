@@ -22,7 +22,7 @@ class RepositoryTag(models.Model):
     """リポジトリ+タグ"""
     repository = models.ForeignKey(Repository, models.PROTECT)
     name = models.CharField(max_length=1024)
-    last_updated = models.DateTimeField(null=True, blank=True)
+    last_updated = models.DateTimeField(null=False, blank=False)
 
     class Meta:
         unique_together = ("repository", "name")
