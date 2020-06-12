@@ -123,7 +123,7 @@
 				"-a",
 				"-g",
 				"-o",
-				"ER-diagram.png",
+				"${workspaceFolder}/ER-diagram.png",
 				"--settings=config.settings_dev"
 			],
 			"options": {
