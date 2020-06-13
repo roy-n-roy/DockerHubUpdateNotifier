@@ -28,8 +28,10 @@
                     {{ item.repository_tag }} <i class="small text-primary fas fa-external-link-alt"></i>
                 </a>
             </td>
-            <td data-sort="{{ item.repository_tag.last_updated|date:'YmdHis' }}">{{ item.repository_tag.last_updated }}</td>
-            <td>
+            <td data-sort="{{ item.repository_tag.last_updated|date:'YmdHis' }}">
+                {{ item.repository_tag.last_updated }}
+            </td>
+            <td data-sort="{{ item.history_count }}">
                 <button class="btn btn-outline-info btn-sm hist_confirm"
                         data-toggle="modal" data-target="#historyModal"
                         data-title="{{ item.repository_tag }}" data-url="{% url 'repos:history' watching_id=item.id %}">
@@ -96,7 +98,7 @@ $(() => {
              "<'row'<'col-sm-12'tr>>" +
              "<'row'<'col-sm-12 col-md-3'i><'col-sm-12 col-md-6'p><'#add-button-container.col-sm-12 col-md-3'>>",
         stateSave: true,
-        columns: [ null, null, { "orderable": false }, { "orderable": false }, { "orderable": false } ],
+        columns: [ null, null, null, { "orderable": false }, { "orderable": false } ],
         order: [[ 1, 'desc' ]],
         language: {
             emptyTable: "{% if  user.language_code == 'ja' %}リポジトリが登録されていません" + 
