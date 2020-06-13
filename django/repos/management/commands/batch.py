@@ -35,7 +35,13 @@ class Command(BaseCommand):
                 last_updated = App.check_repository(
                     tag.repository.owner, tag.repository.name, tag.name
                 )
-                if tag.last_updated is None or tag.last_updated != last_updated:
+                if last_updated is None:
+                    self.stdout.write(self.style.WARNING(
+                        f'Cannot get update for tag "{tag}".'
+                    ))
+                elif tag.last_updated == last_updated:
+                    self.stdout.write(f'No update on "{tag}".')
+                else:
                     tag.last_updated = last_updated
                     tag.save()
 
@@ -46,8 +52,6 @@ class Command(BaseCommand):
                             repository_tag=tag).all():
                         WatchingHistory(watching=wch, tag_history=hist).save()
                         send_notify(self, wch.user, tag)
-                else:
-                    self.stdout.write(f'No update on "{tag}".')
             except Exception as e:
                 self.stdout.write(self.style.ERROR(traceback.format_exc()))
                 if hasattr(settings, 'USE_SENTRY') and settings.USE_SENTRY:
