@@ -13,7 +13,7 @@ RUN source $HOME/.poetry/env \
  && poetry self update \
  && poetry export -f requirements.txt -E production -o /tmp/poetry/requirements.txt
 
-FROM python:3.8-alpine
+FROM python:3.8-alpine AS django
 
 ENV PYTHONUNBUFFERED 1
 
