@@ -1,4 +1,4 @@
-name: Docker image build
+name: Docker image release build
 
 on:
   push:
@@ -71,6 +71,12 @@ jobs:
     - name: Finalize release to Sentry
       run: |
         ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
+
+    - name: Create a Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.GITHUB_REF }}
+        release_name: Release v${VERSION}
 
     - name: Delete release of Sentry
       if: failure()
