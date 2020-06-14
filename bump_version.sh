@@ -35,4 +35,4 @@ git log -1 ${VERSION} >& /dev/null && git tag -d ${VERSION}
 git ls-remote --exit-code origin ${VERSION} && git push -d origin ${VERSION}
 
 git tag ${VERSION}
-git push origin master ${VERSION}
+git push -f origin master ${VERSION}
