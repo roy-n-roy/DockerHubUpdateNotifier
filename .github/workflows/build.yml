@@ -17,6 +17,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - uses: azure/docker-login@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
     - uses: crazy-max/ghaction-docker-buildx@v1
 
     - uses: actions/cache@v2
@@ -25,11 +31,6 @@ jobs:
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
-
-    - uses: azure/docker-login@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Get Version
       run: |
@@ -65,7 +66,6 @@ jobs:
 
     - name: Docker Buildx Build and Push
       run: |
-        docker buildx create --use
         docker buildx build --push ${{ steps.setup.outputs.buildx_args }}
 
     - name: Finalize release to Sentry
@@ -80,7 +80,7 @@ jobs:
     - name: Clear docker config
       if: always()
       run: |
-        rm -f ${HOME}/.docker/config.json
+        rm -f ${DOCKER_CONFIG}
 
     - name: Notify Slack
       if: always()
