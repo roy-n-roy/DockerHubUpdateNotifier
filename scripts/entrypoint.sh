@@ -12,12 +12,13 @@ if [ "$#" -gt "0" ]; then
         python manage.py migrate --noinput
         python manage.py collectstatic --noinput --clear
 
-        end=$(date +%s)
-
         if [ ! -z "${SENTRY_AUTH_TOKEN}" -a ! -z "${SENTRY_ORG}" -a ! -e ~/.deployed ]; then
+            name="DockerHubUpdateNotifier"
             version=$(cut -d'=' -f 2 < ./config/__init__.py | tr -d "' \r")
-            echo "Version ${version} deployment information is being sent to Sentry."
-            sentry-cli releases deploys "DockerHubUpdateNotifier@${version}" new -e "${SENTRY_ENV:-prod}" -t $((end-start))
+            echo "Version '${version}' deployment information is being sent to Sentry.io."
+
+            /usr/local/bin/sentry_deploy.py "${name}@${version}" "${start}"
+
             touch ~/.deployed
         fi
     fi

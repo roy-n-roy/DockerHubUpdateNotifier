@@ -1,5 +1,3 @@
-FROM getsentry/sentry-cli:latest AS sentry-cli
-
 FROM python:3.8-alpine AS poetry
 
 WORKDIR /tmp/poetry
@@ -26,8 +24,6 @@ RUN addgroup -g 1000 django \
 RUN mkdir -p /static /var/run/django \
  && chown django:django /static /var/run/django
 
-COPY --from=sentry-cli /bin/sentry-cli /usr/local/bin/
-
 COPY --from=poetry /tmp/poetry/requirements.txt .
 
 RUN apk add --no-cache postgresql-libs \
@@ -41,9 +37,9 @@ RUN apk add --no-cache gettext \
  && django-admin compilemessages \
  && apk del --no-cache --purge gettext
 
-COPY entrypoint.sh /usr/local/bin/
+COPY scripts /usr/local/bin
 
-RUN chmod 755 /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/sentry_deploy.py
 
 USER django
 
