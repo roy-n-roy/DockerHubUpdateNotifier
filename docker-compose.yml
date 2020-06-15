@@ -2,7 +2,11 @@ version: '3.7'
 
 services:
   webapp:
-    build: .
+    build:
+      context: .
+      cache_from:
+        - roynroy/docker-hub-update-notifier:nightly
+      target: django
     image: docker-hub-update-notifier
     restart: always
     environment:
@@ -29,7 +33,11 @@ services:
       - postgres
 
   batch:
-    build: .
+    build:
+      context: .
+      cache_from:
+        - roynroy/docker-hub-update-notifier:nightly
+      target: django
     image: docker-hub-update-notifier
     restart: always
     command: python scheduler.py batch
