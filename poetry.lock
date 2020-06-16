@@ -311,13 +311,13 @@ description = "The uWSGI server"
 name = "uwsgi"
 optional = true
 python-versions = "*"
-version = "2.0.18"
+version = "2.0.19"
 
 [extras]
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "067a0be317de85dc96c5ecae7cfbc0f4bc9c6ac00b7c00dc116eecf3cba7bf8d"
+content-hash = "ae2f773b914e58d791ddfffe9c4a15ccb10eeb57f745b00a0c9b9513026ae7e8"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -459,5 +459,5 @@ urllib3 = [
     {file = "urllib3-1.25.9.tar.gz", hash = "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527"},
 ]
 uwsgi = [
-    {file = "uwsgi-2.0.18.tar.gz", hash = "sha256:4972ac538800fb2d421027f49b4a1869b66048839507ccf0aa2fda792d99f583"},
+    {file = "uWSGI-2.0.19.tar.gz", hash = "sha256:a2d9e3ad86cb4fdc69ad58ba39c2b6f90a950f8a015d9075bc8d18804f4af8da"},
 ]
