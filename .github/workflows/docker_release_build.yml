@@ -14,6 +14,7 @@ jobs:
     env:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: roy-n-roy
+      CACHE_PATH: /tmp/.buildx-cache
 
     steps:
     - uses: actions/checkout@v2
@@ -27,7 +28,7 @@ jobs:
 
     - uses: actions/cache@v2
       with:
-        path: /tmp/.buildx-cache
+        path: ${{ env.CACHE_PATH }}
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
@@ -59,9 +60,9 @@ jobs:
           DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${tag}"
         done
 
-        echo ::set-output name=buildx_args::--platform linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6 \
-          --cache-from "type=local,src=/tmp/.buildx-cache" \
-          --cache-to "type=local,dest=/tmp/.buildx-cache" \
+        echo ::set-output name=buildx_args::--platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x \
+          --cache-from "type=local,src=${CACHE_PATH}" \
+          --cache-to "type=local,dest=${CACHE_PATH}" \
           ${DOCKER_TAGS} .
 
     - name: Docker Buildx Build and Push
@@ -74,19 +75,16 @@ jobs:
 
     - name: Create a Release
       uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.GITHUB_REF }}
+        tag_name: ${{ github.ref }}
         release_name: Release v${VERSION}
 
     - name: Delete release of Sentry
       if: failure()
       run: |
         ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
-
-    - name: Clear docker config
-      if: always()
-      run: |
-        rm -f ${DOCKER_CONFIG}
 
     - name: Notify Slack
       if: always()
