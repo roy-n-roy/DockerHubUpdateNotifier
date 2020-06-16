@@ -19,7 +19,7 @@ WORKDIR /app
 
 RUN addgroup -g 1000 django \
  && adduser -S -u 1000 django -G django \
- && echo "export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"" >> ~django/.profile
+ && echo "if [ ! \"\$SECRET_KEY\" ]; then export SECRET_KEY=\"\$(cat /dev/urandom | tr -dc 'a-zA-Z0-9%&@+\-*/=^~|' | fold -w 80 | head -n 1)\"; fi" >> ~django/.profile
 
 RUN mkdir -p /static /var/run/django \
  && chown django:django /static /var/run/django
