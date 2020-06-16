@@ -60,7 +60,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:12.1-alpine
+    image: postgres:12-alpine
     restart: always
     environment:
       POSTGRES_DB: django
@@ -71,7 +71,7 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   nginx:
-    image: nginx:1.17.8-alpine
+    image: nginx:1.18-alpine
     ports:
       - 80:80
       - 443:443
