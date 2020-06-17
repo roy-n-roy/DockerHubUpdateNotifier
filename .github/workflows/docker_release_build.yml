@@ -53,11 +53,11 @@ jobs:
       run: |
         DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/docker-hub-update-notifier
         v_array=(${VERSION//./ })
-        tag=${v_array[0]}
-        DOCKER_TAGS="--tag ${DOCKER_IMAGE}:latest --tag ${DOCKER_IMAGE}:${tag}"
+        ver=${v_array[0]}
+        DOCKER_TAGS="--tag ${DOCKER_IMAGE}:latest --tag ${DOCKER_IMAGE}:${ver}"
         for n in ${v_array[@]:1}; do
-          tag="${tag}.${n}"
-          DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${tag}"
+          ver="${ver}.${n}"
+          DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${ver}"
         done
 
         echo ::set-output name=buildx_args::--platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x \
