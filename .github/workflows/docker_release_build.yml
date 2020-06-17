@@ -2,7 +2,7 @@ name: Release build
 
 on:
   push:
-    tags: 
+    tags:
       - 'v*'
 
 jobs:
@@ -14,84 +14,92 @@ jobs:
     env:
       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
       SENTRY_ORG: roy-n-roy
-      CACHE_PATH: /tmp/.buildx-cache
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - uses: azure/docker-login@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - uses: azure/docker-login@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - uses: crazy-max/ghaction-docker-buildx@v1
+      - uses: crazy-max/ghaction-docker-buildx@v1
 
-    - uses: actions/cache@v2
-      with:
-        path: ${{ env.CACHE_PATH }}
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: ${{ runner.temp }}/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
-    - name: Get Version
-      run: |
-        echo ::set-env name=VERSION::${GITHUB_REF/refs\/tags\/v/}
+      - name: Get Version
+        run: |
+          echo ::set-env name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
-    - name: Get Sentry-CLI tool
-      env:
-        INSTALL_DIR: .
-      run:  |
-        curl -sL https://sentry.io/get-cli/ | bash
+      - name: Get Sentry-CLI tool
+        env:
+          INSTALL_DIR: .
+        run: |
+          curl -sL https://sentry.io/get-cli/ | bash
 
-    - name: Create release to Sentry
-      run: |
-        ./sentry-cli releases new -p docker_hub_update_notifier_webapp -p docker_hub_update_notifier_batch "DockerHubUpdateNotifier@v${VERSION}"
-        ./sentry-cli releases set-commits --auto "DockerHubUpdateNotifier@v${VERSION}"
+      - name: Create release to Sentry
+        run: |
+          ./sentry-cli releases new -p docker_hub_update_notifier_webapp -p docker_hub_update_notifier_batch "DockerHubUpdateNotifier@v${VERSION}"
+          ./sentry-cli releases set-commits --auto "DockerHubUpdateNotifier@v${VERSION}"
 
-    - name: Setup Docker arguments
-      id: setup
-      run: |
-        DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/docker-hub-update-notifier
-        v_array=(${VERSION//./ })
-        ver=${v_array[0]}
-        DOCKER_TAGS="--tag ${DOCKER_IMAGE}:latest --tag ${DOCKER_IMAGE}:${ver}"
-        for n in ${v_array[@]:1}; do
-          ver="${ver}.${n}"
-          DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${ver}"
-        done
+      - name: Setup Docker arguments
+        id: setup
+        run: |
+          DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/docker-hub-update-notifier
+          DOCKER_PLATFORMS=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
+          DOCKER_CACHE_FROM_LOCAL="--cache-from \"type=local,src=${{ runner.temp }}/.buildx-cache\""
+          DOCKER_CACHE_FROM_REMOTE="--cache-from \"type=registry,ref=${DOCKER_IMAGE}\""
+          DOCKER_CACHE_TO_LOCAL="--cache-to \"type=local,dest=${{ runner.temp }}/.buildx-cache\""
+          cache_hit=${{ steps.cache.outputs.cache-hit }}
+          if [[ ${cache_hit,,} == 'true' ]]; then
+            DOCKER_CACHE_FROM="${DOCKER_CACHE_FROM_LOCAL}"
+          else
+            DOCKER_CACHE_FROM="${DOCKER_CACHE_FROM_REMOTE}"
+          fi
+          v_array=(${VERSION//./ })
+          ver=${v_array[0]}
+          DOCKER_TAGS="--tag ${DOCKER_IMAGE}:latest --tag ${DOCKER_IMAGE}:${ver}"
+          for n in ${v_array[@]:1}; do
+            ver="${ver}.${n}"
+            DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${ver}"
+          done
+          echo ::set-output name=buildx_build_args::--output "type=image,push=false" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM} ${DOCKER_CACHE_TO_LOCAL} ${DOCKER_TAGS} .
+          echo ::set-output name=buildx_push_args::--output "type=image,push=true" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_LOCAL} --cache-to "type=inline" ${DOCKER_TAGS} .
 
-        echo ::set-output name=buildx_args::--platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x \
-          --cache-from "type=local,src=${CACHE_PATH}" \
-          --cache-to "type=local,dest=${CACHE_PATH}" \
-          ${DOCKER_TAGS} .
+      - name: Docker Buildx Build and Push
+        run: |
+          docker buildx build ${{ steps.setup.outputs.buildx_build_args }}
+          docker buildx build ${{ steps.setup.outputs.buildx_push_args }}
 
-    - name: Docker Buildx Build and Push
-      run: |
-        docker buildx build --push ${{ steps.setup.outputs.buildx_args }}
+      - name: Finalize release to Sentry
+        run: |
+          ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
 
-    - name: Finalize release to Sentry
-      run: |
-        ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
+      - name: Delete release of Sentry
+        if: failure()
+        run: |
+          ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
 
-    - name: Create a Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release v${{ env.VERSION }}
+      - name: Create a Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release v${{ env.VERSION }}
 
-    - name: Delete release of Sentry
-      if: failure()
-      run: |
-        ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
-
-    - name: Notify Slack
-      if: always()
-      uses: 8398a7/action-slack@v3
-      with:
-        status: ${{ job.status }}
-        fields: repo,message,author,action
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,author,action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
