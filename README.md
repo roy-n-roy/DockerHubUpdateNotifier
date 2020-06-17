@@ -19,8 +19,3 @@ https://container-image.live-on.net
 ```
 
 その後、 http://localhost/ へアクセスしてください。 (Access To "http://localhost/")  
-
-## TODO
-- [ ] Webhook URLバリデーション
-- [ ] 全タグ更新チェック対応
-- [ ] 通知機能: IFTTT (Webhook)
