@@ -54,8 +54,9 @@ jobs:
           DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/docker-hub-update-notifier
           DOCKER_PLATFORMS=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
           DOCKER_CACHE_FROM_LOCAL="--cache-from \"type=local,src=${{ runner.temp }}/.buildx-cache\""
-          DOCKER_CACHE_FROM_REMOTE="--cache-from \"type=registry,ref=${DOCKER_IMAGE}\""
+          DOCKER_CACHE_FROM_REMOTE="--cache-from \"type=registry,mode=max,ref=${DOCKER_IMAGE}\""
           DOCKER_CACHE_TO_LOCAL="--cache-to \"type=local,dest=${{ runner.temp }}/.buildx-cache\""
+          DOCKER_CACHE_TO_REMOTE="--cache-to \"type=registry,mode=max,ref=${DOCKER_IMAGE}\""
           cache_hit=${{ steps.cache.outputs.cache-hit }}
           if [[ ${cache_hit,,} == 'true' ]]; then
             DOCKER_CACHE_FROM="${DOCKER_CACHE_FROM_LOCAL}"
@@ -70,7 +71,7 @@ jobs:
             DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${ver}"
           done
           echo ::set-output name=buildx_build_args::--output "type=image,push=false" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM} ${DOCKER_CACHE_TO_LOCAL} ${DOCKER_TAGS} .
-          echo ::set-output name=buildx_push_args::--output "type=image,push=true" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_LOCAL} --cache-to "type=inline" ${DOCKER_TAGS} .
+          echo ::set-output name=buildx_push_args::--output "type=image,push=true" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_LOCAL} ${DOCKER_CACHE_TO_REMOTE} ${DOCKER_TAGS} .
 
       - name: Docker Buildx Build and Push
         run: |
@@ -99,7 +100,7 @@ jobs:
         uses: 8398a7/action-slack@v3
         with:
           status: ${{ job.status }}
-          fields: repo,message,author,action
+          fields: repo,message,author,workflow
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
