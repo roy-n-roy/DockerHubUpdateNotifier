@@ -50,12 +50,13 @@ services:
       DB_NAME: django
       DB_USER: django
       DB_PASS: django
-      EMAIL_BACKEND: smtp
-      EMAIL_HOST: smtp.gmail.com
-      EMAIL_PORT: 587
-      EMAIL_USE_TLS: 'true'
-      EMAIL_HOST_USER: ''
-      EMAIL_HOST_PASSWORD: ''
+      EMAIL_BACKEND: console
+      #EMAIL_BACKEND: smtp
+      #EMAIL_HOST: smtp.gmail.com
+      #EMAIL_PORT: 587
+      #EMAIL_USE_TLS: 'true'
+      #EMAIL_HOST_USER: ''
+      #EMAIL_HOST_PASSWORD: ''
       EMAIL_USE_LOCALTIME: 'false'
       DEFAULT_FROM_EMAIL: ''
     depends_on:
