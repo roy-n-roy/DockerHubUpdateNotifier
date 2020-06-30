@@ -109,8 +109,8 @@ category = "dev"
 description = "Extensions for Django"
 name = "django-extensions"
 optional = false
-python-versions = "*"
-version = "2.2.9"
+python-versions = ">=3.5"
+version = "3.0.1"
 
 [package.dependencies]
 six = ">=1.2"
@@ -320,7 +320,7 @@ version = "2.0.19.1"
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "a48b0148d63196089d166f94c235403c45a0a0966749bdf19f84f23e834e4960"
+content-hash = "23f1b589207a76eb5ae584162bdb81a32f366fa97513302d9b8fe63eb200cd7d"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -357,8 +357,8 @@ django-bootstrap4 = [
     {file = "django_bootstrap4-2.1.1-py3-none-any.whl", hash = "sha256:b0236cdba9b64f03889cd2555c35586ab645a75260b088429ca98a47e80ef798"},
 ]
 django-extensions = [
-    {file = "django-extensions-2.2.9.tar.gz", hash = "sha256:2f81b618ba4d1b0e58603e25012e5c74f88a4b706e0022a3b21f24f0322a6ce6"},
-    {file = "django_extensions-2.2.9-py2.py3-none-any.whl", hash = "sha256:b19182d101a441fe001c5753553a901e2ef3ff60e8fbbe38881eb4a61fdd17c4"},
+    {file = "django-extensions-3.0.1.tar.gz", hash = "sha256:ae98d08cd32fcc737502d716ec57c98a3e680c7d34c92b4b8d9ad8ba592f0b44"},
+    {file = "django_extensions-3.0.1-py2.py3-none-any.whl", hash = "sha256:879ad8ca5dcafbb70fee5e6df068df4a9bbb42122d378bb2eb0f81f10a48b0af"},
 ]
 flake8 = [
     {file = "flake8-3.8.3-py2.py3-none-any.whl", hash = "sha256:15e351d19611c887e482fb960eae4d44845013cc142d42896e9862f775d8cf5c"},
