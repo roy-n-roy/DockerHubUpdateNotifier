@@ -11,9 +11,6 @@ jobs:
     defaults:
       run:
         shell: bash
-    env:
-      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-      SENTRY_ORG: roy-n-roy
 
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +28,7 @@ jobs:
           path: ${{ runner.temp }}/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
+            ${{ runner.os }}-buildx-${{ github.sha }}
             ${{ runner.os }}-buildx-
 
       - name: Get Version
@@ -44,6 +42,9 @@ jobs:
           curl -sL https://sentry.io/get-cli/ | bash
 
       - name: Create release to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: roy-n-roy
         run: |
           ./sentry-cli releases new -p docker_hub_update_notifier_webapp -p docker_hub_update_notifier_batch "DockerHubUpdateNotifier@v${VERSION}"
           ./sentry-cli releases set-commits --auto "DockerHubUpdateNotifier@v${VERSION}"
@@ -80,11 +81,17 @@ jobs:
           docker buildx build ${{ steps.setup.outputs.buildx_push_args }}
 
       - name: Finalize release to Sentry
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: roy-n-roy
         run: |
           ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
 
       - name: Delete release of Sentry
         if: failure()
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: roy-n-roy
         run: |
           ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
 
