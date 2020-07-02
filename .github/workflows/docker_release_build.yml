@@ -54,15 +54,10 @@ jobs:
           DOCKER_IMAGE=${{ secrets.DOCKER_USERNAME }}/docker-hub-update-notifier
           DOCKER_PLATFORMS=linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/ppc64le,linux/s390x
           DOCKER_CACHE_FROM_LOCAL="--cache-from \"type=local,src=${{ runner.temp }}/.buildx-cache\""
-          DOCKER_CACHE_FROM_REMOTE="--cache-from \"type=registry,mode=max,ref=${DOCKER_IMAGE}:build-cache\""
-          DOCKER_CACHE_TO_LOCAL="--cache-to \"type=local,dest=${{ runner.temp }}/.buildx-cache\""
+          DOCKER_CACHE_FROM_REMOTE="--cache-from \"type=registry,ref=${DOCKER_IMAGE}:build-cache\""
+          DOCKER_CACHE_TO_LOCAL="--cache-to \"type=local,mode=max,dest=${{ runner.temp }}/.buildx-cache\""
           DOCKER_CACHE_TO_REMOTE="--cache-to \"type=registry,mode=max,ref=${DOCKER_IMAGE}:build-cache\""
-          cache_hit=${{ steps.cache.outputs.cache-hit }}
-          if [[ ${cache_hit,,} == 'true' ]]; then
-            DOCKER_CACHE_FROM="${DOCKER_CACHE_FROM_LOCAL}"
-          else
-            DOCKER_CACHE_FROM="${DOCKER_CACHE_FROM_REMOTE}"
-          fi
+
           v_array=(${VERSION//./ })
           ver=${v_array[0]}
           DOCKER_TAGS="--tag ${DOCKER_IMAGE}:latest --tag ${DOCKER_IMAGE}:${ver}"
@@ -70,7 +65,13 @@ jobs:
             ver="${ver}.${n}"
             DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_IMAGE}:${ver}"
           done
-          echo ::set-output name=buildx_build_args::--output "type=image,push=false" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM} ${DOCKER_CACHE_TO_LOCAL} .
+
+          cache_hit=${{ steps.cache.outputs.cache-hit }}
+          if [[ ${cache_hit,,} == 'true' ]]; then
+            echo ::set-output name=buildx_build_args::--output "type=image,push=false" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_LOCAL} ${DOCKER_CACHE_TO_LOCAL} ${DOCKER_TAGS} .
+          else
+            echo ::set-output name=buildx_build_args::--output "type=image,push=false" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_REMOTE} ${DOCKER_CACHE_TO_LOCAL} ${DOCKER_TAGS} .
+          fi
           echo ::set-output name=buildx_push_args::--output "type=image,push=true" --platform ${DOCKER_PLATFORMS} ${DOCKER_CACHE_FROM_LOCAL} ${DOCKER_CACHE_TO_REMOTE} ${DOCKER_TAGS} .
 
       - name: Docker Buildx Build and Push
