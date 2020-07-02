@@ -1,15 +1,30 @@
+# syntax = docker/dockerfile:experimental
+
 FROM python:3.8-alpine AS poetry
 
-WORKDIR /tmp/poetry
+WORKDIR /poetry
 
 RUN apk add --no-cache curl \
  && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
-COPY pyproject.toml poetry.lock /tmp/poetry/
+COPY pyproject.toml poetry.lock /poetry/
 
 RUN source $HOME/.poetry/env \
  && poetry self update \
- && poetry export -f requirements.txt -E production -o /tmp/poetry/requirements.txt
+ && poetry export -f requirements.txt -E production -o /poetry/requirements.txt
+
+
+FROM python:3.8-alpine AS build_wheel
+
+WORKDIR /build
+
+COPY --from=poetry /poetry/requirements.txt .
+
+RUN apk add --no-cache gcc linux-headers musl-dev postgresql-dev
+
+RUN mkdir -p /build/wheel \
+ && pip wheel -r requirements.txt -w /build/wheel
+
 
 FROM python:3.8-alpine AS django
 
@@ -24,12 +39,9 @@ RUN addgroup -g 1000 django \
 RUN mkdir -p /static /var/run/django \
  && chown django:django /static /var/run/django
 
-COPY --from=poetry /tmp/poetry/requirements.txt .
-
-RUN apk add --no-cache postgresql-libs \
- && apk add --no-cache --virtual .build-deps gcc linux-headers musl-dev postgresql-dev \
- && pip install --no-cache-dir -r requirements.txt \
- && apk del --no-cache --purge .build-deps
+RUN --mount=type=bind,from=build_wheel,source=/build/wheel,target=/wheel \
+    apk add --no-cache postgresql-libs \
+ && pip install --no-cache-dir /wheel/*.whl
 
 COPY django/ /app/
 
