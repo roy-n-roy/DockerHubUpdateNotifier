@@ -16,14 +16,18 @@ RUN source $HOME/.poetry/env \
 
 FROM python:3.8-alpine AS build_wheel
 
-WORKDIR /build
+WORKDIR /wheel
+
+RUN apk add --no-cache \
+    gcc \
+    linux-headers \
+    musl-dev \
+    postgresql-dev
 
 COPY --from=poetry /poetry/requirements.txt .
 
-RUN apk add --no-cache gcc linux-headers musl-dev postgresql-dev
-
-RUN mkdir -p /build/wheel \
- && pip wheel -r requirements.txt -w /build/wheel
+RUN apk upgrade --no-cache \
+ && pip wheel --no-cache-dir -r requirements.txt
 
 
 FROM python:3.8-alpine AS django
@@ -39,9 +43,10 @@ RUN addgroup -g 1000 django \
 RUN mkdir -p /static /var/run/django \
  && chown django:django /static /var/run/django
 
-RUN --mount=type=bind,from=build_wheel,source=/build/wheel,target=/wheel \
-    apk add --no-cache postgresql-libs \
- && pip install --no-cache-dir /wheel/*.whl
+RUN apk add --no-cache postgresql-libs
+
+RUN --mount=type=bind,from=build_wheel,source=/wheel,target=/wheel \
+    pip install --no-cache-dir /wheel/*.whl
 
 COPY django/ /app/
 
