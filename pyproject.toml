@@ -21,7 +21,7 @@ autopep8 = "^1.5.3"
 flake8 = "^3.8.3"
 rope = "^0.17.0"
 pygraphviz = "^1.5"
-django-extensions = "^3.0.2"
+django-extensions = "^3.0.3"
 
 [tool.poetry.extras]
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
