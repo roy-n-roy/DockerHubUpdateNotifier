@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME --cache-from $DOCKER_REPO:build-cache .
+docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME --cache-from $IMAGE_NAME .
