@@ -78,10 +78,10 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.6"
-version = "3.0.8"
+version = "3.1"
 
 [package.dependencies]
-asgiref = ">=3.2,<4.0"
+asgiref = ">=3.2.10,<3.3.0"
 pytz = "*"
 sqlparse = ">=0.2.2"
 
@@ -321,7 +321,7 @@ version = "2.0.19.1"
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "bd67c1dee5df2ebb086ef3ffc294fbcd1ebe93d9341469cb22e9c3b5b736460a"
+content-hash = "83ad5b80310c9640bcec9e2c86d937e0f5850f1fdba2954f58e62fb3d8845c5e"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -350,8 +350,8 @@ chardet = [
     {file = "chardet-3.0.4.tar.gz", hash = "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"},
 ]
 django = [
-    {file = "Django-3.0.8-py3-none-any.whl", hash = "sha256:5457fc953ec560c5521b41fad9e6734a4668b7ba205832191bbdff40ec61073c"},
-    {file = "Django-3.0.8.tar.gz", hash = "sha256:31a5fbbea5fc71c99e288ec0b2f00302a0a92c44b13ede80b73a6a4d6d205582"},
+    {file = "Django-3.1-py3-none-any.whl", hash = "sha256:1a63f5bb6ff4d7c42f62a519edc2adbb37f9b78068a5a862beff858b68e3dc8b"},
+    {file = "Django-3.1.tar.gz", hash = "sha256:2d390268a13c655c97e0e2ede9d117007996db692c1bb93eabebd4fb7ea7012b"},
 ]
 django-bootstrap4 = [
     {file = "django-bootstrap4-2.2.0.tar.gz", hash = "sha256:1c0a931b4245a0dcd5051ea1b244ac130a328374ce8e85254c75eb072a737201"},
