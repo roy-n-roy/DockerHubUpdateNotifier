@@ -15,7 +15,7 @@ description = "A tool that automatically formats Python code to conform to the P
 name = "autopep8"
 optional = false
 python-versions = "*"
-version = "1.5.3"
+version = "1.5.4"
 
 [package.dependencies]
 pycodestyle = ">=2.6.0"
@@ -321,7 +321,7 @@ version = "2.0.19.1"
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "83ad5b80310c9640bcec9e2c86d937e0f5850f1fdba2954f58e62fb3d8845c5e"
+content-hash = "113328c100146cde3bfa483700f47a33448d58588f505519c475bf5ee82e95ee"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -330,7 +330,7 @@ asgiref = [
     {file = "asgiref-3.2.10.tar.gz", hash = "sha256:7e51911ee147dd685c3c8b805c0ad0cb58d360987b56953878f8c06d2d1c6f1a"},
 ]
 autopep8 = [
-    {file = "autopep8-1.5.3.tar.gz", hash = "sha256:60fd8c4341bab59963dafd5d2a566e94f547e660b9b396f772afe67d8481dbf0"},
+    {file = "autopep8-1.5.4.tar.gz", hash = "sha256:d21d3901cb0da6ebd1e83fc9b0dfbde8b46afc2ede4fe32fbda0c7c6118ca094"},
 ]
 beautifulsoup4 = [
     {file = "beautifulsoup4-4.9.1-py2-none-any.whl", hash = "sha256:e718f2342e2e099b640a34ab782407b7b676f47ee272d6739e60b8ea23829f2c"},
