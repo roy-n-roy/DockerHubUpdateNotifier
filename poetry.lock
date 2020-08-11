@@ -189,8 +189,8 @@ category = "dev"
 description = "Python interface to Graphviz"
 name = "pygraphviz"
 optional = false
-python-versions = "*"
-version = "1.5"
+python-versions = ">=3.6"
+version = "1.6"
 
 [[package]]
 category = "main"
@@ -321,7 +321,7 @@ version = "2.0.19.1"
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "f856d5e4e831e0ee5ef239a537ca53aaaf2ff1926043053673e894c74acc4a58"
+content-hash = "beac8fa09ce83559da1ee029e9c4b1f97d615244f73b75b545c10ecfa2100a8f"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -421,7 +421,7 @@ pyflakes = [
     {file = "pyflakes-2.2.0.tar.gz", hash = "sha256:35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8"},
 ]
 pygraphviz = [
-    {file = "pygraphviz-1.5.zip", hash = "sha256:50a829a305dc5a0fd1f9590748b19fece756093b581ac91e00c2c27c651d319d"},
+    {file = "pygraphviz-1.6.zip", hash = "sha256:411ae84a5bc313e3e1523a1cace59159f512336318a510573b47f824edef8860"},
 ]
 pytz = [
     {file = "pytz-2020.1-py2.py3-none-any.whl", hash = "sha256:a494d53b6d39c3c6e44c3bec237336e14305e4f29bbf800b599253057fbb79ed"},
