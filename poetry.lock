@@ -240,7 +240,7 @@ description = "Python client for Sentry (https://sentry.io)"
 name = "sentry-sdk"
 optional = true
 python-versions = "*"
-version = "0.17.0"
+version = "0.17.3"
 
 [package.dependencies]
 certifi = "*"
@@ -310,7 +310,7 @@ version = "2.0.19.1"
 production = ["psycopg2", "uWSGI", "sentry-sdk"]
 
 [metadata]
-content-hash = "342a16105f51d38da23affbecf789678f04b3fb8120532112b1087bf61c30796"
+content-hash = "6cc60280174b78e45f3344b9f45dc8cf2c6423673d83418c1c4202e8af067af3"
 lock-version = "1.0"
 python-versions = "^3.8"
 
@@ -429,8 +429,8 @@ schedule = [
     {file = "schedule-0.6.0.tar.gz", hash = "sha256:f9fb5181283de4db6e701d476dd01b6a3dd81c38462a54991ddbb9d26db857c9"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-0.17.0.tar.gz", hash = "sha256:09cbc253c827a88064c5ed548d24fb4294568bfe9b1816a857fa5a423d4ce762"},
-    {file = "sentry_sdk-0.17.0-py2.py3-none-any.whl", hash = "sha256:1d654ac57be9967dae67545fb759f6e7594de07f487c21a276e6466dd52e83f1"},
+    {file = "sentry-sdk-0.17.3.tar.gz", hash = "sha256:0af429c221670e602f960fca85ca3f607c85510a91f11e8be8f742a978127f78"},
+    {file = "sentry_sdk-0.17.3-py2.py3-none-any.whl", hash = "sha256:a088a1054673c6a19ea590045c871c38da029ef743b61a07bfee95e9f3c060f7"},
 ]
 soupsieve = [
     {file = "soupsieve-1.9.6-py2.py3-none-any.whl", hash = "sha256:feb1e937fa26a69e08436aad4a9037cd7e1d4c7212909502ba30701247ff8abd"},
