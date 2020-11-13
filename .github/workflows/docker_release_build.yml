@@ -26,20 +26,6 @@ jobs:
         run: |
           echo ::set-env name=VERSION::${GITHUB_REF/refs\/tags\/v/}
 
-      - name: Get Sentry-CLI tool
-        env:
-          INSTALL_DIR: .
-        run: |
-          curl -sL https://sentry.io/get-cli/ | bash
-
-      - name: Create release to Sentry
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: roy-n-roy
-        run: |
-          ./sentry-cli releases new -p docker_hub_update_notifier_webapp -p docker_hub_update_notifier_batch "DockerHubUpdateNotifier@v${VERSION}"
-          ./sentry-cli releases set-commits --auto "DockerHubUpdateNotifier@v${VERSION}"
-
       - name: Setup docker tag names
         id: docker
         run: |
@@ -64,21 +50,6 @@ jobs:
           push: true
           cache-from: ${{ steps.docker.outputs.image }}:build-cache
           cache-to: ${{ steps.docker.outputs.image }}:build-cache
-
-      - name: Finalize release to Sentry
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: roy-n-roy
-        run: |
-          ./sentry-cli releases finalize "DockerHubUpdateNotifier@v${VERSION}"
-
-      - name: Delete release of Sentry
-        if: failure()
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_ORG: roy-n-roy
-        run: |
-          ./sentry-cli releases delete "DockerHubUpdateNotifier@v${VERSION}"
 
       - name: Create a Release
         uses: actions/create-release@v1

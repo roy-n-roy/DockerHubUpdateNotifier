@@ -232,34 +232,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "sentry-sdk"
-version = "0.19.3"
-description = "Python client for Sentry (https://sentry.io)"
-category = "main"
-optional = true
-python-versions = "*"
-
-[package.dependencies]
-certifi = "*"
-urllib3 = ">=1.10.0"
-
-[package.extras]
-aiohttp = ["aiohttp (>=3.5)"]
-beam = ["apache-beam (>=2.12)"]
-bottle = ["bottle (>=0.12.13)"]
-celery = ["celery (>=3)"]
-chalice = ["chalice (>=1.16.0)"]
-django = ["django (>=1.8)"]
-falcon = ["falcon (>=1.4)"]
-flask = ["flask (>=0.11)", "blinker (>=1.1)"]
-pure_eval = ["pure-eval", "executing", "asttokens"]
-pyspark = ["pyspark (>=2.4.4)"]
-rq = ["rq (>=0.6)"]
-sanic = ["sanic (>=0.8)"]
-sqlalchemy = ["sqlalchemy (>=1.2)"]
-tornado = ["tornado (>=5)"]
-
-[[package]]
 name = "soupsieve"
 version = "1.9.6"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -305,12 +277,12 @@ optional = true
 python-versions = "*"
 
 [extras]
-production = ["psycopg2", "uWSGI", "sentry-sdk"]
+production = ["psycopg2", "uWSGI"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9db0ed5701c97d861841c4534bcfcfdb047d1c7e95b47f6443cf00ff99ee58cb"
+content-hash = "0ee48949d5cc4462f3d43ec89125dcd315545c55db0d066879393c7c3a3fb0d2"
 
 [metadata.files]
 asgiref = [
@@ -427,10 +399,6 @@ rope = [
 schedule = [
     {file = "schedule-0.6.0-py2.py3-none-any.whl", hash = "sha256:3f895a1036799a25ab9c335de917073e63cf8256920917e932777382f101f08f"},
     {file = "schedule-0.6.0.tar.gz", hash = "sha256:f9fb5181283de4db6e701d476dd01b6a3dd81c38462a54991ddbb9d26db857c9"},
-]
-sentry-sdk = [
-    {file = "sentry-sdk-0.19.3.tar.gz", hash = "sha256:fd48f627945511c140546939b4d73815be4860cd1d2b9149577d7f6563e7bd60"},
-    {file = "sentry_sdk-0.19.3-py2.py3-none-any.whl", hash = "sha256:81d7a5d8ca0b13a16666e8280127b004565aa988bfeec6481e98a8601804b215"},
 ]
 soupsieve = [
     {file = "soupsieve-1.9.6-py2.py3-none-any.whl", hash = "sha256:feb1e937fa26a69e08436aad4a9037cd7e1d4c7212909502ba30701247ff8abd"},

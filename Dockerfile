@@ -56,7 +56,7 @@ RUN apk add --no-cache gettext \
 
 COPY scripts /usr/local/bin
 
-RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/sentry_deploy.py
+RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 USER django
 

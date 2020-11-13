@@ -14,8 +14,6 @@ import os
 
 from django.contrib.messages import constants as messages
 
-from . import __version__
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -214,24 +212,6 @@ LOGGING = {
         },
     },
 }
-
-# Settings for SENTRY
-if os.getenv('SENTRY_DSN'):
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(
-        dsn=os.getenv('SENTRY_DSN'),
-        integrations=[DjangoIntegration()],
-        release='DockerHubUpdateNotifier@' + __version__,
-        environment=os.getenv('SENTRY_ENV', 'prod'),
-
-        # If you wish to associate users to errors (assuming you are using
-        # django.contrib.auth) you may enable sending PII data.
-        send_default_pii=True
-    )
-
-    USE_SENTRY = True
 
 # Settings for django-bootstrap4
 BOOTSTRAP4 = {
